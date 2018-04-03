@@ -1,7 +1,5 @@
 package io.vertx.starter
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
 import com.ufoscout.vertxk.VertxkKodein
 import io.vertx.config.ConfigRetriever
 import io.vertx.core.Vertx
@@ -10,6 +8,8 @@ import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.starter.config.ConfigModule
 import kotlinx.coroutines.experimental.runBlocking
+import org.kodein.di.Kodein
+import org.kodein.di.jxinject.jxInjectorModule
 import java.io.IOException
 
 

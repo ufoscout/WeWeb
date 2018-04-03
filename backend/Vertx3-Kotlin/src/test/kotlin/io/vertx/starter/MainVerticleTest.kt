@@ -1,6 +1,5 @@
 package io.vertx.starter
 
-import com.github.salomonbrys.kodein.instance
 import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
@@ -11,6 +10,8 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.kodein.di.direct
+import org.kodein.di.generic.instance
 
 class MainVerticleTest {
 
@@ -20,9 +21,10 @@ class MainVerticleTest {
     @Before
     fun setUp() = runBlocking<Unit> {
         var kodein = Main.launch(TestModule.module)
-        var conf: AppConfig = kodein.instance();
+        val dk = kodein.direct
+        var conf: AppConfig = dk.instance();
         port = conf.serverPort()
-        vertx = kodein.instance()
+        vertx = dk.instance()
 
     }
 

@@ -1,8 +1,8 @@
 package io.vertx.starter.config
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.singleton
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.singleton
 import io.vertx.core.json.JsonObject
 
 object ConfigModule {
@@ -12,6 +12,5 @@ object ConfigModule {
             bind<AppConfig>() with singleton { AppConfig(serverPort = config.getJsonObject("server").getInteger("port", 8080)) }
 
         }
-
 
 }
