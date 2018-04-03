@@ -9,17 +9,21 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <!-- properties -->
+        <main.class>io.vertx.starter.Main</main.class>
+        <java.version>1.8</java.version>
+
+        <!-- dependencies -->
         <junit.version>4.12</junit.version>
-        <properlty.version>1.4.0</properlty.version>
         <vertx.version>3.5.1</vertx.version>
         <vertxk.version>0.2.0</vertxk.version>
 
-        <main.class>io.vertx.starter.Main</main.class>
-
-        <java.version>1.8</java.version>
-
+        <!-- plugins -->
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin.version>1.2.30</kotlin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -36,9 +40,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.ufoscout.properlty</groupId>
-            <artifactId>properlty-kotlin</artifactId>
-            <version>${properlty.version}</version>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-config</artifactId>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
@@ -55,7 +58,6 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-lang-kotlin-coroutines</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ufoscout.vertxk</groupId>
@@ -80,7 +82,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
@@ -135,7 +137,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>${maven-shade-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -167,7 +169,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>${exec-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
                 </configuration>

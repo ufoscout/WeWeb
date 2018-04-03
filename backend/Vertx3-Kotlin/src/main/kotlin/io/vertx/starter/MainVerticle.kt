@@ -6,6 +6,7 @@ import io.vertx.core.http.HttpServerRequest
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.awaitResult
+import io.vertx.starter.config.AppConfig
 
 class MainVerticle (val appConfig: AppConfig, val router: Router) : CoroutineVerticle() {
 

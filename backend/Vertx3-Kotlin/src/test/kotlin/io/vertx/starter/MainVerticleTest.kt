@@ -5,6 +5,7 @@ import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.kotlin.coroutines.awaitEvent
+import io.vertx.starter.config.AppConfig
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert

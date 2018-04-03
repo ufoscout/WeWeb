@@ -2,11 +2,8 @@ package io.vertx.starter
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
-import io.vertx.core.Vertx
-import io.vertx.ext.web.Router
-import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.starter.config.AppConfig
 import java.io.IOException
 import java.net.ServerSocket
 
