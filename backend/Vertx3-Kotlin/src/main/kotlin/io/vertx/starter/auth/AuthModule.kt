@@ -1,10 +1,16 @@
 package io.vertx.starter.auth
 
+import io.vertx.core.Vertx
+import io.vertx.starter.vertxk.VertxkModule
 import org.kodein.di.Kodein
 
-object AuthModule {
+object AuthModule : VertxkModule() {
 
-    fun module() = Kodein.Module {
+    override fun module() = Kodein.Module {
+
+    }
+
+    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
 
     }
 

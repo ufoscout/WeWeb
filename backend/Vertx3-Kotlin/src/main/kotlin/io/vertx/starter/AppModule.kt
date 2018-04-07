@@ -7,14 +7,15 @@ import org.kodein.di.generic.singleton
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.starter.vertxk.VertxkModule
 
 /**
  * Created by ufo on 18/07/17.
  */
 
-object AppModule {
+class AppModule: VertxkModule() {
 
-    fun module(vertx: Vertx) = Kodein.Module {
+    override fun module() = Kodein.Module {
 
         bind<Router>() with singleton {
             println("create router")
@@ -25,6 +26,10 @@ object AppModule {
             //mainRouter.route().failureHandler(GlobalHandlers::error);
             mainRouter
         }
+    }
+
+    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
+        deployVerticle<AppVerticle>(vertx)
     }
 
 }

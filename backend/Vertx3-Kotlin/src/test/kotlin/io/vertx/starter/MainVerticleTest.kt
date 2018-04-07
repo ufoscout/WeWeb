@@ -1,9 +1,9 @@
 package io.vertx.starter
 
-import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.kotlin.coroutines.awaitEvent
+import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.starter.config.AppConfig
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
@@ -20,7 +20,7 @@ class MainVerticleTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        var kodein = Main.launch(TestModule.module)
+        var kodein = AppMain.start(TestModule())
         val dk = kodein.direct
         var conf: AppConfig = dk.instance();
         port = conf.serverPort()
@@ -42,7 +42,7 @@ class MainVerticleTest {
             }
         }
         Assert.assertTrue(body.length() > 0)
-        Assert.assertEquals(MainVerticle.HELLO_MSG, body.toString())
+        Assert.assertEquals(HelloControllerVerticle.HELLO_MSG, body.toString())
     }
 
 }
