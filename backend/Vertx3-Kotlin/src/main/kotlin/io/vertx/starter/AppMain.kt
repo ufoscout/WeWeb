@@ -1,5 +1,7 @@
 package io.vertx.starter
 
+import com.ufoscout.vertxk.Vertxk
+import com.ufoscout.vertxk.VertxkModule
 import io.vertx.config.ConfigRetriever
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
@@ -7,8 +9,6 @@ import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.starter.config.ConfigModule
 import io.vertx.starter.monitoring.MonitoringModule
-import io.vertx.starter.vertxk.Vertxk
-import io.vertx.starter.vertxk.VertxkModule
 import kotlinx.coroutines.experimental.runBlocking
 import org.kodein.di.Kodein
 import java.io.IOException

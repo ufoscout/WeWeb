@@ -1,8 +1,8 @@
 package io.vertx.starter.monitoring
 
+import com.ufoscout.vertxk.VertxkModule
 import io.vertx.core.Vertx
 import io.vertx.starter.HelloControllerVerticle
-import io.vertx.starter.vertxk.VertxkModule
 import org.kodein.di.Kodein
 
 class MonitoringModule : VertxkModule() {

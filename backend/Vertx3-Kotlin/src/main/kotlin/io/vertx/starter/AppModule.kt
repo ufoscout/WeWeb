@@ -1,13 +1,13 @@
 package io.vertx.starter
 
+import com.ufoscout.vertxk.VertxkModule
+import io.vertx.core.Vertx
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.BodyHandler
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
-import io.vertx.core.Vertx
-import io.vertx.ext.web.Router
-import io.vertx.ext.web.handler.BodyHandler
-import io.vertx.starter.vertxk.VertxkModule
 
 /**
  * Created by ufo on 18/07/17.

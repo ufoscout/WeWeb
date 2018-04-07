@@ -1,15 +1,14 @@
 package io.vertx.starter
 
+import com.ufoscout.vertxk.VertxkModule
 import io.vertx.core.Vertx
 import io.vertx.starter.config.AppConfig
-import io.vertx.starter.vertxk.VertxkModule
 import org.kodein.di.Kodein
 import org.kodein.di.Kodein.Module
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
 import java.io.IOException
 import java.net.ServerSocket
-
 
 
 /**

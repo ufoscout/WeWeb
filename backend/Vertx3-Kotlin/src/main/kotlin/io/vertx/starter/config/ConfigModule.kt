@@ -1,11 +1,11 @@
 package io.vertx.starter.config
 
+import com.ufoscout.vertxk.VertxkModule
 import io.vertx.core.Vertx
+import io.vertx.core.json.JsonObject
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
-import io.vertx.core.json.JsonObject
-import io.vertx.starter.vertxk.VertxkModule
 
 class ConfigModule(val config: JsonObject) : VertxkModule() {
 

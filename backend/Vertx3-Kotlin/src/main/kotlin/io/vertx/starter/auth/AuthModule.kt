@@ -1,7 +1,7 @@
 package io.vertx.starter.auth
 
+import com.ufoscout.vertxk.VertxkModule
 import io.vertx.core.Vertx
-import io.vertx.starter.vertxk.VertxkModule
 import org.kodein.di.Kodein
 
 object AuthModule : VertxkModule() {
