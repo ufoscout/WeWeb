@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngxs/store';
 import { AuthState, AuthStateModel } from './auth.state';
+import * as str from '../shared/utils/string.utils';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -15,16 +16,15 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private _store: Store) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const token = this._store.selectSnapshot<AuthStateModel>((state) => state.auth);
+        const authState = this._store.selectSnapshot<AuthStateModel>((state) => state.auth);
 
-        console.log("AuthInterceptor: found token: " + JSON.stringify(token));
-        /*
-        req = req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        */
+        if (!str.isBlank(authState.token)) {
+            req = req.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${authState.token}`
+                }
+            });
+        }
 
         return next.handle(req);
     }
