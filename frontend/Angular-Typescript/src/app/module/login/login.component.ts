@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthState, AuthStateModel } from '../auth/auth.state';
 import { Login } from './login.model';
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
   @Select(AuthState) auth$: Observable<AuthStateModel>;
   model = new Login('', '');
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.auth$.subscribe(auth => {
