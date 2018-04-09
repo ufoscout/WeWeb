@@ -6,7 +6,7 @@ package com.weweb.core.jwt;
  * @author Francesco Cina'
  *
  */
-public interface JWTService {
+public interface JwtService {
 
     /**
      * Generates a JWT from the payload
@@ -31,6 +31,6 @@ public interface JWTService {
      * @param payloadClass
      * @return
      */
-    <T> T parse(String jwt, Class<T> payloadClass);
+    <T> T parse(String jwt, Class<T> payloadClass) throws TokenExpiredException;
 
 }

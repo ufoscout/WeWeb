@@ -19,11 +19,11 @@ public class JacksonJsonSerializerService implements JsonSerializerService {
 	private final ObjectMapper mapper;
 
 	public JacksonJsonSerializerService() {
-		this(true, true);
+		this(false, false);
 	}
 
 	public JacksonJsonSerializerService(final boolean failOnUnknownProperties) {
-		this(failOnUnknownProperties, true);
+		this(failOnUnknownProperties, false);
 	}
 
 	public JacksonJsonSerializerService(final boolean failOnUnknownProperties, final boolean failOnEmptyBeans) {

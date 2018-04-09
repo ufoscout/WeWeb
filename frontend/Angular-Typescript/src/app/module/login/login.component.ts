@@ -25,8 +25,26 @@ export class LoginComponent implements OnInit {
   }
 
   submitLogin(): void {
-    this.store.dispatch(new SetAuthData({username: this.model.username, token: this.model.password}));
-    console.log("Send login data " + JSON.stringify(this.model));
+    //this.store.dispatch(new SetAuthData({username: this.model.username, token: this.model.password}));
+    this.http.post("/api/auth/login", {
+      username: this.model.username,
+      password: this.model.password,
+    }).subscribe(response => {
+      console.log("Response: " + JSON.stringify(response));
+      this.store.dispatch(new SetAuthData({username: this.model.username, token: response['token']}));
+    });
+  }
+
+  callPublic(): void {
+    this.http.get("/api/auth/test/public").subscribe(response => {
+      console.log("Response: " + JSON.stringify(response));
+    });
+  }
+
+  callProtected(): void {
+    this.http.get("/api/auth/test/protected").subscribe(response => {
+      console.log("Response: " + JSON.stringify(response));
+    });
   }
 
 }

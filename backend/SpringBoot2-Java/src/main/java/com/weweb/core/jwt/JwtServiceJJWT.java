@@ -10,23 +10,29 @@ import io.jsonwebtoken.impl.DefaultClock;
 import java.util.Date;
 
 /**
- * Implementation of the {@link JWTService} based on JJWT
+ * Implementation of the {@link JwtService} based on JJWT
  *
  * @author Francesco Cina'
  *
  */
-public class JWTServiceJJWT implements JWTService {
+public class JwtServiceJJWT implements JwtService {
 
     final static String PAYLOAD_CLAIM_KEY = "payload";
     private final Clock clock = DefaultClock.INSTANCE;
     private final SignatureAlgorithm signatureAlgorithm;
+    private String secret;
+    private long tokenValidityMinutes;
     private final JsonSerializerService jsonSerializerService;
-    private final JWTConfig config;
 
-    public JWTServiceJJWT(final JWTConfig config, final JsonSerializerService jsonSerializerService) {
-        this.config = config;
+    public JwtServiceJJWT(String secret,
+            SignatureAlgorithm signatureAlgorithm,
+            long tokenValidityMinutes,
+            final JsonSerializerService jsonSerializerService) {
+        this.secret = secret;
+        this.signatureAlgorithm = signatureAlgorithm;
+        this.tokenValidityMinutes = tokenValidityMinutes;
         this.jsonSerializerService = jsonSerializerService;
-        signatureAlgorithm = SignatureAlgorithm.forName(config.getSignatureAlgorithm());
+
     }
 
     @Override
@@ -46,7 +52,7 @@ public class JWTServiceJJWT implements JWTService {
                 .claim(PAYLOAD_CLAIM_KEY, jsonSerializerService.toJson(payload))
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
-                .signWith(signatureAlgorithm, config.getSecret())
+                .signWith(signatureAlgorithm, secret)
                 .compact();
     }
 
@@ -57,13 +63,13 @@ public class JWTServiceJJWT implements JWTService {
     }
 
     private Date calculateExpirationDate(Date createdDate) {
-        return new Date(createdDate.getTime() + config.getTokenValidityMinutes() * 1000);
+        return new Date(createdDate.getTime() + tokenValidityMinutes * 60 * 1000);
     }
 
     Claims getAllClaimsFromToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(config.getSecret())
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {

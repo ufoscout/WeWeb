@@ -1,8 +1,7 @@
 package com.weweb.auth.config;
 
-import com.weweb.auth.jwt.JwtAuthenticationEntryPoint;
-import com.weweb.auth.jwt.JwtAuthorizationTokenFilter;
-import com.weweb.auth.jwt.JwtTokenService;
+import com.weweb.core.config.CoreConstants;
+import com.weweb.core.jwt.JwtService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,47 +15,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class JwtWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private AuthConfig config;
-    private JwtTokenService jwtTokenUtil;
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private JwtService jwtService;
 
-    public WebSecurityConfig(AuthConfig config, JwtTokenService jwtTokenUtil, JwtAuthenticationEntryPoint unauthorizedHandler) {
+    public JwtWebSecurityConfigurerAdapter(AuthConfig config, JwtService jwtService) {
         this.config = config;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.unauthorizedHandler = unauthorizedHandler;
+        this.jwtService = jwtService;
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        // Custom JWT based security filter
+        JwtAuthorizationTokenFilter authenticationTokenFilter =
+                new JwtAuthorizationTokenFilter(jwtService, config.getJwtHeaderKey(),
+                        config.getUserContextAttributeKey());
+
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
                 .csrf().disable()
 
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-
                 // don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and().addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
 
-                // Un-secure H2 Database
-                .antMatchers("/h2-console/**/**").permitAll()
-
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers(AuthContants.BASE_AUTH_API + "/**").permitAll()
+                .antMatchers(CoreConstants.BASE_PUBLIC_API+ "/**").permitAll()
                 .anyRequest().authenticated();
-
-        // Custom JWT based security filter
-        JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(jwtTokenUtil, config.getJwtTokenHeader());
-        httpSecurity
-                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // disable page caching
-        httpSecurity
-                .headers()
-                .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
-                .cacheControl();
     }
 
     @Override

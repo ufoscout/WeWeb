@@ -1,0 +1,4 @@
+core:
+  jwt:
+    secret: mySecret
+    tokenValidityMinutes: 60

@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import com.weweb.BaseTest;
 import com.weweb.core.json.JacksonJsonSerializerService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import java.util.Date;
 import java.util.UUID;
@@ -17,14 +18,11 @@ import org.junit.Test;
 public class JWTServiceJJWTTest extends BaseTest {
 
 	private final long expireMinutes = 2;
-    private final JWTConfig config = new JWTConfig();
-	private JWTServiceJJWT jwtService;
+	private JwtServiceJJWT jwtService;
 
 	@Before
 	public void setUp() {
-		config.setSecret(UUID.randomUUID().toString());
-		config.setTokenValidityMinutes(expireMinutes);
-		jwtService = new JWTServiceJJWT(config, new JacksonJsonSerializerService());
+		jwtService = new JwtServiceJJWT("secret", SignatureAlgorithm.HS512, expireMinutes, new JacksonJsonSerializerService());
 	}
 
     @Test
@@ -37,7 +35,7 @@ public class JWTServiceJJWTTest extends BaseTest {
         final String jwt = jwtService.generate(message);
         getLogger().info("Generated JWT:\n{}", jwt);
 
-        final String parsed = jwtService.getAllClaimsFromToken(jwt).get(JWTServiceJJWT.PAYLOAD_CLAIM_KEY, String.class);
+        final String parsed = jwtService.getAllClaimsFromToken(jwt).get(JwtServiceJJWT.PAYLOAD_CLAIM_KEY, String.class);
         getLogger().info("Parsed JWT:\n{}", parsed);
         assertNotNull(parsed);
         assertFalse(parsed.isEmpty());
@@ -68,7 +66,7 @@ public class JWTServiceJJWTTest extends BaseTest {
         assertTrue( issuedTime <= afterTime );
 
         long expireTime = claims.getExpiration().getTime();
-        assertEquals( issuedTime + (config.getTokenValidityMinutes() * 1000), expireTime );
+        assertEquals( issuedTime + (expireMinutes * 1000), expireTime );
     }
 
 

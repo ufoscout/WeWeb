@@ -21,6 +21,12 @@
                 </div>
             </div>
             <button [disabled]="!loginForm.form.valid" class="btn btn-primary" (click)="submitLogin()">Submit</button>
+
+            <button class="btn btn-primary" (click)="callPublic()">Call public</button>
+
+
+            <button class="btn btn-primary" (click)="callProtected()">Call protected</button>
+
         </form>
     </div>
 </div>
