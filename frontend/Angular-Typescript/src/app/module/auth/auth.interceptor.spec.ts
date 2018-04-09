@@ -9,7 +9,7 @@ import { Store, NgxsModule } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { SetAuthData } from './auth.events';
 
-describe(`AuthInterceptor`, () => {
+describe(`[Auth] AuthInterceptor`, () => {
 
     let store: Store;
     let httpMock: HttpTestingController;

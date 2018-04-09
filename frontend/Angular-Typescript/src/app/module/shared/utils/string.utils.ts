@@ -1,10 +1,11 @@
 import * as obj from './object.utils';
+import * as _ from "lodash";
 
 /**
  * Checks if a string is empty (""), undefined, null or whitespace only.
  */
 export function isBlank(text: string): boolean {
-  return !obj.exists(text) || text.trim().length === 0;
+  return isEmpty(_.trim(text));
 }
 
 /**

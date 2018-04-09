@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { AuthState } from './auth.state';
 import { SetAuthData } from './auth.events';
 
-describe('Auth State', () => {
+describe('[Auth] Auth State', () => {
     let store: Store;
 
     beforeEach(async(() => {

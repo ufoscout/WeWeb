@@ -1,6 +1,6 @@
 import * as str from './string.utils';
 
-describe('Object helper', () => {
+describe('[Shared] StringUtils', () => {
 
     it('should be blank if undefined', () => {
         expect(
