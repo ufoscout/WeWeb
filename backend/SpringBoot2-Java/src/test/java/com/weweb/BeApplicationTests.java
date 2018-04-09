@@ -1,4 +1,4 @@
-package com.weweb.be;
+package com.weweb;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
