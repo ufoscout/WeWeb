@@ -1,5 +1,6 @@
 package com.weweb.auth.config;
 
+import com.weweb.auth.model.UserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

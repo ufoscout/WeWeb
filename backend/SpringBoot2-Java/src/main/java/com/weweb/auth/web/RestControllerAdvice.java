@@ -2,6 +2,7 @@ package com.weweb.auth.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import com.weweb.core.jwt.TokenExpiredException;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -22,27 +23,32 @@ public class RestControllerAdvice {
     public ResponseEntity<ErrorDetails> handleException(Exception exception) {
         String uuid = UUID.randomUUID().toString();
         log.error(uuid + " : " + getMessage(exception), exception);
-        return errorResponse(new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Fatal error: " + uuid));
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, "Fatal error: " + uuid);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception) {
-        log.error(getMessage(exception), exception);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception) {
+        log.warn(getMessage(exception), exception);
+        return response(HttpStatus.FORBIDDEN, "AccessDenied");
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
+    public ResponseEntity<ErrorDetails> handleBadCredentialsException(BadCredentialsException exception) {
         log.warn(getMessage(exception));
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return response(HttpStatus.FORBIDDEN, "BadCredentials");
     }
 
-    private ResponseEntity<ErrorDetails> errorResponse(ErrorDetails error) {
-        log.error(error.getMessage());
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ErrorDetails> handleTokenExpiredException(TokenExpiredException exception) {
+        log.warn(getMessage(exception));
+        return response(HttpStatus.UNAUTHORIZED, "TokenExpired");
+    }
+
+    private ResponseEntity<ErrorDetails> response(HttpStatus status, String message) {
         return ResponseEntity
-                .status(error.getCode())
+                .status(status)
                 .contentType(APPLICATION_JSON)
-                .body(error);
+                .body(new ErrorDetails(status.value(), message));
     }
 
     private String getMessage(Exception exception) {

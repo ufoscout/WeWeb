@@ -1,4 +1,4 @@
-package com.weweb.auth.config;
+package com.weweb.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

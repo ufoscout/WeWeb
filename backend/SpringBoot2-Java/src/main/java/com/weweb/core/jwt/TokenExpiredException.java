@@ -1,7 +1,7 @@
 package com.weweb.core.jwt;
 
 /**
- * Exception thrown when parsing a bean that implements {@link Expirable} that has expired
+ * Exception thrown when parsing an expired jwt token.
  *
  * @author Francesco Cina'
  *
