@@ -66,7 +66,7 @@ public class JWTServiceJJWTTest extends BaseTest {
         assertTrue( issuedTime <= afterTime );
 
         long expireTime = claims.getExpiration().getTime();
-        assertEquals( issuedTime + (expireMinutes * 1000), expireTime );
+        assertEquals( issuedTime + (expireMinutes * 60 * 1000), expireTime );
     }
 
 
