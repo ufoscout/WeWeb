@@ -38,12 +38,6 @@ public class RestControllerAdvice {
         return response(HttpStatus.FORBIDDEN, "BadCredentials");
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ErrorDetails> handleTokenExpiredException(TokenExpiredException exception) {
-        log.warn(getMessage(exception));
-        return response(HttpStatus.UNAUTHORIZED, "TokenExpired");
-    }
-
     private ResponseEntity<ErrorDetails> response(HttpStatus status, String message) {
         return ResponseEntity
                 .status(status)

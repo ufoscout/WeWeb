@@ -23,4 +23,24 @@ describe('[Shared] Object utils', () => {
             .toBeTruthy();
     });
 
+    it('should return defaul if value is undefined', () => {
+        expect(
+            obj.getOrDefault(undefined, 'default')
+        )
+            .toBe('default');
+    });
+
+    it('should return defaul if value is null', () => {
+        expect(
+            obj.getOrDefault(null, 'default')
+        )
+            .toBe('default');
+    });
+
+    it('should return value if is not undefined and not null', () => {
+        expect(
+            obj.getOrDefault('value', 'default')
+        )
+            .toBe('value');
+    });
 });

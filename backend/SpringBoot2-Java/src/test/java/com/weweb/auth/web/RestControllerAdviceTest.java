@@ -53,13 +53,4 @@ public class RestControllerAdviceTest extends BaseMockitoTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
-    @Test
-    public void handleTokenExpiredException() throws Exception {
-        // Arrange
-        TokenExpiredException exception = new TokenExpiredException();
-        // Act
-        ResponseEntity<ErrorDetails> response = advice.handleTokenExpiredException(exception);
-        //Assert
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
 }

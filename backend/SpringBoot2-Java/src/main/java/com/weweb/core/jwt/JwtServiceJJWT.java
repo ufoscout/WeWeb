@@ -46,7 +46,7 @@ public class JwtServiceJJWT implements JwtService {
         return generate(subject, payload, createdDate, calculateExpirationDate(createdDate));
     }
 
-    <T> String generate(final String subject, final T payload, Date createdDate, Date expirationDate) {
+    public <T> String generate(final String subject, final T payload, Date createdDate, Date expirationDate) {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim(PAYLOAD_CLAIM_KEY, jsonSerializerService.toJson(payload))

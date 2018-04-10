@@ -71,4 +71,25 @@ describe('[Shared] StringUtils', () => {
         )
             .toBeFalsy();
     });
+
+    it('should return default if undefined', () => {
+        expect(
+            str.getOrEmpty(undefined)
+        )
+            .toBe('');
+    });
+
+    it('should return default if null', () => {
+        expect(
+            str.getOrDefault(null, 'default')
+        )
+            .toBe('default');
+    });
+
+    it('should return value if not empty ', () => {
+        expect(
+            str.getOrEmpty('myString')
+        )
+            .toBe('myString');
+    });
 });
