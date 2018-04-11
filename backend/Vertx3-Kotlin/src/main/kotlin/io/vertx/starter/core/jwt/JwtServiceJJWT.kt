@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.impl.DefaultClock
 import io.vertx.starter.core.json.JsonSerializerService
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Implementation of the [JwtService] based on JJWT
@@ -17,6 +18,11 @@ class JwtServiceJJWT(private val secret: String,
                      private val signatureAlgorithm: SignatureAlgorithm,
                      private val tokenValidityMinutes: Long,
                      private val jsonSerializerService: JsonSerializerService) : JwtService {
+
+    companion object {
+        internal val PAYLOAD_CLAIM_KEY = "payload"
+    }
+
     private val clock = DefaultClock.INSTANCE
 
     override fun generate(payload: Any): String {
@@ -38,7 +44,7 @@ class JwtServiceJJWT(private val secret: String,
                 .compact()
     }
 
-    override fun <T> parse(jwt: String, payloadClass: Class<T>): T {
+    override fun <T: Any> parse(jwt: String, payloadClass: KClass<T>): T {
         val claims = getAllClaimsFromToken(jwt)
         return jsonSerializerService.fromJson(payloadClass, claims[PAYLOAD_CLAIM_KEY] as String)
     }
@@ -57,11 +63,6 @@ class JwtServiceJJWT(private val secret: String,
             throw TokenExpiredException()
         }
 
-    }
-
-    companion object {
-
-        internal val PAYLOAD_CLAIM_KEY = "payload"
     }
 
 }

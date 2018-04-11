@@ -30,7 +30,7 @@ class JacksonJsonSerializerServiceTest : BaseTest() {
 
         getLogger().info("JSON content: /n[{}]", json)
 
-        val fromJson = jsonSerializerService.fromJson(SerializerBean::class.java, json)
+        val fromJson: SerializerBean = jsonSerializerService.fromJson(json)
         assertNotNull(fromJson)
         assertEquals(message.id, fromJson.id)
         assertEquals(message.date, fromJson.date)
@@ -57,7 +57,7 @@ class JacksonJsonSerializerServiceTest : BaseTest() {
 
         getLogger().info("JSON content: /n[{}]", json)
 
-        val fromJson = jsonSerializerService.fromJson(SerializerBean::class.java, json)
+        val fromJson: SerializerBean = jsonSerializerService.fromJson(json)
         assertNotNull(fromJson)
         assertEquals(message.id, fromJson.id)
         assertEquals(message.date, fromJson.date)

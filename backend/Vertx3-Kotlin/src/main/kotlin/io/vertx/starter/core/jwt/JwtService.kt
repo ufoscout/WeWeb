@@ -1,5 +1,8 @@
 package io.vertx.starter.core.jwt
 
+import io.vertx.starter.core.json.JsonSerializerService
+import kotlin.reflect.KClass
+
 /**
  * Interface to parse and generate JWTs
  *
@@ -31,6 +34,16 @@ interface JwtService {
      * @return
      */
     @Throws(TokenExpiredException::class)
-    fun <T> parse(jwt: String, payloadClass: Class<T>): T
+    fun <T: Any> parse(jwt: String, payloadClass: KClass<T>): T
 
 }
+
+/**
+ * Parses a JWT and return the contained bean.
+ * It throws [TokenExpiredException] if the token has expired.
+ *
+ * @param jwt
+ * @return
+ */
+@Throws(TokenExpiredException::class)
+inline fun <reified T: Any> JwtService.parse(jwt: String) = parse(jwt, T::class)

@@ -1,13 +1,14 @@
 package io.vertx.starter.core.json
 
-import com.fasterxml.jackson.module.kotlin.*
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.io.IOException
 import java.io.OutputStream
+import kotlin.reflect.KClass
 
 
 /**
@@ -16,10 +17,9 @@ import java.io.OutputStream
  */
 class JacksonJsonSerializerService @JvmOverloads constructor(failOnUnknownProperties: Boolean = false, failOnEmptyBeans: Boolean = false) : JsonSerializerService {
 
-    private val mapper: ObjectMapper
+    val mapper: ObjectMapper = jacksonObjectMapper()
 
     init {
-        mapper = jacksonObjectMapper()
         mapper.registerModule(JavaTimeModule())
         mapper.registerModule(Jdk8Module())
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failOnUnknownProperties)
@@ -62,9 +62,9 @@ class JacksonJsonSerializerService @JvmOverloads constructor(failOnUnknownProper
 
     }
 
-    override fun <T> fromJson(clazz: Class<T>, json: String): T {
+    override fun <T: Any> fromJson(clazz: KClass<T>, json: String): T {
         try {
-            return mapper.readValue(json, clazz)
+            return mapper.readValue(json, clazz.java)
         } catch (e: IOException) {
             throw RuntimeException(e)
         }

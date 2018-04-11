@@ -40,7 +40,7 @@ class JWTServiceJJWTTest : BaseTest() {
         assertNotNull(parsed)
         assertFalse(parsed.isEmpty())
 
-        val parsedMessage = jwtService!!.parse(jwt, SimpleMailMessage::class.java)
+        val parsedMessage = jwtService!!.parse(jwt, SimpleMailMessage::class)
         assertNotNull(parsedMessage)
         assertEquals(message.from, parsedMessage.from)
         assertEquals(message.subject, parsedMessage.subject)
@@ -80,21 +80,21 @@ class JWTServiceJJWTTest : BaseTest() {
         val jwt = jwtService!!.generate(message)
         getLogger().info("Generated JWT:\n{}", jwt)
 
-        jwtService!!.parse(jwt + 1, String::class.java)
+        jwtService!!.parse<String>(jwt + 1)
     }
 
     @Test(expected = TokenExpiredException::class)
     fun shouldFailParsingExpiredBeans() {
         val userContext = SimpleMailMessage()
         val JWT = jwtService!!.generate("", userContext, Date(), Date(System.currentTimeMillis() - 1))
-        jwtService!!.parse(JWT, SimpleMailMessage::class.java)
+        jwtService!!.parse(JWT, SimpleMailMessage::class)
     }
 
     @Test
     fun shouldAcceptNotExpiredBeans() {
         val userContext = SimpleMailMessage()
         val jwt = jwtService!!.generate(userContext)
-        assertNotNull(jwtService!!.parse(jwt, SimpleMailMessage::class.java))
+        assertNotNull(jwtService!!.parse<SimpleMailMessage>(jwt))
     }
 
 

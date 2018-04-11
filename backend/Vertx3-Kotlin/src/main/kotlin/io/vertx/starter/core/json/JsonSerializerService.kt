@@ -1,6 +1,7 @@
 package io.vertx.starter.core.json
 
 import java.io.OutputStream
+import kotlin.reflect.KClass
 
 /**
  *
@@ -10,32 +11,40 @@ interface JsonSerializerService {
 
     /**
      * Return the json representation of the Bean
-     * @param object
+     * @param obj
      * @return
      */
-    fun toJson(`object`: Any): String
+    fun toJson(obj: Any): String
 
     /**
      * Return the json representation of the Bean
-     * @param object
+     * @param obj
      */
-    fun toJson(`object`: Any, out: OutputStream)
+    fun toJson(obj: Any, out: OutputStream)
 
     /**
      * Return the json representation of the Bean
      * WARN: it is slower than the other method!
-     * @param object
+     * @param obj
      * @return
      */
-    fun toPrettyPrintedJson(`object`: Any): String
+    fun toPrettyPrintedJson(obj: Any): String
 
     /**
      * Return the json representation of the Bean
      * WARN: it is slower than the other method!
-     * @param object
+     * @param obj
      */
-    fun toPrettyPrintedJson(`object`: Any, out: OutputStream)
+    fun toPrettyPrintedJson(obj: Any, out: OutputStream)
 
-    fun <T> fromJson(clazz: Class<T>, json: String): T
+    /**
+      * Method to deserialize JSON content from given JSON content String.
+      */
+    fun <T: Any> fromJson(clazz: KClass<T>, json: String): T
 
 }
+
+/**
+ * Method to deserialize JSON content from given JSON content String.
+ */
+inline fun <reified T: Any> JsonSerializerService.fromJson(json: String) = fromJson(T::class, json)
