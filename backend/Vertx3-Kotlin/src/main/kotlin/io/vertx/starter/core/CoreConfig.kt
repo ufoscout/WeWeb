@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.vertx.starter.config
+package io.vertx.starter.core
 
-class AppConfig(private val serverPort: Int) {
+class CoreConfig(private val serverPort: Int) {
 
     /**
      * @return the serverPort

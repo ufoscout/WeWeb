@@ -1,4 +1,4 @@
-package io.vertx.starter
+package io.vertx.starter.core.web
 
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpServer
@@ -6,13 +6,11 @@ import io.vertx.core.http.HttpServerRequest
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.awaitResult
-import io.vertx.starter.config.AppConfig
+import io.vertx.starter.core.CoreConfig
 
-class AppVerticle (val appConfig: AppConfig, val router: Router) : CoroutineVerticle() {
+class CoreWebController (val appConfig: CoreConfig, val router: Router) : CoroutineVerticle() {
 
     override suspend fun start() {
-
-        println("Start main verticle")
 
         val port = appConfig.serverPort();
         // Create the http server and pass it the router

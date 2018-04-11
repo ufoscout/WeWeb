@@ -7,7 +7,7 @@ import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.awaitResult
-import io.vertx.starter.config.ConfigModule
+import io.vertx.starter.core.CoreModule
 import io.vertx.starter.monitoring.MonitoringModule
 import kotlinx.coroutines.experimental.runBlocking
 import org.kodein.di.Kodein
@@ -39,11 +39,10 @@ object AppMain {
         }
 
         return Vertxk.launch(vertx,
-                ConfigModule(config),
-                AppModule(),
                 MonitoringModule(),
+                CoreModule(config),
                 *modules
-                );
+        );
 
     }
 

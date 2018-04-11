@@ -4,7 +4,7 @@ import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.kotlin.coroutines.awaitEvent
 import io.vertx.kotlin.coroutines.awaitResult
-import io.vertx.starter.config.AppConfig
+import io.vertx.starter.core.CoreConfig
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert
@@ -13,7 +13,7 @@ import org.junit.Test
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-class MainVerticleTest {
+class AppMainTest : BaseTest() {
 
     private var vertx: Vertx? = null
     private var port: Int? = 8080
@@ -22,7 +22,7 @@ class MainVerticleTest {
     fun setUp() = runBlocking<Unit> {
         var kodein = AppMain.start(TestModule())
         val dk = kodein.direct
-        var conf: AppConfig = dk.instance();
+        var conf: CoreConfig = dk.instance();
         port = conf.serverPort()
         vertx = dk.instance()
 
@@ -35,6 +35,7 @@ class MainVerticleTest {
 
     @Test
     fun testThatTheServerIsStarted() = runBlocking<Unit> {
+
         val body = awaitEvent<Buffer> {
             vertx!!.createHttpClient().getNow(port!!, "localhost", "/") { response ->
                 Assert.assertEquals(response.statusCode(), 200)
