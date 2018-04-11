@@ -1,13 +1,12 @@
 package io.vertx.starter.core.jwt
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Clock
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.impl.DefaultClock
 import io.vertx.starter.core.json.JsonSerializerService
-import java.util.Date
+import java.util.*
 
 /**
  * Implementation of the [JwtService] based on JJWT
@@ -20,16 +19,16 @@ class JwtServiceJJWT(private val secret: String,
                      private val jsonSerializerService: JsonSerializerService) : JwtService {
     private val clock = DefaultClock.INSTANCE
 
-    override fun <T> generate(payload: T): String {
+    override fun generate(payload: Any): String {
         return generate("", payload)
     }
 
-    override fun <T> generate(subject: String, payload: T): String {
+    override fun generate(subject: String, payload: Any): String {
         val createdDate = clock.now()
         return generate(subject, payload, createdDate, calculateExpirationDate(createdDate))
     }
 
-    fun <T> generate(subject: String, payload: T, createdDate: Date, expirationDate: Date): String {
+    fun generate(subject: String, payload: Any, createdDate: Date, expirationDate: Date): String {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim(PAYLOAD_CLAIM_KEY, jsonSerializerService.toJson(payload))

@@ -1,5 +1,6 @@
 package io.vertx.starter.core.json
 
+import com.fasterxml.jackson.module.kotlin.*
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -18,43 +19,43 @@ class JacksonJsonSerializerService @JvmOverloads constructor(failOnUnknownProper
     private val mapper: ObjectMapper
 
     init {
-        mapper = ObjectMapper()
+        mapper = jacksonObjectMapper()
         mapper.registerModule(JavaTimeModule())
         mapper.registerModule(Jdk8Module())
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, failOnUnknownProperties)
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, failOnEmptyBeans)
     }
 
-    override fun toJson(`object`: Any): String {
+    override fun toJson(obj: Any): String {
         try {
-            return mapper.writeValueAsString(`object`)
+            return mapper.writeValueAsString(obj)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
 
     }
 
-    override fun toJson(`object`: Any, out: OutputStream) {
+    override fun toJson(obj: Any, out: OutputStream) {
         try {
-            mapper.writeValue(out, `object`)
+            mapper.writeValue(out, obj)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
 
     }
 
-    override fun toPrettyPrintedJson(`object`: Any): String {
+    override fun toPrettyPrintedJson(obj: Any): String {
         try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(`object`)
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
 
     }
 
-    override fun toPrettyPrintedJson(`object`: Any, out: OutputStream) {
+    override fun toPrettyPrintedJson(obj: Any, out: OutputStream) {
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(out, `object`)
+            mapper.writerWithDefaultPrettyPrinter().writeValue(out, obj)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

@@ -12,7 +12,7 @@ interface JwtService {
      * @param payload the JWT payload
      * @return
      */
-    fun <T> generate(payload: T): String
+    fun generate(payload: Any): String
 
     /**
      * Generates a JWT from the payload
@@ -20,7 +20,7 @@ interface JwtService {
      * @param payload the JWT payload
      * @return
      */
-    fun <T> generate(subject: String, payload: T): String
+    fun generate(subject: String, payload: Any): String
 
     /**
      * Parses a JWT and return the contained bean.
