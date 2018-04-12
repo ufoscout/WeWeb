@@ -1,6 +1,7 @@
 package com.weweb
 
 import com.weweb.core.CoreConfig
+import com.weweb.core.CoreTestModule
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
@@ -18,7 +19,9 @@ abstract class BaseIT : BaseTest() {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        val dk = AppMain.start(TestModule()).direct
+        val dk = AppMain.start(
+                CoreTestModule()
+        ).direct
         var conf: CoreConfig = dk.instance();
         port = conf.serverPort()
         vertx = dk.instance()

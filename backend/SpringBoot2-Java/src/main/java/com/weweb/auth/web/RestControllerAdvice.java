@@ -23,7 +23,7 @@ public class RestControllerAdvice {
     public ResponseEntity<ErrorDetails> handleException(Exception exception) {
         String uuid = UUID.randomUUID().toString();
         log.error(uuid + " : " + getMessage(exception), exception);
-        return response(HttpStatus.INTERNAL_SERVER_ERROR, "Fatal error: " + uuid);
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, "Error code: " + uuid);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

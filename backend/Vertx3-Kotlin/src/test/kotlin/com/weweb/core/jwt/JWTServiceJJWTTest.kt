@@ -33,10 +33,10 @@ class JWTServiceJJWTTest : BaseTest() {
         message.sentDate = Date()
 
         val jwt = jwtService!!.generate(message)
-        getLogger().info("Generated JWT:\n{}", jwt)
+        logger().info("Generated JWT:\n{}", jwt)
 
         val parsed = jwtService!!.getAllClaimsFromToken(jwt).get(JwtServiceJJWT.PAYLOAD_CLAIM_KEY, String::class.java)
-        getLogger().info("Parsed JWT:\n{}", parsed)
+        logger().info("Parsed JWT:\n{}", parsed)
         assertNotNull(parsed)
         assertFalse(parsed.isEmpty())
 
@@ -56,7 +56,7 @@ class JWTServiceJJWTTest : BaseTest() {
 
         val beforeTime = Date().time - 1000
         val jwt = jwtService!!.generate(message)
-        getLogger().info("Generated JWT:\n{}", jwt)
+        logger().info("Generated JWT:\n{}", jwt)
 
         val afterTime = Date().time + 1000
         val claims = jwtService!!.getAllClaimsFromToken(jwt)
@@ -78,7 +78,7 @@ class JWTServiceJJWTTest : BaseTest() {
         message.sentDate = Date()
 
         val jwt = jwtService!!.generate(message)
-        getLogger().info("Generated JWT:\n{}", jwt)
+        logger().info("Generated JWT:\n{}", jwt)
 
         jwtService!!.parse<String>(jwt + 1)
     }

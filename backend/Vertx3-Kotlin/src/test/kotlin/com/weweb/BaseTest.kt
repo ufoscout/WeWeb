@@ -2,14 +2,14 @@ package com.weweb
 
 import io.vertx.core.logging.Logger
 import io.vertx.core.logging.LoggerFactory
-import java.io.File
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TestName
+import java.io.File
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 abstract class BaseTest {
     private val logger = LoggerFactory.getLogger(this.javaClass)
@@ -43,7 +43,7 @@ abstract class BaseTest {
         logger.info("===================================================================")
     }
 
-    protected fun getLogger(): Logger {
+    protected fun logger(): Logger {
         return logger
     }
 

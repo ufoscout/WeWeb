@@ -28,7 +28,7 @@ class JacksonJsonSerializerServiceTest : BaseTest() {
         assertNotNull(json)
         assertTrue(json.contains("" + message.id))
 
-        getLogger().info("JSON content: /n[{}]", json)
+        logger().info("JSON content: /n[{}]", json)
 
         val fromJson: SerializerBean = jsonSerializerService.fromJson(json)
         assertNotNull(fromJson)
@@ -55,7 +55,7 @@ class JacksonJsonSerializerServiceTest : BaseTest() {
         assertNotNull(json)
         assertTrue(json.contains("" + message.id))
 
-        getLogger().info("JSON content: /n[{}]", json)
+        logger().info("JSON content: /n[{}]", json)
 
         val fromJson: SerializerBean = jsonSerializerService.fromJson(json)
         assertNotNull(fromJson)
