@@ -14,31 +14,13 @@ import org.junit.Test
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-class AppMainTest : BaseTest() {
-
-    private var vertx: Vertx? = null
-    private var port: Int? = 8080
-
-    @Before
-    fun setUp() = runBlocking<Unit> {
-        var kodein = AppMain.start(TestModule())
-        val dk = kodein.direct
-        var conf: CoreConfig = dk.instance();
-        port = conf.serverPort()
-        vertx = dk.instance()
-
-    }
-
-    @After
-    fun tearDown() = runBlocking<Unit> {
-        awaitResult<Void> { vertx!!.close(it) }
-    }
+class AppMainIT : BaseIT() {
 
     @Test
     fun testThatTheServerIsStarted() = runBlocking<Unit> {
 
         val body = awaitEvent<Buffer> {
-            vertx!!.createHttpClient().getNow(port!!, "localhost", "/") { response ->
+            vertx().createHttpClient().getNow(port(), "localhost", "/") { response ->
                 Assert.assertEquals(response.statusCode(), 200)
                 response.bodyHandler(it)
             }
