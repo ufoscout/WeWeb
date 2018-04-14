@@ -4,7 +4,6 @@ class WebException : RuntimeException {
 
     private val statusCode: Int
 
-
     constructor(message: String = "", code: Int = 500) : super(message) {
         statusCode = code
     }

@@ -48,7 +48,7 @@ class FailureHandlerIT: BaseIT() {
 
     @Test
     fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
-        
+
         val body = awaitEvent<Buffer> {
             vertx().createHttpClient().getNow(port(), "localhost", "/core/test/customException") { response ->
                 Assert.assertEquals(12345, response.statusCode())

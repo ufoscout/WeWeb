@@ -28,7 +28,7 @@ public class RestControllerAdviceTest extends BaseMockitoTest {
         ResponseEntity<ErrorDetails> response = advice.handleException(exception);
         //Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody().getMessage()).contains("Fatal");
+        assertThat(response.getBody().getMessage()).contains("Error code:");
     }
 
     @Test

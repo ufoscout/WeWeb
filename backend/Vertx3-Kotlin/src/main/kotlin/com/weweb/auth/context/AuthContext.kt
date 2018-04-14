@@ -1,4 +1,7 @@
-package com.weweb.auth.service
+package com.weweb.auth.context
+
+import com.weweb.auth.exception.UnauthenticatedException
+import com.weweb.auth.exception.UnauthorizedException
 
 class AuthContext(val user: UserContext, val permissionsMap: Map<String, Array<String>>) {
 

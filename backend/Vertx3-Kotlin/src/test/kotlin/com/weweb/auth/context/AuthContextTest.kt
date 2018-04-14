@@ -1,7 +1,8 @@
-package com.weweb.auth.service
+package com.weweb.auth.context
 
 import com.weweb.BaseTest
-import org.junit.Assert.*
+import com.weweb.auth.exception.UnauthenticatedException
+import com.weweb.auth.exception.UnauthorizedException
 import org.junit.Test
 
 class AuthContextTest: BaseTest() {

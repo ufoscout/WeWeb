@@ -1,4 +1,4 @@
-package com.weweb.auth.service
+package com.weweb.auth.context
 
 /**
  * Context containing the profile of the caller of a protected end point
