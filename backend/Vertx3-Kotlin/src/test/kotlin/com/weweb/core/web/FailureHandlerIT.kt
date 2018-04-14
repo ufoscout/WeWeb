@@ -3,7 +3,6 @@ package com.weweb.core.web
 import com.weweb.BaseIT
 import io.vertx.core.buffer.Buffer
 import io.vertx.kotlin.coroutines.awaitEvent
-import io.vertx.starter.HelloControllerVerticle
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -12,7 +11,7 @@ import java.util.*
 class FailureHandlerIT: BaseIT() {
 
     @Test
-    fun testThatTheServerIsStarted() = runBlocking<Unit> {
+    fun shouldThrow500() = runBlocking<Unit> {
 
         val message = UUID.randomUUID().toString()
 
@@ -30,7 +29,7 @@ class FailureHandlerIT: BaseIT() {
     }
 
     @Test
-    fun testThatTerverIsStarted() = runBlocking<Unit> {
+    fun shouldThrowWebException() = runBlocking<Unit> {
 
         val message = UUID.randomUUID().toString()
         val statusCode = 400 + Random().nextInt(50)
@@ -46,4 +45,20 @@ class FailureHandlerIT: BaseIT() {
         logger().info("body is ${body}")
         Assert.assertEquals(message, body.toString())
     }
+
+    @Test
+    fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
+        
+        val body = awaitEvent<Buffer> {
+            vertx().createHttpClient().getNow(port(), "localhost", "/core/test/customException") { response ->
+                Assert.assertEquals(12345, response.statusCode())
+                response.bodyHandler(it)
+            }
+        }
+
+        Assert.assertTrue(body.length() > 0)
+        logger().info("body is ${body}")
+        Assert.assertEquals("CustomTestExceptionMessage", body.toString())
+    }
+
 }
