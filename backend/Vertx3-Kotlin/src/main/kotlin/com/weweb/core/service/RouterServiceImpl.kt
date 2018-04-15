@@ -1,34 +1,43 @@
-package com.weweb.core.web
+package com.weweb.core.service
 
 import com.weweb.core.CoreConfig
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import io.vertx.core.Handler
+import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
-import io.vertx.kotlin.coroutines.CoroutineVerticle
+import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.coroutines.awaitResult
 import java.util.*
 
-
-class CoreWebController (val appConfig: CoreConfig, val router: Router, val webExceptionService: WebExceptionService) : CoroutineVerticle() {
+class RouterServiceImpl(val coreConfig: CoreConfig, val webExceptionService: WebExceptionService) : RouterService {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    override suspend fun start() {
+    override suspend fun router(vertx: Vertx): Router {
+
+        val router = Router.router(vertx)
+
+        router.route().consumes("application/json")
+        router.route().produces("application/json")
+        router.route().handler(BodyHandler.create())
 
         router.route().failureHandler { handleFailure(it) }
 
-        val port = appConfig.serverPort();
+        val port = coreConfig.serverPort();
         // Create the http server and pass it the router
         awaitResult<HttpServer> { wait ->
             vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { router.accept(it) }).listen(port, wait)
         }
-        println(Thread.currentThread().name + " - Server listening on port " + port)
+
+        logger.debug("Router created and listening on port ${port}")
+        return router
+
     }
 
     private fun handleFailure(context: RoutingContext) {

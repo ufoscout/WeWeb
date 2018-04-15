@@ -1,11 +1,13 @@
 package com.weweb.core
 
 import com.ufoscout.vertxk.VertxkModule
-import io.vertx.core.Vertx
-import com.weweb.core.CoreConfig
 import com.weweb.core.web.TestWebController
+import io.vertx.core.DeploymentOptions
+import io.vertx.core.Vertx
+import org.kodein.di.DKodein
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 import java.io.IOException
 import java.net.ServerSocket
@@ -21,8 +23,9 @@ class CoreTestModule : VertxkModule() {
         bind<CoreConfig>() with singleton { CoreConfig(serverPort = getFreePort()) }
     }
 
-    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
-        deployVerticle<TestWebController>(vertx)
+    override suspend fun onInit(vertx: Vertx, kodein: DKodein) {
+        val deploymentOptions = kodein.instance<DeploymentOptions>()
+        deployVerticle<TestWebController>(vertx, deploymentOptions)
     }
 
     @Synchronized private fun getFreePort(): Int {

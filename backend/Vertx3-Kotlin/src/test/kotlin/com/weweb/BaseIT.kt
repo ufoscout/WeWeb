@@ -8,7 +8,6 @@ import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.kodein.di.DKodein
-import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
 abstract class BaseIT : BaseTest() {
@@ -21,7 +20,7 @@ abstract class BaseIT : BaseTest() {
     fun setUp() = runBlocking<Unit> {
         val dk = AppMain.start(
                 CoreTestModule()
-        ).direct
+        )
         var conf: CoreConfig = dk.instance();
         port = conf.serverPort()
         vertx = dk.instance()

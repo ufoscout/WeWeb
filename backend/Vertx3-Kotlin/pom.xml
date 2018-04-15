@@ -21,7 +21,7 @@
         <jjwt.version>0.9.0</jjwt.version>
         <junit.version>4.12</junit.version>
         <vertx.version>3.5.1</vertx.version>
-        <vertxk.version>1.0.1</vertxk.version>
+        <vertxk.version>1.1.0-SNAPSHOT</vertxk.version>
 
         <!-- plugins -->
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>

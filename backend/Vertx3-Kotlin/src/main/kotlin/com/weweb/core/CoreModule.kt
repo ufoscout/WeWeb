@@ -3,33 +3,35 @@ package com.weweb.core
 import com.ufoscout.vertxk.VertxkModule
 import com.weweb.core.exception.WebExceptionService
 import com.weweb.core.exception.WebExceptionServiceImpl
-import com.weweb.core.web.CoreWebController
+import com.weweb.core.service.RouterService
+import com.weweb.core.service.RouterServiceImpl
+import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
-import io.vertx.ext.web.Router
-import io.vertx.ext.web.handler.BodyHandler
+import org.kodein.di.DKodein
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 
 class CoreModule(val config: JsonObject) : VertxkModule() {
 
     override fun module() = Kodein.Module {
-        bind<CoreConfig>() with singleton { CoreConfig(serverPort = config.getJsonObject("server").getInteger("port", 8080)) }
-        bind<WebExceptionService>() with singleton { WebExceptionServiceImpl() }
-        bind<Router>() with singleton {
-            val mainRouter = Router.router(instance())
-            mainRouter.route().consumes("application/json")
-            mainRouter.route().produces("application/json")
-            mainRouter.route().handler(BodyHandler.create())
-            //mainRouter.route().failureHandler(GlobalHandlers::error);
-            mainRouter
+            bind<CoreConfig>() with singleton { CoreConfig(serverPort = config.getJsonObject("server").getInteger("port", 8080)) }
+            bind<WebExceptionService>() with singleton { WebExceptionServiceImpl() }
+            bind<RouterService>() with singleton {RouterServiceImpl(instance(), instance())}
+            bind<DeploymentOptions>() with provider {
+                val options = DeploymentOptions()
+                options.instances = Runtime.getRuntime().availableProcessors()
+                options
+            }
         }
-    }
 
-    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
-        deployVerticle<CoreWebController>(vertx)
+    override suspend fun onInit(vertx: Vertx, kodein: DKodein) {
+        //val options = DeploymentOptions()
+        //options.setInstances(2)
+        //deployVerticle<CoreWebController>(vertx, options)
     }
 
 }

@@ -6,7 +6,17 @@ import io.vertx.kotlin.coroutines.awaitEvent
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
+import java.net.URL
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.stream.Collectors
+import java.io.InputStreamReader
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+
 
 class FailureHandlerIT: BaseIT() {
 
@@ -59,6 +69,38 @@ class FailureHandlerIT: BaseIT() {
         Assert.assertTrue(body.length() > 0)
         logger().info("body is ${body}")
         Assert.assertEquals("CustomTestExceptionMessage", body.toString())
+    }
+
+
+    @Test
+    fun shouldUseMultipleThreads() = runBlocking<Unit> {
+
+
+        val count = CountDownLatch(100)
+
+        for (i in 0..100) {
+                    Thread({
+                        /*
+                        vertx().createHttpClient().getNow(port(), "localhost", "/core/test/slow") { response ->
+                            Assert.assertEquals(response.statusCode(), 200)
+                            count.countDown()
+                        }
+*/
+                        val urlString = "http://127.0.0.1:${port()}/core/test/slow"
+                        val url = URL(urlString)
+                        val conn = url.openConnection()
+                        val stream = conn.getInputStream()
+                        read(stream)
+                        stream.close()
+                        count.countDown()
+                    }).start()
+                }
+        count.await()
+    }
+
+    fun read(input: InputStream): String {
+        val reader = BufferedReader(InputStreamReader(input))
+        return reader.lines().collect(Collectors.joining("\n"))
     }
 
 }
