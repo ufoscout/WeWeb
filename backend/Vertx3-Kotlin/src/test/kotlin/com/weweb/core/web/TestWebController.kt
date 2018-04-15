@@ -4,12 +4,7 @@ import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import com.weweb.core.exception.registerTransformer
 import com.weweb.core.service.RouterService
-import io.vertx.core.Handler
-import io.vertx.core.http.HttpServer
-import io.vertx.core.http.HttpServerRequest
-import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.awaitResult
 
 class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService) : CoroutineVerticle() {
 
@@ -33,7 +28,6 @@ class TestWebController(val routerService: RouterService, val webExceptionServic
             var message = it.request().getParam("message")
             throw WebException(message, code.toInt())
         }
-
 
         router.get("/core/test/slow").handler {
             Thread.sleep(100)

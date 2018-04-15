@@ -80,12 +80,6 @@ class FailureHandlerIT: BaseIT() {
 
         for (i in 0..100) {
                     Thread({
-                        /*
-                        vertx().createHttpClient().getNow(port(), "localhost", "/core/test/slow") { response ->
-                            Assert.assertEquals(response.statusCode(), 200)
-                            count.countDown()
-                        }
-*/
                         val urlString = "http://127.0.0.1:${port()}/core/test/slow"
                         val url = URL(urlString)
                         val conn = url.openConnection()

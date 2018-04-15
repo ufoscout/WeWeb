@@ -29,9 +29,6 @@ class CoreModule(val config: JsonObject) : VertxkModule() {
         }
 
     override suspend fun onInit(vertx: Vertx, kodein: DKodein) {
-        //val options = DeploymentOptions()
-        //options.setInstances(2)
-        //deployVerticle<CoreWebController>(vertx, options)
     }
 
 }
