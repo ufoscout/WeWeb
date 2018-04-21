@@ -1,6 +1,7 @@
 package com.weweb
 
 import com.ufoscout.vertxk.ext.Kx
+import com.weweb.auth.AuthTestModule
 import com.weweb.core.CoreTestModule
 import com.weweb.core.config.CoreConfig
 import io.vertx.core.Vertx
@@ -23,7 +24,8 @@ abstract class BaseIT : BaseTest(), Kx {
         @BeforeClass @JvmStatic
         fun setUp() = runBlocking<Unit> {
             val dk = AppMain.start(
-                    CoreTestModule.module()
+                    CoreTestModule.module(),
+                    AuthTestModule.module()
             ).direct
             var conf: CoreConfig = dk.instance();
             port = conf.server.port

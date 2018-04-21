@@ -20,7 +20,6 @@ class AuthenticationControllerIT : BaseIT() {
         val loginDto = LoginDto("user", "user")
         val response = client.postJson(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
 
-        //assertTrue(body.length() > 0)
         logger().info("token is ${response.body.token}")
 
     }

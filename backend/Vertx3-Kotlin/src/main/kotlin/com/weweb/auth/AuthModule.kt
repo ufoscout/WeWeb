@@ -14,8 +14,8 @@ object AuthModule {
         bind<AuthConfig>() with singleton { AuthConfig(instance()) }
         bind<PasswordEncoder>() with singleton { BCryptPasswordEncoder() }
         bind<UserService>() with singleton { InMemoryUserService(instance()) }
-        bind<AuthContextService>() with singleton { AuthContextServiceImpl() }
-        bind<AuthenticationController>() with singleton { AuthenticationController(instance(), instance(), instance(), instance(), instance()) }
+        bind<AuthContextService>() with singleton { AuthContextServiceImpl(instance()) }
+        bind<AuthenticationController>() with singleton { AuthenticationController(instance(), instance(), instance(), instance(), instance(), instance()) }
     }
 
 }

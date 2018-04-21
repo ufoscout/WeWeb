@@ -6,7 +6,7 @@ import com.weweb.auth.exception.UnauthorizedException
 class AuthContext(val user: UserContext, val permissionsMap: Map<String, Array<String>>) {
 
     fun isAuthenticated(): AuthContext {
-        if (!user.isValid) {
+        if (user.username.isEmpty()) {
             throw UnauthenticatedException("User needs to be authenticated.")
         }
         return this

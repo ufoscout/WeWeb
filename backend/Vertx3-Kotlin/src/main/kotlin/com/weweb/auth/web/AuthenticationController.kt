@@ -8,6 +8,7 @@ import com.weweb.auth.dto.LoginResponseDto
 import com.weweb.auth.exception.BadCredentialsException
 import com.weweb.auth.exception.UnauthenticatedException
 import com.weweb.auth.exception.UnauthorizedException
+import com.weweb.auth.service.AuthContextService
 import com.weweb.auth.service.UserService
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
@@ -17,12 +18,12 @@ import com.weweb.core.json.fromJson
 import com.weweb.core.jwt.JwtService
 import com.weweb.core.jwt.TokenExpiredException
 import io.vertx.ext.web.Router
-import io.vertx.kotlin.coroutines.CoroutineVerticle
 
 class AuthenticationController (val router: Router,
                                 val userService: UserService,
                                 val json: JsonSerializerService,
                                 val jwt: JwtService,
+                                val auth: AuthContextService,
                                 val webExceptionService: WebExceptionService): VertxKComponent {
 
     override suspend fun start() {

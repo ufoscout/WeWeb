@@ -6,5 +6,4 @@ package com.weweb.auth.context
  * @author Francesco Cina'
  */
 class UserContext @JvmOverloads constructor(val username: String = "",
-                                            val roles: Array<String> = arrayOf(),
-                                            val isValid: Boolean = false)
+                                            val roles: Array<String> = arrayOf())

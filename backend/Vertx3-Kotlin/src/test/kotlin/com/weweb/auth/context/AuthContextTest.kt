@@ -9,7 +9,7 @@ class AuthContextTest: BaseTest() {
 
     @Test
     fun shouldBeAuthenticated() {
-        val user = UserContext(isValid = true)
+        val user = UserContext("name")
         val authContext = AuthContext(user, HashMap())
         authContext.isAuthenticated()
     }
@@ -30,7 +30,7 @@ class AuthContextTest: BaseTest() {
 
     @Test
     fun shouldHaveRole() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN"))
+        val user = UserContext("name", roles = arrayOf("ADMIN"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasRole("ADMIN")
     }
@@ -38,14 +38,14 @@ class AuthContextTest: BaseTest() {
 
     @Test
     fun shouldHaveRole2() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasRole("USER")
     }
 
     @Test(expected = UnauthorizedException::class)
     fun shouldNotHaveRole() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN"))
+        val user = UserContext("name", roles = arrayOf("ADMIN"))
         val authContext = AuthContext(user, HashMap())
         authContext.isAuthenticated()
         authContext.hasRole("USER")
@@ -53,28 +53,28 @@ class AuthContextTest: BaseTest() {
 
     @Test
     fun shouldHaveAnyRole() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasAnyRole("USER", "FRIEND")
     }
 
     @Test(expected = UnauthorizedException::class)
     fun shouldNotHaveAnyRole() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "OWNER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "OWNER"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasAnyRole("USER", "FRIEND")
     }
 
     @Test
     fun shouldHaveAllRoles() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER", "FRIEND"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER", "FRIEND"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasAllRoles("USER", "FRIEND")
     }
 
     @Test(expected = UnauthorizedException::class)
     fun shouldNotHaveAllRoles() {
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, HashMap())
         authContext.hasAllRoles("USER", "FRIEND")
     }
@@ -93,7 +93,7 @@ class AuthContextTest: BaseTest() {
     fun shouldHavePermissions() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER", "ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN"))
+        val user = UserContext("name", roles = arrayOf("ADMIN"))
         val authContext = AuthContext(user, permissions)
         authContext.hasPermission("delete")
     }
@@ -103,7 +103,7 @@ class AuthContextTest: BaseTest() {
     fun shouldHavePermission2() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER", "ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasPermission("delete")
     }
@@ -113,7 +113,7 @@ class AuthContextTest: BaseTest() {
     fun shouldNotHavePermission() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasPermission("delete")
     }
@@ -123,7 +123,7 @@ class AuthContextTest: BaseTest() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER"))
         permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasAnyPermission("delete", "superDelete")
     }
@@ -133,7 +133,7 @@ class AuthContextTest: BaseTest() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER", "ADMIN"))
         permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("USER"))
+        val user = UserContext("name", roles = arrayOf("USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasAnyPermission("delete", "superAdmin")
     }
@@ -143,7 +143,7 @@ class AuthContextTest: BaseTest() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER", "USER"))
         permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasAllPermissions("delete", "superDelete")
     }
@@ -153,7 +153,7 @@ class AuthContextTest: BaseTest() {
         val permissions = HashMap<String, Array<String>>()
         permissions.put("delete", arrayOf("OWNER"))
         permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext(isValid = true, roles = arrayOf("ADMIN", "USER"))
+        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
         val authContext = AuthContext(user, permissions)
         authContext.hasAllPermissions("delete", "superDelete")
     }

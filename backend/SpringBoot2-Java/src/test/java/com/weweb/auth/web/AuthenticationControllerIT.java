@@ -28,8 +28,6 @@ import org.springframework.http.ResponseEntity;
 public class AuthenticationControllerIT extends BaseIT {
 
     @Autowired
-    private JsonSerializerService json;
-    @Autowired
     private JwtServiceJJWT jwt;
     @Autowired
     private AuthConfig authConfig;
