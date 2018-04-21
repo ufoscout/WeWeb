@@ -1,13 +1,15 @@
 package com.weweb.core.web
 
+import com.ufoscout.vertxk.VertxKComponent
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import com.weweb.core.exception.registerTransformer
 import io.vertx.ext.web.Router
 
-class TestWebController(val router: Router, val webExceptionService: WebExceptionService) {
+class TestWebController(val router: Router, val webExceptionService: WebExceptionService): VertxKComponent {
 
-    init {
+    override suspend fun start() {
+        println("Start TestWebController")
 
         webExceptionService.registerTransformer<CustomTestException>({exp -> WebException(code = 12345, message = "CustomTestExceptionMessage")})
 
@@ -31,7 +33,6 @@ class TestWebController(val router: Router, val webExceptionService: WebExceptio
             println("Replying from: [${Thread.currentThread().name}]")
             it.response().end("ok")
         }
-
     }
 
 }
