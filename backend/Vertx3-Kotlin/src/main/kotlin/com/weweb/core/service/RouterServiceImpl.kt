@@ -1,6 +1,5 @@
 package com.weweb.core.service
 
-import com.ufoscout.vertxk.RouterService
 import com.weweb.core.config.CoreConfig
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
@@ -20,29 +19,26 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun router(): Router {
+    private val router = Router.router(vertx)
 
-        val router = Router.router(vertx)
-
+    init {
         router.route().consumes("application/json")
         router.route().produces("application/json")
         router.route().handler(BodyHandler.create())
-
         router.route().failureHandler { handleFailure(it) }
-
-        return router
-
     }
 
-    override suspend fun start(router: Router) {
+    override fun router(): Router {
+        return router
+    }
+
+    override suspend fun start() {
         awaitResult<HttpServer> { wait ->
             val port = coreConfig.server.port;
             vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { router.accept(it) }).listen(port, wait)
-            println("Router created into: [${Thread.currentThread().name}]")
             logger.debug("Router created and listening on port ${port}")
         }
     }
-
 
     private fun handleFailure(context: RoutingContext) {
         logger.info("Handling failure")
