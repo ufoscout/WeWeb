@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.weweb.core
+package com.weweb.core.config
 
-class CoreConfig(private val serverPort: Int) {
-
-    /**
-     * @return the serverPort
-     */
-    fun serverPort(): Int {
-        return serverPort
-    }
-
+data class CoreConfig(val server: ServerConfig,
+                      val jwt: JwtConfig ) {
 }

@@ -1,6 +1,7 @@
 package com.weweb.core
 
 import com.ufoscout.vertxk.VertxkModule
+import com.weweb.core.config.CoreConfig
 import com.weweb.core.web.TestWebController
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
@@ -20,12 +21,13 @@ import java.net.ServerSocket
 class CoreTestModule : VertxkModule() {
 
     override fun module() = Kodein.Module(allowSilentOverride = true) {
-        bind<CoreConfig>() with singleton { CoreConfig(serverPort = getFreePort()) }
+        //bind<CoreConfig>() with singleton { CoreConfig(serverPort = getFreePort()) }
     }
 
     override suspend fun onInit(vertx: Vertx, kodein: DKodein) {
         val deploymentOptions = kodein.instance<DeploymentOptions>()
         deployVerticle<TestWebController>(vertx, deploymentOptions)
+        println("DEPLOYED TEST WEB CONTROLLER")
     }
 
     @Synchronized private fun getFreePort(): Int {

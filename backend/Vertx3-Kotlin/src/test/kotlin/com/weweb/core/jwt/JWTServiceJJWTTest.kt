@@ -9,7 +9,9 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.SignatureException
 import com.weweb.BaseTest
+import com.weweb.core.config.JwtConfig
 import com.weweb.core.json.JacksonJsonSerializerService
+import com.weweb.core.json.JacksonMapperFactory
 import java.util.Date
 import java.util.UUID
 import org.junit.Before
@@ -22,7 +24,8 @@ class JWTServiceJJWTTest : BaseTest() {
 
     @Before
     fun setUp() {
-        jwtService = JwtServiceJJWT("secret", SignatureAlgorithm.HS512, expireMinutes, JacksonJsonSerializerService())
+        jwtService = JwtServiceJJWT(
+                JwtConfig("secret", "HS512", expireMinutes), JacksonJsonSerializerService(JacksonMapperFactory.prettyMapper))
     }
 
     @Test

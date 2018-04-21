@@ -1,6 +1,6 @@
 package com.weweb.core.service
 
-import com.weweb.core.CoreConfig
+import com.weweb.core.config.CoreConfig
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import io.vertx.core.Handler
@@ -29,7 +29,7 @@ class RouterServiceImpl(val coreConfig: CoreConfig, val webExceptionService: Web
 
         router.route().failureHandler { handleFailure(it) }
 
-        val port = coreConfig.serverPort();
+        val port = coreConfig.server.port;
         // Create the http server and pass it the router
         awaitResult<HttpServer> { wait ->
             vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { router.accept(it) }).listen(port, wait)

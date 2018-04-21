@@ -15,7 +15,7 @@ import org.junit.Test
 
 class JacksonJsonSerializerServiceTest : BaseTest() {
 
-    private val jsonSerializerService = JacksonJsonSerializerService()
+    private val jsonSerializerService = JacksonJsonSerializerService(JacksonMapperFactory.prettyMapper)
 
     @Test
     fun testJson() {

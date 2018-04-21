@@ -1,6 +1,6 @@
 package com.weweb
 
-import com.weweb.core.CoreConfig
+import com.weweb.core.config.CoreConfig
 import com.weweb.core.CoreTestModule
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.awaitResult
@@ -22,7 +22,7 @@ abstract class BaseIT : BaseTest() {
                 CoreTestModule()
         )
         var conf: CoreConfig = dk.instance();
-        port = conf.serverPort()
+        port = conf.server.port
         vertx = dk.instance()
         kodein = dk
     }

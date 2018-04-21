@@ -1,11 +1,12 @@
 package com.weweb.core.jwt
 
+import com.weweb.core.config.JwtConfig
+import com.weweb.core.json.JsonSerializerService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.impl.DefaultClock
-import com.weweb.core.json.JsonSerializerService
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -14,13 +15,21 @@ import kotlin.reflect.KClass
  *
  * @author Francesco Cina'
  */
-class JwtServiceJJWT(private val secret: String,
-                     private val signatureAlgorithm: SignatureAlgorithm,
-                     private val tokenValidityMinutes: Long,
+class JwtServiceJJWT(jwtConfig: JwtConfig,
                      private val jsonSerializerService: JsonSerializerService) : JwtService {
+
+    private val secret: String;
+    private val signatureAlgorithm: SignatureAlgorithm;
+    private val tokenValidityMinutes: Long;
 
     companion object {
         internal val PAYLOAD_CLAIM_KEY = "payload"
+    }
+
+    init {
+        secret = jwtConfig.secret
+        signatureAlgorithm = SignatureAlgorithm.forName(jwtConfig.signatureAlgorithm)
+        tokenValidityMinutes = jwtConfig.tokenValidityMinutes
     }
 
     private val clock = DefaultClock.INSTANCE
