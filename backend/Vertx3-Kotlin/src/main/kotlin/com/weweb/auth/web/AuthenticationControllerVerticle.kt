@@ -12,15 +12,10 @@ import com.weweb.core.exception.registerTransformer
 import com.weweb.core.json.JsonSerializerService
 import com.weweb.core.json.fromJson
 import com.weweb.core.jwt.TokenExpiredException
-import com.weweb.core.service.RouterService
-import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.awaitResult
-import io.vertx.kotlin.coroutines.dispatcher
-import kotlinx.coroutines.experimental.launch
 
-class AuthenticationControllerVerticle (val routerService: RouterService,
+class AuthenticationControllerVerticle (val router: Router,
                                         val userService: UserService,
                                         val json: JsonSerializerService,
                                         val webExceptionService: WebExceptionService): CoroutineVerticle() {
@@ -31,8 +26,6 @@ class AuthenticationControllerVerticle (val routerService: RouterService,
         webExceptionService.registerTransformer<UnauthenticatedException>({exp -> WebException(code = 401, message = "NotAuthenticated") })
         webExceptionService.registerTransformer<TokenExpiredException>({exp -> WebException(code = 401, message = "TokenExpired") })
         webExceptionService.registerTransformer<UnauthorizedException>({exp -> WebException(code = 403, message = "AccessDenied") })
-
-        val router = routerService.router(vertx)
 
         router.get(AuthContants.BASE_AUTH_API + "/login").handler {
             val request = it.request();

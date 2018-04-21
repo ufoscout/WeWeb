@@ -72,10 +72,10 @@ class FailureHandlerIT: BaseIT() {
     @Test
     fun shouldUseMultipleThreads() = runBlocking<Unit> {
 
+        val messages = 100
+        val count = CountDownLatch(messages)
 
-        val count = CountDownLatch(100)
-
-        for (i in 0..100) {
+        for (i in 0..messages) {
                     Thread({
                         val urlString = "http://127.0.0.1:${port()}/core/test/slow"
                         val url = URL(urlString)

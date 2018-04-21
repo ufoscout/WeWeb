@@ -3,16 +3,13 @@ package com.weweb.core.web
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import com.weweb.core.exception.registerTransformer
-import com.weweb.core.service.RouterService
-import io.vertx.kotlin.coroutines.CoroutineVerticle
+import io.vertx.ext.web.Router
 
-class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService) : CoroutineVerticle() {
+class TestWebController(val router: Router, val webExceptionService: WebExceptionService) {
 
-    override suspend fun start() {
+    init {
 
         webExceptionService.registerTransformer<CustomTestException>({exp -> WebException(code = 12345, message = "CustomTestExceptionMessage")})
-
-        val router = routerService.router(vertx)
 
         router.get("/core/test/fatal/:message").handler {
             var message = it.request().getParam("message")
@@ -30,7 +27,7 @@ class TestWebController(val routerService: RouterService, val webExceptionServic
         }
 
         router.get("/core/test/slow").handler {
-            Thread.sleep(100)
+            Thread.sleep(2)
             println("Replying from: [${Thread.currentThread().name}]")
             it.response().end("ok")
         }

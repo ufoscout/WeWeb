@@ -20,6 +20,7 @@
         <jbcrypt.version>0.4</jbcrypt.version>
         <jjwt.version>0.9.0</jjwt.version>
         <junit.version>4.12</junit.version>
+        <kodein.version>5.0.0</kodein.version>
         <vertx.version>3.5.1</vertx.version>
         <vertxk.version>1.1.0</vertxk.version>
 
@@ -88,11 +89,20 @@
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.ufoscout.vertxk</groupId>
-            <artifactId>vertxk-kodein</artifactId>
-            <version>${vertxk.version}</version>
-        </dependency>
+            <dependency>
+                <groupId>org.kodein.di</groupId>
+                <artifactId>kodein-di-generic-jvm</artifactId>
+                <version>${kodein.version}</version>
+            </dependency>
+
+
+        <!--
+         <dependency>
+             <groupId>com.ufoscout.vertxk</groupId>
+             <artifactId>vertxk-kodein</artifactId>
+             <version>${vertxk.version}</version>
+         </dependency>
+         -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -216,5 +226,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
 
 </project>
