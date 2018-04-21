@@ -32,7 +32,7 @@ object AppMain {
 
     suspend fun start(vararg modules: Kodein.Module): Kodein {
 
-        println("Starting kotlin main")
+        log.info("Starting kotlin main")
 
         val vertx = Vertx.vertx()
 

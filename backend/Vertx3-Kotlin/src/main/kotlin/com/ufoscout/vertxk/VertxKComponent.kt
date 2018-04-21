@@ -1,6 +1,8 @@
 package com.ufoscout.vertxk
 
-interface VertxKComponent {
+import com.ufoscout.vertxk.ext.Kx
+
+interface VertxKComponent: Kx {
 
     suspend fun start()
 

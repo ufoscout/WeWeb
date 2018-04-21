@@ -1,5 +1,6 @@
 package com.weweb
 
+import com.ufoscout.vertxk.ext.Kx
 import com.weweb.core.CoreTestModule
 import com.weweb.core.config.CoreConfig
 import io.vertx.core.Vertx
@@ -11,7 +12,7 @@ import org.kodein.di.DKodein
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-abstract class BaseIT : BaseTest() {
+abstract class BaseIT : BaseTest(), Kx {
 
 
     companion object {

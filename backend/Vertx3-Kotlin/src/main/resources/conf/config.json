@@ -4,7 +4,7 @@
   },
   "jwt": {
     "secret": "mySecret",
-    "signatureAlgorithm": "",
+    "signatureAlgorithm": "HS512",
     "tokenValidityMinutes": 600
   }
 }
