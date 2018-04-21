@@ -1,6 +1,7 @@
 package com.weweb.core.web
 
 import com.weweb.BaseIT
+import com.weweb.core.exception.ErrorDetails
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -20,15 +21,14 @@ class FailureHandlerIT: BaseIT() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/fatal/${message}")
-        Assert.assertEquals(response.statusCode, 500)
+        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/fatal/${message}", ErrorDetails::class)
+        Assert.assertEquals(500, response.statusCode)
 
-        val body = response.body
+        val errorDetails = response.body
+        Assert.assertEquals(response.statusCode, errorDetails.code)
 
-        Assert.assertTrue(body.length() > 0)
-        logger().info("body is ${body}")
-        Assert.assertTrue(body.toString().contains("Error code:"))
-        Assert.assertFalse(body.toString().contains(message))
+        Assert.assertTrue(errorDetails.message.contains("Error code:"))
+        Assert.assertFalse(errorDetails.message.contains(message))
     }
 
     @Test
@@ -37,27 +37,28 @@ class FailureHandlerIT: BaseIT() {
         val message = UUID.randomUUID().toString()
         val statusCode = 400 + Random().nextInt(50)
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/webException/${statusCode}/${message}")
+        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/webException/${statusCode}/${message}", ErrorDetails::class)
 
         Assert.assertEquals(statusCode, response.statusCode)
-        val body = response.body
+        val errorDetails = response.body
 
-        Assert.assertTrue(body.length() > 0)
-        logger().info("body is ${body}")
-        Assert.assertEquals(message, body.toString())
+        Assert.assertEquals(response.statusCode, errorDetails.code)
+
+        Assert.assertFalse(errorDetails.message.isEmpty())
+        Assert.assertEquals(message, errorDetails.message)
     }
 
     @Test
     fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/customException")
+        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/customException", ErrorDetails::class)
         Assert.assertEquals(12345, response.statusCode)
 
-        val body = response.body
+        val errorDetails = response.body
+        Assert.assertEquals(response.statusCode, errorDetails.code)
 
-        Assert.assertTrue(body.length() > 0)
-        logger().info("body is ${body}")
-        Assert.assertEquals("CustomTestExceptionMessage", body.toString())
+        Assert.assertFalse(errorDetails.message.isEmpty())
+        Assert.assertEquals("CustomTestExceptionMessage", errorDetails.message)
     }
 
 

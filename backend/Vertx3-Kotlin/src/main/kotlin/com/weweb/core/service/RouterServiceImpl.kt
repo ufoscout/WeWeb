@@ -1,6 +1,7 @@
 package com.weweb.core.service
 
 import com.weweb.core.config.CoreConfig
+import com.weweb.core.exception.ErrorDetails
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import io.vertx.core.Handler
@@ -59,7 +60,7 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
                 val uuid = UUID.randomUUID().toString()
                 val message = "Error code: " + uuid
                 logger.error(uuid + " : " + exception.message, exception)
-                response.setStatusCode(statusCode).end(message)
+                response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, message))
             }
         }
 
@@ -67,8 +68,7 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
 
     private fun reply(response: HttpServerResponse, exception: WebException) {
         val statusCode = exception.statusCode()
-        val message = exception.message!!
-        response.setStatusCode(statusCode).end(message)
+        response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, exception.message!!))
     }
 
 }
