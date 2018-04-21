@@ -18,12 +18,10 @@ class AuthenticationControllerIT : BaseIT() {
         val client = vertx().createHttpClient()
 
         val loginDto = LoginDto("user", "user")
-        val buffer = client.postJson(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
-
-        println("After call")
+        val response = client.postJson(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
 
         //assertTrue(body.length() > 0)
-        logger().info("token is ${buffer}")
+        logger().info("token is ${response.body.token}")
 
     }
 }

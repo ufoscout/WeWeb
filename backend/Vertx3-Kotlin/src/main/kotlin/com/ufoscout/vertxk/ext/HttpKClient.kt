@@ -8,18 +8,29 @@ import kotlin.reflect.KClass
 
 interface HttpKClient {
 
-    suspend fun HttpClient.get(port: Int, host: String, requestUri: String): Buffer {
-        return awaitEvent<Buffer> {
-            getNow(port, host, requestUri) { response ->
-                response.bodyHandler(it)
+    suspend fun HttpClient.getJson(port: Int, host: String, requestUri: String, vararg headers: Pair<String, String>): HttpKClientResponse<Buffer> {
+        return awaitEvent<HttpKClientResponse<Buffer>> {
+            val request = get(port, host, requestUri) { response ->
+                response.bodyHandler({body ->
+                    it.handle(HttpKClientResponse(response.statusCode(), body))
+                })
             }
+            headers.forEach { request.putHeader(it.first, it.second) }
+            request.end()
         }
     }
 
-    suspend fun HttpClient.postJson(port: Int, host: String, requestUri: String, body: Any, vararg headers: Pair<String, String>): Buffer {
-        return awaitEvent<Buffer> {
+    suspend fun <T : Any> HttpClient.getJson(port: Int, host: String, requestUri: String, kClass: KClass<T>, vararg headers: Pair<String, String>): HttpKClientResponse<T> {
+        val response = getJson(port, host, requestUri, *headers)
+        return HttpKClientResponse( response.statusCode, response.body.toJsonObject().mapTo(kClass.javaObjectType))
+    }
+
+    suspend fun HttpClient.postJson(port: Int, host: String, requestUri: String, body: Any, vararg headers: Pair<String, String>): HttpKClientResponse<Buffer> {
+        return awaitEvent<HttpKClientResponse<Buffer>> {
             val request = post(port, host, requestUri, { response ->
-                response.bodyHandler(it)
+                response.bodyHandler({body ->
+                    it.handle(HttpKClientResponse(response.statusCode(), body))
+                })
             })
             request.putHeader("content-type", "application/json")
             headers.forEach { request.putHeader(it.first, it.second) }
@@ -29,9 +40,9 @@ interface HttpKClient {
         }
     }
 
-    suspend fun <T : Any> HttpClient.postJson(port: Int, host: String, requestUri: String, body: Any, kClass: KClass<T>, vararg headers: Pair<String, String>): T {
-        val buffer = postJson(port, host, requestUri, body, *headers)
-        return buffer.toJsonObject().mapTo(kClass.javaObjectType)
+    suspend fun <T : Any> HttpClient.postJson(port: Int, host: String, requestUri: String, body: Any, kClass: KClass<T>, vararg headers: Pair<String, String>): HttpKClientResponse<T> {
+        val response = postJson(port, host, requestUri, body, *headers)
+        return HttpKClientResponse( response.statusCode, response.body.toJsonObject().mapTo(kClass.javaObjectType))
     }
 
 }
