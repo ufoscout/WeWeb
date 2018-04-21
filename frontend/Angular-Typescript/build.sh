@@ -1,31 +1,23 @@
+PROJECT_NAME=Angular-Typescript
+
+declare -a steps=(
+  "rm -rf dist"
+  "rm -rf node_modules"
+  "npm install"
+  "npm run lint"
+  "run test-single-run"
+  "npm run build"
+)
 
 echo $LINE_SEPARATOR
-echo 'Build Angular-Typescript'
+echo "Build $PROJECT_NAME"
 echo $LINE_SEPARATOR
 
-rm -rf dist
-rm -rf node_modules
-
-npm install
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; exit $rc
-fi
-
-npm run lint
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; exit $rc
-fi
-
-npm run test-single-run
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; exit $rc
-fi
-
-npm run build
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; exit $rc
-fi
+for i in "${steps[@]}"
+do
+    eval $i
+    rc=$?
+    if [[ $rc -ne 0 ]] ; then
+        echo "Failure executing: $i"; exit $rc
+    fi
+done

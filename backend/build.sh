@@ -4,23 +4,20 @@ echo $LINE_SEPARATOR
 echo 'Build Backends'
 echo $LINE_SEPARATOR
 
-LINE_SEPARATOR='--------------------------------------------------------'
+declare -a projects=(
+    "SpringBoot2-Java" 
+    "Vertx3-Kotlin"
+)
 
-cd SpringBoot2-Java
-./build.sh
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; cd ..; exit $rc
-fi
-cd ..
+for i in "${projects[@]}"
+do
+    LINE_SEPARATOR='--------------------------------------------------------'
 
-LINE_SEPARATOR='--------------------------------------------------------'
-
-cd Vertx3-Kotlin
-./build.sh
-rc=$?
-if [[ $rc -ne 0 ]] ; then
-  echo 'Failure'; cd ..; exit $rc
-fi
-cd ..
-
+    cd $i
+    ./build.sh
+    rc=$?
+    if [[ $rc -ne 0 ]] ; then
+        echo "Failure builind $i"; cd ..; exit $rc
+    fi
+    cd ..
+done
