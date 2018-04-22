@@ -23,9 +23,9 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
     private val router = Router.router(vertx)
 
     init {
-        router.route().consumes("application/json")
-        router.route().produces("application/json")
-        router.route().handler(BodyHandler.create())
+        //router.route().consumes("application/json")
+        //router.route().produces("application/json")
+        //router.route().handler(BodyHandler.create())
         router.route().failureHandler { handleFailure(it) }
     }
 
