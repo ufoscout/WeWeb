@@ -77,7 +77,7 @@ interface RouterExt {
                     launch(Vertx.currentContext().dispatcher()) {
                         try {
                             val result = handler(it)
-                            it.response().end(Json.encode(result))
+                            it.response().putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(result))
                         } catch (e: Exception) {
                             it.fail(e)
                         }
@@ -97,7 +97,7 @@ interface RouterExt {
                             }
                             val body = bodyBuffer.toJsonObject().mapTo(kClass.javaObjectType)
                             val result = handler(rc, body)
-                            rc.response().end(Json.encode(result))
+                            rc.response().putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(result))
                         } catch (e: Exception) {
                             rc.fail(e)
                         }
