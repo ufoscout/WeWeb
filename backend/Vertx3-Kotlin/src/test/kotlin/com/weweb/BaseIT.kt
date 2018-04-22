@@ -1,6 +1,6 @@
 package com.weweb
 
-import com.ufoscout.vertxk.ext.Kx
+import com.ufoscout.vertxk.ext.K
 import com.weweb.auth.AuthTestModule
 import com.weweb.core.CoreTestModule
 import com.weweb.core.config.CoreConfig
@@ -13,7 +13,7 @@ import org.kodein.di.DKodein
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 
-abstract class BaseIT : BaseTest(), Kx {
+abstract class BaseIT : BaseTest(), K {
 
 
     companion object {

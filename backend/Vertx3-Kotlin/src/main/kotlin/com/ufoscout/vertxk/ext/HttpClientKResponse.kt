@@ -1,6 +1,6 @@
 package com.ufoscout.vertxk.ext
 
-class HttpKClientResponse<T>(
+class HttpClientKResponse<T>(
         val statusCode: Int,
         val body: T
 ) {

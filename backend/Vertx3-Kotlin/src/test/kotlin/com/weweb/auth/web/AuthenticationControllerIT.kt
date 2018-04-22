@@ -6,6 +6,7 @@ import com.weweb.auth.context.UserContext
 import com.weweb.auth.dto.LoginDto
 import com.weweb.auth.dto.LoginResponseDto
 import kotlinx.coroutines.experimental.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -18,8 +19,9 @@ class AuthenticationControllerIT : BaseIT() {
         val client = vertx().createHttpClient()
 
         val loginDto = LoginDto("user", "user")
-        val response = client.postJson(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
+        val response = client.k().postForRest<LoginResponseDto>(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto)
 
+        assertEquals(200, response.statusCode)
         logger().info("token is ${response.body.token}")
 
     }

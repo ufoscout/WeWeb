@@ -18,6 +18,7 @@ import com.weweb.core.json.fromJson
 import com.weweb.core.jwt.JwtService
 import com.weweb.core.jwt.TokenExpiredException
 import io.vertx.ext.web.Router
+import java.lang.RuntimeException
 
 class AuthenticationController (val router: Router,
                                 val userService: UserService,
@@ -33,20 +34,14 @@ class AuthenticationController (val router: Router,
         webExceptionService.registerTransformer<TokenExpiredException>({exp -> WebException(code = 401, message = "TokenExpired") })
         webExceptionService.registerTransformer<UnauthorizedException>({exp -> WebException(code = 403, message = "AccessDenied") })
 
-        router.post(AuthContants.BASE_AUTH_API + "/login").handler {
-            val request = it.request();
-            val body = it.getBodyAsString()
-            println("body is: [${body}]")
-            val loginDto = json.fromJson<LoginDto>(it.getBodyAsString())
-
+        router.restPost(AuthContants.BASE_AUTH_API + "/login", LoginDto::class) { rc, loginDto ->
             val login = userService.login(loginDto.username, loginDto.password)
-
             val roles = login.roles.toTypedArray()
             val token = jwt.generate(login.username, UserContext(login.username, roles))
-
             println("Return token: [${token}]")
-            request.response().endWithJson(LoginResponseDto(token))
+            LoginResponseDto(token)
         }
+
 
     }
 

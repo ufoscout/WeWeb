@@ -21,7 +21,7 @@ class FailureHandlerIT: BaseIT() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/fatal/${message}", ErrorDetails::class)
+        val response = vertx().createHttpClient().k().getForRest<ErrorDetails>(port(), "localhost", "/core/test/fatal/${message}")
         Assert.assertEquals(500, response.statusCode)
 
         val errorDetails = response.body
@@ -37,7 +37,7 @@ class FailureHandlerIT: BaseIT() {
         val message = UUID.randomUUID().toString()
         val statusCode = 400 + Random().nextInt(50)
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/webException/${statusCode}/${message}", ErrorDetails::class)
+        val response = vertx().createHttpClient().k().getForRest<ErrorDetails>(port(), "localhost", "/core/test/webException/${statusCode}/${message}")
 
         Assert.assertEquals(statusCode, response.statusCode)
         val errorDetails = response.body
@@ -51,7 +51,7 @@ class FailureHandlerIT: BaseIT() {
     @Test
     fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
 
-        val response = vertx().createHttpClient().getJson(port(), "localhost", "/core/test/customException", ErrorDetails::class)
+        val response = vertx().createHttpClient().k().getForRest<ErrorDetails>(port(), "localhost", "/core/test/customException")
         Assert.assertEquals(12345, response.statusCode)
 
         val errorDetails = response.body
