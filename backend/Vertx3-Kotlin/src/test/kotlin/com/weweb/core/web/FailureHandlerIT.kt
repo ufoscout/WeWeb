@@ -24,7 +24,7 @@ class FailureHandlerIT: BaseIT() {
         val response = vertx().createHttpClient().restGet(port(), "localhost", "/core/test/fatal/${message}", ErrorDetails::class)
         Assert.assertEquals(500, response.statusCode)
 
-        val errorDetails = response.body
+        val errorDetails = response.body!!
         Assert.assertEquals(response.statusCode, errorDetails.code)
 
         Assert.assertTrue(errorDetails.message.contains("Error code:"))
@@ -40,7 +40,7 @@ class FailureHandlerIT: BaseIT() {
         val response = vertx().createHttpClient().restGet(port(), "localhost", "/core/test/webException/${statusCode}/${message}", ErrorDetails::class)
 
         Assert.assertEquals(statusCode, response.statusCode)
-        val errorDetails = response.body
+        val errorDetails = response.body!!
 
         Assert.assertEquals(response.statusCode, errorDetails.code)
 
@@ -54,7 +54,7 @@ class FailureHandlerIT: BaseIT() {
         val response = vertx().createHttpClient().restGet(port(), "localhost", "/core/test/customException", ErrorDetails::class)
         Assert.assertEquals(12345, response.statusCode)
 
-        val errorDetails = response.body
+        val errorDetails = response.body!!
         Assert.assertEquals(response.statusCode, errorDetails.code)
 
         Assert.assertFalse(errorDetails.message.isEmpty())

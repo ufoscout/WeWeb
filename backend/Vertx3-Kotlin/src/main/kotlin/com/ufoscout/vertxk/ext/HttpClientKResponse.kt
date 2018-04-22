@@ -2,6 +2,7 @@ package com.ufoscout.vertxk.ext
 
 class HttpClientKResponse<T>(
         val statusCode: Int,
-        val body: T
+        val body: T?,
+        val cause: Throwable?
 ) {
 }
