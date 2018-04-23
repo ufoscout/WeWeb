@@ -26,6 +26,7 @@
     <vertxk.version>1.2.2</vertxk.version>
 
     <!-- plugins -->
+    <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     <junit-platform-surefire-provider.version>1.1.1</junit-platform-surefire-provider.version>
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -129,38 +130,35 @@
         <executions>
           <execution>
             <id>compile</id>
-            <!-- <phase>compile</phase> -->
-            <phase>process-sources</phase>
+            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/main/java</source>
-                <source>src/main/kotlin</source>
-                <source>src/main/resources</source>
-              </sourceDirs>
-            </configuration>
           </execution>
           <execution>
             <id>test-compile</id>
-            <!-- <phase>test-compile</phase> -->
-            <phase>process-test-sources</phase>
+            <phase>test-compile</phase>
             <goals>
               <goal>test-compile</goal>
             </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/test/java</source>
-                <source>src/test/kotlin</source>
-                <source>src/test/resources</source>
-              </sourceDirs>
-            </configuration>
           </execution>
         </executions>
         <configuration>
           <jvmTarget>${java.version}</jvmTarget>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>${dokka-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -242,5 +240,12 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jcenter</id>
+      <name>JCenter</name>
+      <url>https://jcenter.bintray.com/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
