@@ -1,6 +1,7 @@
 package com.weweb.core.jwt
 
 import com.weweb.core.json.JsonSerializerService
+import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -24,6 +25,16 @@ interface JwtService {
      * @return
      */
     fun generate(subject: String, payload: Any): String
+
+    /**
+     * Generates a JWT from the payload
+     * @param subject the JWT subject
+     * @param payload the JWT payload
+     * @param createdDate the creation Date
+     * @param expirationDate the expiration Date
+     * @return
+     */
+    fun generate(subject: String, payload: Any, createdDate: Date, expirationDate: Date): String
 
     /**
      * Parses a JWT and return the contained bean.

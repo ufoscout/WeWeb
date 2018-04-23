@@ -43,7 +43,7 @@ class JwtServiceJJWT(jwtConfig: JwtConfig,
         return generate(subject, payload, createdDate, calculateExpirationDate(createdDate))
     }
 
-    fun generate(subject: String, payload: Any, createdDate: Date, expirationDate: Date): String {
+    override fun generate(subject: String, payload: Any, createdDate: Date, expirationDate: Date): String {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim(PAYLOAD_CLAIM_KEY, jsonSerializerService.toJson(payload))

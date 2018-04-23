@@ -46,6 +46,7 @@ public class JwtServiceJJWT implements JwtService {
         return generate(subject, payload, createdDate, calculateExpirationDate(createdDate));
     }
 
+    @Override
     public <T> String generate(final String subject, final T payload, Date createdDate, Date expirationDate) {
         return Jwts.builder()
                 .setSubject(subject)

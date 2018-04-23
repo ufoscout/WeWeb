@@ -28,7 +28,7 @@ import org.springframework.http.ResponseEntity;
 public class AuthenticationControllerIT extends BaseIT {
 
     @Autowired
-    private JwtServiceJJWT jwt;
+    private JwtService jwt;
     @Autowired
     private AuthConfig authConfig;
 
@@ -87,10 +87,10 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldSuccessfulLoginWithValidCredentials() throws Exception {
 
-        LoginDto jwtAuthenticationRequest = new LoginDto("user", "user");
+        LoginDto loginDto = new LoginDto("user", "user");
 
         ResponseEntity<LoginResponseDto> response = restTemplate
-                .postForEntity(AuthContants.BASE_AUTH_API + "/login", jwtAuthenticationRequest, LoginResponseDto.class);
+                .postForEntity(AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto.class);
 
         LoginResponseDto responseDto = response.getBody();
         assertNotNull(responseDto);
@@ -104,10 +104,10 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldFailLoginWithWrongCredentials() throws Exception {
 
-        LoginDto jwtAuthenticationRequest = new LoginDto("user", UUID.randomUUID().toString());
+        LoginDto loginDto = new LoginDto("user", UUID.randomUUID().toString());
 
         ResponseEntity<ErrorDetails> response = restTemplate
-                .postForEntity(AuthContants.BASE_AUTH_API + "/login", jwtAuthenticationRequest, ErrorDetails.class);
+                .postForEntity(AuthContants.BASE_AUTH_API + "/login", loginDto, ErrorDetails.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("BadCredentials", response.getBody().getMessage());
