@@ -1,28 +1,22 @@
 package com.weweb.core.jwt
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.SignatureException
 import com.weweb.BaseTest
 import com.weweb.core.config.JwtConfig
 import com.weweb.core.json.JacksonJsonSerializerService
 import com.weweb.core.json.JacksonMapperFactory
-import java.util.Date
-import java.util.UUID
-import org.junit.Before
-import org.junit.Test
+import io.jsonwebtoken.SignatureException
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 class JWTServiceJJWTTest : BaseTest() {
 
     private val expireMinutes: Long = 2
     private var jwtService: JwtServiceJJWT? = null
 
-    @Before
+    @BeforeEach
     fun setUp() {
         jwtService = JwtServiceJJWT(
                 JwtConfig("secret", "HS512", expireMinutes), JacksonJsonSerializerService(JacksonMapperFactory.prettyMapper))
@@ -73,24 +67,29 @@ class JWTServiceJJWTTest : BaseTest() {
     }
 
 
-    @Test(expected = SignatureException::class)
+    @Test
     fun shouldFailParsingTamperedJwt() {
-        val message = SimpleMailMessage()
-        message.from = "from-" + UUID.randomUUID()
-        message.subject = "sub-" + UUID.randomUUID()
-        message.sentDate = Date()
+        assertThrows<SignatureException> {
 
-        val jwt = jwtService!!.generate(message)
-        logger().info("Generated JWT:\n{}", jwt)
+            val message = SimpleMailMessage()
+            message.from = "from-" + UUID.randomUUID()
+            message.subject = "sub-" + UUID.randomUUID()
+            message.sentDate = Date()
 
-        jwtService!!.parse<String>(jwt + 1)
+            val jwt = jwtService!!.generate(message)
+            logger().info("Generated JWT:\n{}", jwt)
+
+            jwtService!!.parse<String>(jwt + 1)
+        }
     }
 
-    @Test(expected = TokenExpiredException::class)
+    @Test
     fun shouldFailParsingExpiredBeans() {
-        val userContext = SimpleMailMessage()
-        val JWT = jwtService!!.generate("", userContext, Date(), Date(System.currentTimeMillis() - 1))
-        jwtService!!.parse(JWT, SimpleMailMessage::class)
+        assertThrows<TokenExpiredException> {
+            val userContext = SimpleMailMessage()
+            val JWT = jwtService!!.generate("", userContext, Date(), Date(System.currentTimeMillis() - 1))
+            jwtService!!.parse(JWT, SimpleMailMessage::class)
+        }
     }
 
     @Test

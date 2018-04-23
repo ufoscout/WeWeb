@@ -1,9 +1,9 @@
 package com.weweb.core.exception
 
 import com.weweb.BaseTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 class WebExceptionServiceTest : BaseTest() {
 

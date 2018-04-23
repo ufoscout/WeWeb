@@ -9,8 +9,8 @@ import com.weweb.core.exception.ErrorDetails
 import com.weweb.core.jwt.JwtService
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.kodein.di.generic.instance
 import java.util.*
 

@@ -2,10 +2,9 @@ package com.weweb
 
 import io.vertx.core.logging.Logger
 import io.vertx.core.logging.LoggerFactory
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.rules.TestName
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInfo
 import java.io.File
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -13,9 +12,6 @@ import java.util.*
 
 abstract class BaseTest {
     private val logger = LoggerFactory.getLogger(this.javaClass)
-
-    @Rule @JvmField
-    val name = TestName()
 
     private var testStartDate: Long = 0
 
@@ -25,20 +21,20 @@ abstract class BaseTest {
             return TEMP_DIR
         }
 
-    @Before
-    fun setUpBeforeTest() {
+    @BeforeEach
+    fun setUpBeforeTest(testInfo: TestInfo) {
         testStartDate = System.currentTimeMillis()
         logger.info("===================================================================")
-        logger.info("BEGIN TEST " + name.methodName)
+        logger.info("BEGIN TEST " + testInfo.displayName)
         logger.info("===================================================================")
 
     }
 
-    @After
-    fun tearDownAfterTest() {
+    @AfterEach
+    fun tearDownAfterTest(testInfo: TestInfo) {
         val executionTime = System.currentTimeMillis() - testStartDate
         logger.info("===================================================================")
-        logger.info("END TEST " + name.methodName)
+        logger.info("END TEST " + testInfo.displayName)
         logger.info("execution time: " + TIME_FORMAT.format(executionTime) + " ms")
         logger.info("===================================================================")
     }

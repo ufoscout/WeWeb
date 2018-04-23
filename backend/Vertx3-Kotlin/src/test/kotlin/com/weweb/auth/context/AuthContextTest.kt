@@ -3,7 +3,8 @@ package com.weweb.auth.context
 import com.weweb.BaseTest
 import com.weweb.auth.exception.UnauthenticatedException
 import com.weweb.auth.exception.UnauthorizedException
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class AuthContextTest: BaseTest() {
 
@@ -14,18 +15,22 @@ class AuthContextTest: BaseTest() {
         authContext.isAuthenticated()
     }
 
-    @Test(expected = UnauthenticatedException::class)
+    @Test
     fun shouldBeNotAuthenticated() {
-        val user = UserContext()
-        val authContext = AuthContext(user, HashMap())
-        authContext.isAuthenticated()
+        assertThrows<UnauthenticatedException> {
+            val user = UserContext()
+            val authContext = AuthContext(user, HashMap())
+            authContext.isAuthenticated()
+        }
     }
 
-    @Test(expected = UnauthenticatedException::class)
+    @Test
     fun shouldBeNotAuthenticatedEvenIfHasRole() {
-        val user = UserContext(roles = arrayOf("ADMIN"))
-        val authContext = AuthContext(user, HashMap())
-        authContext.hasRole("ADMIN")
+        assertThrows<UnauthenticatedException> {
+            val user = UserContext(roles = arrayOf("ADMIN"))
+            val authContext = AuthContext(user, HashMap())
+            authContext.hasRole("ADMIN")
+        }
     }
 
     @Test
@@ -43,12 +48,14 @@ class AuthContextTest: BaseTest() {
         authContext.hasRole("USER")
     }
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHaveRole() {
-        val user = UserContext("name", roles = arrayOf("ADMIN"))
-        val authContext = AuthContext(user, HashMap())
-        authContext.isAuthenticated()
-        authContext.hasRole("USER")
+        assertThrows<UnauthorizedException> {
+            val user = UserContext("name", roles = arrayOf("ADMIN"))
+            val authContext = AuthContext(user, HashMap())
+            authContext.isAuthenticated()
+            authContext.hasRole("USER")
+        }
     }
 
     @Test
@@ -58,11 +65,13 @@ class AuthContextTest: BaseTest() {
         authContext.hasAnyRole("USER", "FRIEND")
     }
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHaveAnyRole() {
-        val user = UserContext("name", roles = arrayOf("ADMIN", "OWNER"))
-        val authContext = AuthContext(user, HashMap())
-        authContext.hasAnyRole("USER", "FRIEND")
+        assertThrows<UnauthorizedException> {
+            val user = UserContext("name", roles = arrayOf("ADMIN", "OWNER"))
+            val authContext = AuthContext(user, HashMap())
+            authContext.hasAnyRole("USER", "FRIEND")
+        }
     }
 
     @Test
@@ -72,20 +81,24 @@ class AuthContextTest: BaseTest() {
         authContext.hasAllRoles("USER", "FRIEND")
     }
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHaveAllRoles() {
-        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
-        val authContext = AuthContext(user, HashMap())
-        authContext.hasAllRoles("USER", "FRIEND")
+        assertThrows<UnauthorizedException> {
+            val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
+            val authContext = AuthContext(user, HashMap())
+            authContext.hasAllRoles("USER", "FRIEND")
+        }
     }
 
-    @Test(expected = UnauthenticatedException::class)
+    @Test
     fun shouldBeNotAuthenticatedEvenIfHasPermission() {
-        val permissions = HashMap<String, Array<String>>()
-        permissions.put("delete", arrayOf("OWNER", "ADMIN"))
-        val user = UserContext(roles = arrayOf("ADMIN"))
-        val authContext = AuthContext(user, HashMap())
-        authContext.hasPermission("delete")
+        assertThrows<UnauthenticatedException> {
+            val permissions = HashMap<String, Array<String>>()
+            permissions.put("delete", arrayOf("OWNER", "ADMIN"))
+            val user = UserContext(roles = arrayOf("ADMIN"))
+            val authContext = AuthContext(user, HashMap())
+            authContext.hasPermission("delete")
+        }
     }
 
 
@@ -109,13 +122,15 @@ class AuthContextTest: BaseTest() {
     }
 
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHavePermission() {
-        val permissions = HashMap<String, Array<String>>()
-        permissions.put("delete", arrayOf("OWNER"))
-        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
-        val authContext = AuthContext(user, permissions)
-        authContext.hasPermission("delete")
+        assertThrows<UnauthorizedException> {
+            val permissions = HashMap<String, Array<String>>()
+            permissions.put("delete", arrayOf("OWNER"))
+            val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
+            val authContext = AuthContext(user, permissions)
+            authContext.hasPermission("delete")
+        }
     }
 
     @Test
@@ -128,14 +143,16 @@ class AuthContextTest: BaseTest() {
         authContext.hasAnyPermission("delete", "superDelete")
     }
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHaveAnyPermission() {
-        val permissions = HashMap<String, Array<String>>()
-        permissions.put("delete", arrayOf("OWNER", "ADMIN"))
-        permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext("name", roles = arrayOf("USER"))
-        val authContext = AuthContext(user, permissions)
-        authContext.hasAnyPermission("delete", "superAdmin")
+        assertThrows<UnauthorizedException> {
+            val permissions = HashMap<String, Array<String>>()
+            permissions.put("delete", arrayOf("OWNER", "ADMIN"))
+            permissions.put("superDelete", arrayOf("ADMIN"))
+            val user = UserContext("name", roles = arrayOf("USER"))
+            val authContext = AuthContext(user, permissions)
+            authContext.hasAnyPermission("delete", "superAdmin")
+        }
     }
 
     @Test
@@ -148,14 +165,16 @@ class AuthContextTest: BaseTest() {
         authContext.hasAllPermissions("delete", "superDelete")
     }
 
-    @Test(expected = UnauthorizedException::class)
+    @Test
     fun shouldNotHaveAllPermissions() {
-        val permissions = HashMap<String, Array<String>>()
-        permissions.put("delete", arrayOf("OWNER"))
-        permissions.put("superDelete", arrayOf("ADMIN"))
-        val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
-        val authContext = AuthContext(user, permissions)
-        authContext.hasAllPermissions("delete", "superDelete")
+        assertThrows<UnauthorizedException> {
+            val permissions = HashMap<String, Array<String>>()
+            permissions.put("delete", arrayOf("OWNER"))
+            permissions.put("superDelete", arrayOf("ADMIN"))
+            val user = UserContext("name", roles = arrayOf("ADMIN", "USER"))
+            val authContext = AuthContext(user, permissions)
+            authContext.hasAllPermissions("delete", "superDelete")
+        }
     }
 
 }

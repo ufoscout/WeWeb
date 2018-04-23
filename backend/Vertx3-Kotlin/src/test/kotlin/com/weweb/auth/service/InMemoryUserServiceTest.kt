@@ -1,12 +1,10 @@
 package com.weweb.auth.service
 
 import com.weweb.BaseTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-
 import com.weweb.auth.exception.BadCredentialsException
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class InMemoryUserServiceTest: BaseTest() {
 
@@ -20,9 +18,11 @@ class InMemoryUserServiceTest: BaseTest() {
         assertNotEquals("user", user.encodedPassword)
     }
 
-    @Test(expected = BadCredentialsException::class)
+    @Test
     fun shouldThrowBadCredentialException() {
-        service.login("user", "admin")
+        assertThrows<BadCredentialsException> {
+            service.login("user", "admin")
+        }
     }
 
 }

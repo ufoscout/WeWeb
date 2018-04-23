@@ -1,9 +1,9 @@
 package com.weweb.core.json
 
 import com.weweb.BaseTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 
 import java.io.ByteArrayOutputStream
 import java.io.UnsupportedEncodingException
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.util.UUID
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class JacksonJsonSerializerServiceTest : BaseTest() {
 
