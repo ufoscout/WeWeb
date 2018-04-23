@@ -1,6 +1,6 @@
 package com.weweb.auth.web
 
-import com.ufoscout.vertxk.VertxKComponent
+import com.ufoscout.vertxk.kodein.VertxKComponent
 import com.weweb.auth.service.AuthContextService
 import io.vertx.ext.web.Router
 

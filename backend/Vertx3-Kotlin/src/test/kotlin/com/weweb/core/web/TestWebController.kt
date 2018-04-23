@@ -1,6 +1,6 @@
 package com.weweb.core.web
 
-import com.ufoscout.vertxk.VertxKComponent
+import com.ufoscout.vertxk.kodein.VertxKComponent
 import com.weweb.core.exception.WebException
 import com.weweb.core.exception.WebExceptionService
 import com.weweb.core.exception.registerTransformer

@@ -1,6 +1,6 @@
 package com.weweb
 
-import com.ufoscout.vertxk.ext.K
+import com.ufoscout.vertxk.K
 import com.weweb.auth.AuthTestModule
 import com.weweb.core.CoreTestModule
 import com.weweb.core.config.CoreConfig

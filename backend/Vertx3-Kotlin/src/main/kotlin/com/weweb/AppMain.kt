@@ -1,6 +1,6 @@
 package com.weweb
 
-import com.ufoscout.vertxk.VertxK
+import com.ufoscout.vertxk.kodein.VertxK
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
