@@ -37,7 +37,7 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
         awaitResult<HttpServer> { wait ->
             val port = coreConfig.server.port;
             vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { router.accept(it) }).listen(port, wait)
-            logger.debug("Router created and listening on port ${port}")
+            logger.info("Router created and listening on port ${port}")
         }
     }
 

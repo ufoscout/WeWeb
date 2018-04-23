@@ -26,7 +26,11 @@ object AppMain {
     @Throws(IOException::class)
     fun main(args: Array<String>) {
         runBlocking {
-            start()
+            try {
+                start()
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
     }
 
