@@ -2,14 +2,37 @@ version: "3"
 
 services:
 
-  angular:
+## -------------------
+## Vertx3 - Angular 
+## -------------------
+
+  fe_vertx_angular:
     image: "weweb/fe/angular"
     build: ./frontend/Angular-Typescript
     links:
-      - vertx:backend
+      - be_vertx:backend
     ports:
       - "2015:2015"
-
-  vertx:
+    depends_on:
+      - be_vertx
+      
+  be_vertx:
     image: "weweb/be/vertx"
     build: ./backend/Vertx3-Kotlin
+
+## ----------------------
+## SpringBoot2 - Angular
+## ----------------------
+
+  fe_springboot_angular:
+    image: "weweb/fe/angular"
+    links:
+      - be_springboot:backend
+    ports:
+      - "2016:2015"
+    depends_on:
+      - be_springboot
+
+  be_springboot:
+    image: "weweb/be/springboot"
+    build: ./backend/SpringBoot2-Java
