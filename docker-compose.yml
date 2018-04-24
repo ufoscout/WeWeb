@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+
+  angular:
+    image: "weweb/fe/angular"
+    build: ./frontend/Angular-Typescript
+    links:
+      - vertx:backend
+    ports:
+      - "2015:2015"
+
+  vertx:
+    image: "weweb/be/vertx"
+    build: ./backend/Vertx3-Kotlin
