@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthState, AuthStateModel } from '../auth/auth.state';
 import { Login } from './login.model';
 import { SetAuthData } from '../auth/auth.events';
