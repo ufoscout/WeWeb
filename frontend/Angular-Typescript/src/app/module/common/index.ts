@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap/dropdown/dropdown.module';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from './header/header.component';
 
 @NgModule({
@@ -8,7 +9,8 @@ import { HeaderComponent } from './header/header.component';
     HeaderComponent
   ],
   imports: [
-    NgbModule,
+    NgbCollapseModule,
+    NgbDropdownModule,
     RouterModule,
   ],
   providers: [],
@@ -16,4 +18,4 @@ import { HeaderComponent } from './header/header.component';
     HeaderComponent
   ]
 })
-export class CommonModule { }
+export class CommonModule {}
