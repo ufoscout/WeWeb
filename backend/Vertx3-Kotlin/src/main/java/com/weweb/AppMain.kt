@@ -10,11 +10,10 @@ import com.ufoscout.vertxk.kodein.router.RouterModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
-import com.weweb.core.json.JacksonMapperFactory
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
-import io.vertx.core.json.Json
 import io.vertx.core.logging.LoggerFactory
+import io.vertx.core.logging.SLF4JLogDelegateFactory
 import kotlinx.coroutines.experimental.runBlocking
 import org.kodein.di.Kodein
 import java.io.IOException
@@ -22,7 +21,11 @@ import java.io.IOException
 
 object AppMain {
 
-    // initiate logging system
+    init {
+        System.setProperty(LoggerFactory.LOGGER_DELEGATE_FACTORY_CLASS_NAME,
+                SLF4JLogDelegateFactory::class.qualifiedName)
+    }
+
     private val log = LoggerFactory.getLogger(AppMain::class.java)
 
     @JvmStatic
@@ -43,12 +46,6 @@ object AppMain {
 
         val vertx = Vertx.vertx()
 
-        val deploymentOptions = DeploymentOptions()
-        deploymentOptions.setInstances(Runtime.getRuntime().availableProcessors())
-
-        Json.mapper = JacksonMapperFactory.mapper
-        Json.prettyMapper = JacksonMapperFactory.prettyMapper
-
         val properlty = Properlty.builder()
                 .add("classpath:conf/config.properties")
                 .add(resourcePath = "classpath:conf/test-config.properties", ignoreNotFound = true)
@@ -58,6 +55,9 @@ object AppMain {
                 .build()
 
         val coreConfig = CoreConfig.build(properlty)
+
+        val deploymentOptions = DeploymentOptions()
+        deploymentOptions.setInstances(Runtime.getRuntime().availableProcessors())
 
         return VertxK.start(
                 vertx,
