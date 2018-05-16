@@ -1,6 +1,6 @@
 package com.weweb.auth.web
 
-import com.ufoscout.vertxk.kodein.VertxKComponent
+import com.ufoscout.vertxk.kodein.VertxKVerticle
 import com.weweb.auth.config.AuthContants
 import com.weweb.auth.context.UserContext
 import com.weweb.auth.dto.LoginDto
@@ -23,7 +23,7 @@ class AuthenticationController (val router: Router,
                                 val json: JsonSerializerService,
                                 val jwt: JwtService,
                                 val auth: AuthContextService,
-                                val webExceptionService: WebExceptionService): VertxKComponent {
+                                val webExceptionService: WebExceptionService): VertxKVerticle() {
 
     override suspend fun start() {
 

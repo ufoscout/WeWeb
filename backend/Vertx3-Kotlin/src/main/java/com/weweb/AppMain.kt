@@ -5,6 +5,7 @@ import com.ufoscout.properlty.reader.EnvironmentVariablesReader
 import com.ufoscout.properlty.reader.SystemPropertiesReader
 import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
 import com.ufoscout.vertxk.kodein.VertxK
+import com.ufoscout.vertxk.kodein.VertxKModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
@@ -35,7 +36,7 @@ object AppMain {
         }
     }
 
-    suspend fun start(vararg modules: Kodein.Module): Kodein {
+    suspend fun start(vararg modules: VertxKModule): Kodein {
 
         log.info("Starting kotlin main")
 
@@ -57,9 +58,8 @@ object AppMain {
 
         return VertxK.start(
                 vertx,
-                deploymentOptions,
-                AuthModule.module(),
-                CoreModule.module(CoreConfig.build(properlty)),
+                AuthModule(deploymentOptions),
+                CoreModule(CoreConfig.build(properlty)),
                 *modules
         )
 

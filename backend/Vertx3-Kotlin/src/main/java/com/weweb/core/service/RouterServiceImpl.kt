@@ -12,7 +12,6 @@ import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
-import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.coroutines.awaitResult
 import java.util.*
 
@@ -20,23 +19,34 @@ class RouterServiceImpl(val vertx: Vertx, val coreConfig: CoreConfig, val webExc
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    private val router = Router.router(vertx)
+    companion object {
+        private var mainRouter: Router? = null;
+    }
 
     init {
-        //router.route().consumes("application/json")
-        //router.route().produces("application/json")
-        //router.route().handler(BodyHandler.create())
-        router.route().failureHandler { handleFailure(it) }
+        if (mainRouter==null) {
+            synchronized(RouterServiceImpl) {
+                if (mainRouter==null) {
+                    println("--------------------------")
+                    println("creating singleton router!")
+                    println("--------------------------")
+                    mainRouter = Router.router(vertx)
+                }
+            }
+        }
+
+        mainRouter!!.route().failureHandler { handleFailure(it) }
     }
 
     override fun router(): Router {
-        return router
+        val router = Router.router(vertx)
+        return mainRouter!!.mountSubRouter("/", router)
     }
 
     override suspend fun start() {
         awaitResult<HttpServer> { wait ->
             val port = coreConfig.server.port;
-            vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { router.accept(it) }).listen(port, wait)
+            vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { mainRouter!!.accept(it) }).listen(port, wait)
             logger.info("Router created and listening on port ${port}")
         }
     }

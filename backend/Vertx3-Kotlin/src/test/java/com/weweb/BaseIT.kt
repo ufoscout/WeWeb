@@ -29,8 +29,8 @@ abstract class BaseIT : BaseTest(), K {
             System.setProperty("server.port", port.toString())
 
             val dk = AppMain.start(
-                    CoreTestModule.module(),
-                    AuthTestModule.module()
+                    CoreTestModule(),
+                    AuthTestModule()
             ).direct
             var conf: CoreConfig = dk.instance();
             vertx = dk.instance()
