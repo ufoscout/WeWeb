@@ -15,6 +15,22 @@
  */
 package com.weweb.core.config
 
+import com.ufoscout.properlty.Properlty
+
 data class CoreConfig(val server: ServerConfig,
                       val jwt: JwtConfig ) {
+
+    companion object {
+        fun build(prop: Properlty) : CoreConfig {
+            return CoreConfig(
+                    ServerConfig(prop.getInt("server.port")!!),
+                    JwtConfig(
+                            secret = prop.get("jwt.secret")!!,
+                            signatureAlgorithm = prop.get("jwt.signatureAlgorithm")!!,
+                            tokenValidityMinutes = prop.getLong("jwt.tokenValidityMinutes")!!
+                    )
+            )
+        }
+    }
+
 }

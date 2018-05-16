@@ -21,7 +21,7 @@
     <jbcrypt.version>0.4</jbcrypt.version>
     <jjwt.version>0.9.0</jjwt.version>
     <junit.version>5.1.1</junit.version>
-    <kodein.version>5.0.0</kodein.version>
+    <properlty.version>1.6.0</properlty.version>
     <vertx.version>3.5.1</vertx.version>
     <vertxk.version>1.2.2</vertxk.version>
 
@@ -50,8 +50,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-config</artifactId>
+      <groupId>com.ufoscout.properlty</groupId>
+      <artifactId>properlty-kotlin</artifactId>
+      <version>${properlty.version}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>

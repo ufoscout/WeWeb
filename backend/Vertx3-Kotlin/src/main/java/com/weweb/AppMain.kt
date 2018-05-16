@@ -1,17 +1,18 @@
 package com.weweb
 
+import com.ufoscout.properlty.Properlty
+import com.ufoscout.properlty.reader.EnvironmentVariablesReader
+import com.ufoscout.properlty.reader.SystemPropertiesReader
+import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
 import com.ufoscout.vertxk.kodein.VertxK
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
 import com.weweb.core.json.JacksonMapperFactory
-import io.vertx.config.ConfigRetriever
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
-import io.vertx.core.json.JsonObject
 import io.vertx.core.logging.LoggerFactory
-import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.kodein.di.Kodein
 import java.io.IOException
@@ -46,16 +47,19 @@ object AppMain {
         Json.mapper = JacksonMapperFactory.mapper
         Json.prettyMapper = JacksonMapperFactory.prettyMapper
 
-        var retriever = ConfigRetriever.create(vertx)
-        var config = awaitResult<JsonObject> { wait ->
-            retriever.getConfig(wait);
-        }
+        val properlty = Properlty.builder()
+                .add("classpath:conf/config.properties")
+                .add(resourcePath = "classpath:conf/test-config.properties", ignoreNotFound = true)
+                .add(SystemPropertiesReader())
+                .add(EnvironmentVariablesReader())
+                .add(ToLowerCaseAndDotKeyReader(EnvironmentVariablesReader()))
+                .build()
 
         return VertxK.start(
                 vertx,
                 deploymentOptions,
                 AuthModule.module(),
-                CoreModule.module(config.mapTo(CoreConfig::class.java)),
+                CoreModule.module(CoreConfig.build(properlty)),
                 *modules
         )
 
