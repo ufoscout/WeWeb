@@ -3,7 +3,6 @@ package com.weweb.core.jwt
 import com.weweb.BaseTest
 import com.weweb.core.config.JwtConfig
 import com.weweb.core.json.JacksonJsonSerializerService
-import com.weweb.core.json.JacksonMapperFactory
 import io.jsonwebtoken.SignatureException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +18,7 @@ class JWTServiceJJWTTest : BaseTest() {
     @BeforeEach
     fun setUp() {
         jwtService = JwtServiceJJWT(
-                JwtConfig("secret", "HS512", expireMinutes), JacksonJsonSerializerService(JacksonMapperFactory.prettyMapper))
+                JwtConfig("secret", "HS512", expireMinutes), JacksonJsonSerializerService())
     }
 
     @Test

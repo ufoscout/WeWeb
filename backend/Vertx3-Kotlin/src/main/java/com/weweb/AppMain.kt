@@ -6,6 +6,7 @@ import com.ufoscout.properlty.reader.SystemPropertiesReader
 import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
 import com.ufoscout.vertxk.kodein.VertxK
 import com.ufoscout.vertxk.kodein.VertxKModule
+import com.ufoscout.vertxk.kodein.router.RouterModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
@@ -56,10 +57,13 @@ object AppMain {
                 .add(ToLowerCaseAndDotKeyReader(EnvironmentVariablesReader()))
                 .build()
 
+        val coreConfig = CoreConfig.build(properlty)
+
         return VertxK.start(
                 vertx,
                 AuthModule(deploymentOptions),
-                CoreModule(CoreConfig.build(properlty)),
+                CoreModule(coreConfig),
+                RouterModule(coreConfig.server),
                 *modules
         )
 

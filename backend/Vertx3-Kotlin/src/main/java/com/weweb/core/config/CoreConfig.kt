@@ -16,14 +16,15 @@
 package com.weweb.core.config
 
 import com.ufoscout.properlty.Properlty
+import com.ufoscout.vertxk.kodein.config.RouterConfig
 
-data class CoreConfig(val server: ServerConfig,
+data class CoreConfig(val server: RouterConfig,
                       val jwt: JwtConfig ) {
 
     companion object {
         fun build(prop: Properlty) : CoreConfig {
             return CoreConfig(
-                    ServerConfig(prop.getInt("server.port")!!),
+                    RouterConfig(prop.getInt("server.port")!!),
                     JwtConfig(
                             secret = prop.get("jwt.secret")!!,
                             signatureAlgorithm = prop.get("jwt.signatureAlgorithm")!!,
