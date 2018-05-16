@@ -1,6 +1,9 @@
 package com.weweb.auth.web
 
 import com.ufoscout.vertxk.kodein.VertxKVerticle
+import com.ufoscout.vertxk.kodein.router.WebException
+import com.ufoscout.vertxk.kodein.router.WebExceptionService
+import com.ufoscout.vertxk.kodein.router.registerTransformer
 import com.weweb.auth.config.AuthContants
 import com.weweb.auth.context.UserContext
 import com.weweb.auth.dto.LoginDto
@@ -10,14 +13,9 @@ import com.weweb.auth.exception.UnauthenticatedException
 import com.weweb.auth.exception.UnauthorizedException
 import com.weweb.auth.service.AuthContextService
 import com.weweb.auth.service.UserService
-import com.weweb.core.exception.WebException
-import com.weweb.core.exception.WebExceptionService
-import com.weweb.core.exception.registerTransformer
-import com.weweb.core.json.JsonSerializerService
 import com.weweb.core.jwt.JwtService
 import com.weweb.core.jwt.TokenExpiredException
 import com.weweb.core.service.RouterService
-import io.vertx.ext.web.Router
 
 class AuthenticationController (val routerService: RouterService,
                                 val userService: UserService,

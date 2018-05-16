@@ -1,11 +1,11 @@
 package com.weweb.auth.config
 
+import com.ufoscout.vertxk.kodein.router.WebException
+import com.ufoscout.vertxk.kodein.router.WebExceptionService
+import com.ufoscout.vertxk.kodein.router.registerTransformer
 import com.weweb.auth.exception.BadCredentialsException
 import com.weweb.auth.exception.UnauthenticatedException
 import com.weweb.auth.exception.UnauthorizedException
-import com.weweb.core.exception.WebException
-import com.weweb.core.exception.WebExceptionService
-import com.weweb.core.exception.registerTransformer
 
 class AuthConfig(val webExceptionService: WebExceptionService) {
 

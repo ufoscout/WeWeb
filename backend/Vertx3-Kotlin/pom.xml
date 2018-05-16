@@ -23,7 +23,7 @@
     <junit.version>5.1.1</junit.version>
     <properlty.version>1.6.0</properlty.version>
     <vertx.version>3.5.1</vertx.version>
-    <vertxk.version>1.3.0-SNAPSHOT</vertxk.version>
+    <vertxk.version>1.3.0</vertxk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
