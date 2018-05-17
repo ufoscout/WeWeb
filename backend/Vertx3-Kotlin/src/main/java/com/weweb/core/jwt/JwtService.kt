@@ -1,6 +1,5 @@
 package com.weweb.core.jwt
 
-import com.weweb.core.json.JsonSerializerService
 import java.util.*
 import kotlin.reflect.KClass
 

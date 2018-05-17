@@ -1,7 +1,7 @@
 package com.weweb.core.jwt
 
+import com.ufoscout.vertxk.kodein.json.JsonSerializerService
 import com.weweb.core.config.JwtConfig
-import com.weweb.core.json.JsonSerializerService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts

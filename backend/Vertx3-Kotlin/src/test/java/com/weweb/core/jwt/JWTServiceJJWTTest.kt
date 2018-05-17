@@ -1,8 +1,8 @@
 package com.weweb.core.jwt
 
+import com.ufoscout.vertxk.kodein.json.JacksonJsonSerializerService
 import com.weweb.BaseTest
 import com.weweb.core.config.JwtConfig
-import com.weweb.core.json.JacksonJsonSerializerService
 import io.jsonwebtoken.SignatureException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
