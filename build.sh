@@ -1,3 +1,4 @@
+#!/bin/bash
 
 ## Backend
 cd backend

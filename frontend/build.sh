@@ -1,3 +1,5 @@
+#!/bin/bash
+
 LINE_SEPARATOR='--------------------------------------------------------'
 
 echo $LINE_SEPARATOR

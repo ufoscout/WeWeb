@@ -1,3 +1,4 @@
+#!/bin/bash
 
 echo $LINE_SEPARATOR
 echo 'Build SpringBoot2-Java'
