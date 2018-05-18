@@ -1,5 +1,5 @@
 # Application Builder image
-FROM maven:3-jdk-8 as builder
+FROM maven:3-jdk-8-slim as builder
 
 ENV SRC /src
 ADD ./ $SRC

@@ -1,5 +1,5 @@
 # Application Builder image
-FROM maven:3-jdk-8 as builder
+FROM maven:3-jdk-8-slim as builder
 
 ENV SRC /src
 ADD ./ $SRC
@@ -18,6 +18,7 @@ RUN chmod +x /wait
 
 ENV JAR_PATH target
 ENV JAR_NAME weweb-vertx3-kotlin-fat.jar
+
 ENV WRK_DIR = /opt/build/
 
 COPY --from=builder /src/$JAR_PATH/$JAR_NAME $WRK_DIR
