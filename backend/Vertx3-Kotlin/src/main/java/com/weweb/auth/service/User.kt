@@ -1,5 +1,16 @@
 package com.weweb.auth.service
 
-class User (val username: String,
-    val encodedPassword: String,
-    val roles: List<String>)
+import com.ufoscout.coreutils.auth.Auth
+
+class User (private val username: String,
+    private val roles: Long): Auth<Long> {
+
+    override fun getRoles(): Long {
+        return roles
+    }
+
+    override fun getUsername(): String {
+        return username
+    }
+
+}

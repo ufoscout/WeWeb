@@ -1,15 +1,16 @@
 package com.weweb.auth.service
 
-import com.weweb.auth.context.AuthContext
+import com.ufoscout.coreutils.auth.AuthContext
+import com.ufoscout.vertxk.kodein.VertxKComponent
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.ext.web.RoutingContext
 
-interface AuthContextService {
+interface AuthContextService: VertxKComponent {
 
-    fun get(routingContext: RoutingContext): AuthContext {
+    fun get(routingContext: RoutingContext): AuthContext<Long> {
         return get(routingContext.request())
     }
 
-    fun get(httpServerRequest: HttpServerRequest): AuthContext
+    fun get(httpServerRequest: HttpServerRequest): AuthContext<Long>
 
 }

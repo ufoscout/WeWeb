@@ -2,7 +2,8 @@ package com.weweb.auth.service
 
 import com.weweb.BaseTest
 import com.weweb.auth.exception.BadCredentialsException
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -15,7 +16,6 @@ class InMemoryUserServiceTest: BaseTest() {
         val user = service.login("user", "user")
         assertNotNull(user)
         assertEquals("user", user.username)
-        assertNotEquals("user", user.encodedPassword)
     }
 
     @Test

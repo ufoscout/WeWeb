@@ -1,12 +1,13 @@
 package com.weweb.auth.web
 
+import com.ufoscout.coreutils.auth.AuthService
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.ufoscout.vertxk.kodein.router.ErrorDetails
 import com.weweb.BaseIT
 import com.weweb.auth.config.AuthContants
-import com.weweb.auth.context.UserContext
 import com.weweb.auth.dto.LoginDto
 import com.weweb.auth.dto.LoginResponseDto
+import com.weweb.auth.service.User
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -19,6 +20,7 @@ class AuthenticationControllerIT : BaseIT() {
 
     val client = vertx().createHttpClient()
     val jwt: JwtService = kodein().instance()
+    val authService: AuthService<Long> = kodein().instance()
 
     @Test
     fun shouldCallLogin() = runBlocking<Unit> {
@@ -55,7 +57,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessAuthenticatedApiWithToken() = runBlocking<Unit> {
 
-        val sentUserContext = UserContext(UUID.randomUUID().toString(), arrayOf("ADMIN", "OTHER"))
+        val sentUserContext = User(UUID.randomUUID().toString(), authService.encode("ADMIN", "OTHER"))
 
         val token = jwt.generate(sentUserContext)
 
@@ -63,7 +65,7 @@ class AuthenticationControllerIT : BaseIT() {
 
         val response = client.restGet(port(), "localhost",
                 AuthContants.BASE_AUTH_API + "/test/authenticated",
-                UserContext::class,
+                User::class,
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -73,17 +75,16 @@ class AuthenticationControllerIT : BaseIT() {
         assertEquals(sentUserContext.username, receivedUserContext!!.username)
     }
 
-
     @Test
     fun shouldAccessPublicUriWithAnonymousUser() = runBlocking<Unit> {
 
         val response = client.restGet(port(), "localhost",
                 AuthContants.BASE_AUTH_API + "/test/public",
-                UserContext::class)
+                User::class)
 
         val userContext = response.body
         assertNotNull(userContext)
-        assertTrue(userContext!!.roles.size === 0)
+        assertTrue(authService.decode(userContext!!.roles).size === 0)
         assertTrue(userContext!!.username.isEmpty())
     }
 
@@ -104,10 +105,10 @@ class AuthenticationControllerIT : BaseIT() {
         val responseDto = response.body
         assertNotNull(responseDto)
         assertNotNull(responseDto!!.token)
-        val userContext = jwt.parse(responseDto.token, UserContext::class)
+        val userContext = jwt.parse(responseDto.token, User::class)
         assertEquals("user", userContext.username)
-        assertEquals(1, userContext.roles.size)
-        assertEquals("USER", userContext.roles[0])
+        assertEquals(1, authService.decode(userContext.roles).size)
+        assertEquals("USER", authService.decode(userContext.roles)[0].name)
     }
 
     @Test
@@ -131,7 +132,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldNotAccessProtectedApiWithoutAdminRole() = runBlocking {
 
-        val sentUserContext = UserContext(UUID.randomUUID().toString())
+        val sentUserContext = User(UUID.randomUUID().toString(), 0)
 
         val token = jwt.generate(sentUserContext)
 
@@ -150,7 +151,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessProtectedApiWithAdminRole() = runBlocking {
 
-        val sentUserContext = UserContext(UUID.randomUUID().toString(), arrayOf("ADMIN"))
+        val sentUserContext = User(UUID.randomUUID().toString(), authService.encode("ADMIN"))
 
         val token = jwt.generate(sentUserContext)
 
@@ -158,7 +159,7 @@ class AuthenticationControllerIT : BaseIT() {
 
         val response = client.restGet(port(), "localhost",
                 AuthContants.BASE_AUTH_API + "/test/protected",
-                UserContext::class,
+                User::class,
                 headers)
 
         val receivedUserContext = response.body
@@ -169,7 +170,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldGetTokenExpiredExceptionIfTokenNotValid() = runBlocking {
 
-        val sentUserContext = UserContext(UUID.randomUUID().toString())
+        val sentUserContext = User(UUID.randomUUID().toString(), 0)
 
         val token = jwt.generate("", sentUserContext, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
 
