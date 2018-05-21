@@ -6,6 +6,7 @@ import com.ufoscout.properlty.reader.SystemPropertiesReader
 import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
 import com.ufoscout.vertxk.kodein.VertxK
 import com.ufoscout.vertxk.kodein.VertxKModule
+import com.ufoscout.vertxk.kodein.json.JsonModule
 import com.ufoscout.vertxk.kodein.router.RouterModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
@@ -63,6 +64,7 @@ object AppMain {
                 vertx,
                 AuthModule(deploymentOptions),
                 CoreModule(coreConfig),
+                JsonModule(),
                 RouterModule(coreConfig.server),
                 *modules
         )

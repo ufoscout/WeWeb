@@ -15,6 +15,7 @@
  */
 package com.weweb.core.config
 
+import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.properlty.Properlty
 import com.ufoscout.vertxk.kodein.config.RouterConfig
 
@@ -26,9 +27,9 @@ data class CoreConfig(val server: RouterConfig,
             return CoreConfig(
                     RouterConfig(prop.getInt("server.port")!!),
                     JwtConfig(
-                            secret = prop.get("jwt.secret")!!,
-                            signatureAlgorithm = prop.get("jwt.signatureAlgorithm")!!,
-                            tokenValidityMinutes = prop.getLong("jwt.tokenValidityMinutes")!!
+                            prop.get("jwt.secret")!!,
+                            prop.get("jwt.signatureAlgorithm")!!,
+                            prop.getLong("jwt.tokenValidityMinutes")!!
                     )
             )
         }

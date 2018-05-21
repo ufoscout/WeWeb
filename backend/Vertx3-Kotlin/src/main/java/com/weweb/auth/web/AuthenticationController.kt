@@ -1,5 +1,7 @@
 package com.weweb.auth.web
 
+import com.ufoscout.coreutils.jwt.TokenExpiredException
+import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.ufoscout.vertxk.kodein.VertxKVerticle
 import com.ufoscout.vertxk.kodein.router.RouterService
 import com.ufoscout.vertxk.kodein.router.WebException
@@ -14,8 +16,6 @@ import com.weweb.auth.exception.UnauthenticatedException
 import com.weweb.auth.exception.UnauthorizedException
 import com.weweb.auth.service.AuthContextService
 import com.weweb.auth.service.UserService
-import com.weweb.core.jwt.JwtService
-import com.weweb.core.jwt.TokenExpiredException
 
 class AuthenticationController (val routerService: RouterService,
                                 val userService: UserService,

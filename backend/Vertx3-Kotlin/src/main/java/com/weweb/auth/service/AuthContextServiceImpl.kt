@@ -1,9 +1,9 @@
 package com.weweb.auth.service
 
+import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.weweb.auth.config.AuthContants
 import com.weweb.auth.context.AuthContext
 import com.weweb.auth.context.UserContext
-import com.weweb.core.jwt.JwtService
 import io.vertx.core.http.HttpServerRequest
 
 class AuthContextServiceImpl(val jwtService: JwtService) : AuthContextService {

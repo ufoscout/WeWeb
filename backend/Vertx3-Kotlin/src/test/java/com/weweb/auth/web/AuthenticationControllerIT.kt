@@ -1,12 +1,12 @@
 package com.weweb.auth.web
 
+import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.ufoscout.vertxk.kodein.router.ErrorDetails
 import com.weweb.BaseIT
 import com.weweb.auth.config.AuthContants
 import com.weweb.auth.context.UserContext
 import com.weweb.auth.dto.LoginDto
 import com.weweb.auth.dto.LoginResponseDto
-import com.weweb.core.jwt.JwtService
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
