@@ -1,7 +1,7 @@
-package com.weweb.auth.service
+package com.weweb.um.login
 
-import com.weweb.auth.exception.BadCredentialsException
-import java.util.*
+import com.ufoscout.vertxk.kodein.auth.BadCredentialsException
+import com.ufoscout.vertxk.kodein.auth.User
 import java.util.concurrent.ConcurrentHashMap
 
 class InMemoryUserService(private val crypt: PasswordEncoder) : UserService {

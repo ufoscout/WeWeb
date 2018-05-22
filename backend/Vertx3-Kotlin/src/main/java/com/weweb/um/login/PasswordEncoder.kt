@@ -1,4 +1,4 @@
-package com.weweb.auth.service
+package com.weweb.um.login
 
 interface PasswordEncoder {
 

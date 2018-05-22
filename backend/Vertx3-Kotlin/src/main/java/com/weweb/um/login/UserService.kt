@@ -1,4 +1,6 @@
-package com.weweb.auth.service
+package com.weweb.um.login
+
+import com.ufoscout.vertxk.kodein.auth.User
 
 interface UserService {
 

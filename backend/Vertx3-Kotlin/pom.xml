@@ -18,7 +18,6 @@
     <project.reporting.outputEncoding>utf8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <coreutils.version>1.0.1-SNAPSHOT</coreutils.version>
     <jackson.version>2.9.5</jackson.version>
     <jbcrypt.version>0.4</jbcrypt.version>
     <jjwt.version>0.9.0</jjwt.version>
@@ -26,7 +25,7 @@
     <logback.version>1.2.3</logback.version>
     <properlty.version>1.6.0</properlty.version>
     <vertx.version>3.5.1</vertx.version>
-    <vertxk.version>1.4.0-SNAPSHOT</vertxk.version>
+    <vertxk.version>1.5.0</vertxk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
@@ -58,14 +57,14 @@
       <version>${properlty.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-auth-kotlin</artifactId>
-      <version>${coreutils.version}</version>
+      <groupId>com.ufoscout.vertxk</groupId>
+      <artifactId>vertxk-kodein</artifactId>
+      <version>${vertxk.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-jwt-kotlin</artifactId>
-      <version>${coreutils.version}</version>
+      <groupId>com.ufoscout.vertxk</groupId>
+      <artifactId>vertxk-kodein-auth-jwt</artifactId>
+      <version>${vertxk.version}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
@@ -107,11 +106,6 @@
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>${jbcrypt.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.ufoscout.vertxk</groupId>
-      <artifactId>vertxk-kodein</artifactId>
-      <version>${vertxk.version}</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>

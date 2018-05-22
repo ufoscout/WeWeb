@@ -1,13 +1,14 @@
-package com.weweb.auth.web
+package com.weweb.um.web
 
 import com.ufoscout.coreutils.auth.AuthService
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
+import com.ufoscout.vertxk.kodein.auth.AuthContants
+import com.ufoscout.vertxk.kodein.auth.User
 import com.ufoscout.vertxk.kodein.router.ErrorDetails
 import com.weweb.BaseIT
-import com.weweb.auth.config.AuthContants
-import com.weweb.auth.dto.LoginDto
-import com.weweb.auth.dto.LoginResponseDto
-import com.weweb.auth.service.User
+import com.weweb.um.config.UmContants
+import com.weweb.um.dto.LoginDto
+import com.weweb.um.dto.LoginResponseDto
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -15,8 +16,7 @@ import org.junit.jupiter.api.Test
 import org.kodein.di.generic.instance
 import java.util.*
 
-
-class AuthenticationControllerIT : BaseIT() {
+class LoginControllerVerticleIT : BaseIT() {
 
     val client = vertx().createHttpClient()
     val jwt: JwtService = kodein().instance()
@@ -26,7 +26,7 @@ class AuthenticationControllerIT : BaseIT() {
     fun shouldCallLogin() = runBlocking<Unit> {
 
         val loginDto = LoginDto("user", "user")
-        val response = client.restPost(port(), "localhost", AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
+        val response = client.restPost(port(), "localhost", UmContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
 
         assertEquals(200, response.statusCode)
         logger().info("token is ${response.body!!.token}")
@@ -36,7 +36,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldGetUnauthorizedWithAnonymousUser() = runBlocking<Unit> {
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/authenticated",
+                UmContants.BASE_AUTH_API + "/test/authenticated",
                 ErrorDetails::class)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
@@ -47,7 +47,7 @@ class AuthenticationControllerIT : BaseIT() {
 
     fun shouldGetUnauthorizedWithAnonymousUserOnProtectedUri() = runBlocking<Unit> {
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/protected",
+                UmContants.BASE_AUTH_API + "/test/protected",
                 ErrorDetails::class)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
@@ -64,7 +64,7 @@ class AuthenticationControllerIT : BaseIT() {
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/authenticated",
+                UmContants.BASE_AUTH_API + "/test/authenticated",
                 User::class,
                 headers)
 
@@ -79,7 +79,7 @@ class AuthenticationControllerIT : BaseIT() {
     fun shouldAccessPublicUriWithAnonymousUser() = runBlocking<Unit> {
 
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/public",
+                UmContants.BASE_AUTH_API + "/test/public",
                 User::class)
 
         val userContext = response.body
@@ -97,7 +97,7 @@ class AuthenticationControllerIT : BaseIT() {
         val response = client.restPost(
                 port(),
                 "localhost",
-                AuthContants.BASE_AUTH_API + "/login",
+                UmContants.BASE_AUTH_API + "/login",
                 loginDto,
                 LoginResponseDto::class)
 
@@ -120,7 +120,7 @@ class AuthenticationControllerIT : BaseIT() {
         val response = client.restPost(
                 port(),
                 "localhost",
-                AuthContants.BASE_AUTH_API + "/login",
+                UmContants.BASE_AUTH_API + "/login",
                 loginDto,
                 ErrorDetails::class)
 
@@ -139,7 +139,7 @@ class AuthenticationControllerIT : BaseIT() {
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/protected",
+                UmContants.BASE_AUTH_API + "/test/protected",
                 ErrorDetails::class,
                 headers)
 
@@ -158,7 +158,7 @@ class AuthenticationControllerIT : BaseIT() {
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/protected",
+                UmContants.BASE_AUTH_API + "/test/protected",
                 User::class,
                 headers)
 
@@ -177,7 +177,7 @@ class AuthenticationControllerIT : BaseIT() {
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
         val response = client.restGet(port(), "localhost",
-                AuthContants.BASE_AUTH_API + "/test/protected",
+                UmContants.BASE_AUTH_API + "/test/protected",
                 ErrorDetails::class,
                 headers)
 

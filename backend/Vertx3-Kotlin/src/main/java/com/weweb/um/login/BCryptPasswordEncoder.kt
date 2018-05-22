@@ -1,4 +1,4 @@
-package com.weweb.auth.service
+package com.weweb.um.login
 
 import org.mindrot.jbcrypt.BCrypt
 

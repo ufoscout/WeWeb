@@ -11,6 +11,7 @@ import com.ufoscout.vertxk.kodein.router.RouterModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
+import com.weweb.um.UmModule
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
@@ -62,9 +63,11 @@ object AppMain {
 
         return VertxK.start(
                 vertx,
-                AuthModule(deploymentOptions),
+                AuthModule(),
                 CoreModule(coreConfig),
+                UmModule(deploymentOptions),
                 JsonModule(),
+                com.ufoscout.vertxk.kodein.auth.AuthModule(coreConfig.jwt),
                 RouterModule(coreConfig.server),
                 *modules
         )

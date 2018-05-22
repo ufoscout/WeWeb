@@ -1,7 +1,9 @@
-package com.weweb.auth.service
+package com.weweb.um.login
 
+import com.ufoscout.vertxk.kodein.auth.BadCredentialsException
 import com.weweb.BaseTest
-import com.weweb.auth.exception.BadCredentialsException
+import com.weweb.um.login.BCryptPasswordEncoder
+import com.weweb.um.login.InMemoryUserService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test

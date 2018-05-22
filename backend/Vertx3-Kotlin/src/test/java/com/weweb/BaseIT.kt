@@ -1,8 +1,6 @@
 package com.weweb
 
 import com.ufoscout.vertxk.K
-import com.weweb.auth.AuthTestModule
-import com.weweb.core.CoreTestModule
 import com.weweb.core.config.CoreConfig
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.awaitResult
@@ -29,8 +27,7 @@ abstract class BaseIT : BaseTest(), K {
             System.setProperty("server.port", port.toString())
 
             val dk = AppMain.start(
-                    CoreTestModule(),
-                    AuthTestModule()
+                    // AuthTestModule() <-- Add test modules here
             ).direct
             var conf: CoreConfig = dk.instance();
             vertx = dk.instance()

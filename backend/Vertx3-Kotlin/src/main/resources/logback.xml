@@ -8,7 +8,8 @@
   </appender>
 
   <logger name="com.weweb" level="DEBUG"/>
-
+  <logger name="com.ufoscout" level="DEBUG"/>
+\
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
   </root>
