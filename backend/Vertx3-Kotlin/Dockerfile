@@ -19,7 +19,7 @@ RUN chmod +x /wait
 ENV JAR_PATH target
 ENV JAR_NAME weweb-vertx3-kotlin-fat.jar
 
-ENV WRK_DIR = /opt/build/
+ENV WRK_DIR /opt/build/
 
 COPY --from=builder /src/$JAR_PATH/$JAR_NAME $WRK_DIR
 

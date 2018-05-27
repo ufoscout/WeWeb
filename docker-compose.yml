@@ -3,6 +3,24 @@ version: "3"
 services:
 
 ## -------------------
+## Go - Gin Gonic
+## -------------------
+
+  fe_gin_angular:
+    image: "weweb/fe/angular"
+    build: ./frontend/Angular-Typescript
+    links:
+      - be_gin:backend
+    ports:
+      - "2014:2015"
+    depends_on:
+      - be_gin
+      
+  be_gin:
+    image: "weweb/be/gin"
+    build: ./backend/Go-GinGonic
+
+## -------------------
 ## Vertx3 - Angular 
 ## -------------------
 
