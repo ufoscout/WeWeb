@@ -7,6 +7,7 @@ echo 'Build Backends'
 echo $LINE_SEPARATOR
 
 declare -a projects=(
+    "Go-GinGonic" 
     "SpringBoot2-Java" 
     "Vertx3-Kotlin"
 )
