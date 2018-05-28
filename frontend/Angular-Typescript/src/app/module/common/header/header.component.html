@@ -18,7 +18,7 @@
             {{(commonState$ | async).language}}
             <span class="caret"></span>
           </div>
-          <div ngbDropdownMenu aria-labelledby="dropdownLanguage">
+          <div ngbDropdownMenu aria-labelledby="dropdownLanguage" id="dropdownLanguages">
             <div class="dropdown-item" *ngFor="let lang of (commonState$ | async).allLanguages" (click)="setLanguage(lang)">
               {{lang}}
             </div>
