@@ -1,5 +1,5 @@
 import * as obj from './object.utils';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 /**
  * Checks if a string is empty (""), undefined, null or whitespace only.

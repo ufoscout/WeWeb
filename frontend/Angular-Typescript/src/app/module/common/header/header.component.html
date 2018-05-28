@@ -13,6 +13,17 @@
         <li class="nav-item" [routerLinkActive]="['active']">
           <a class="nav-link" [routerLink]="['/login']" (click)="navbarCollapsed = true">Login</a>
         </li>
+        <li ngbDropdown class="nav-item dropdown">
+          <div class="nav-link dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle id="dropdownLanguage">
+            {{(commonState$ | async).language}}
+            <span class="caret"></span>
+          </div>
+          <div ngbDropdownMenu aria-labelledby="dropdownLanguage">
+            <div class="dropdown-item" *ngFor="let lang of (commonState$ | async).allLanguages" (click)="setLanguage(lang)">
+              {{lang}}
+            </div>
+          </div>
+        </li>
         <!--
               <li class="nav-item" [routerLinkActive]="['active']">
                 <a class="nav-link" [routerLink]="['/components']" (click)="navbarCollapsed = true">Components</a>

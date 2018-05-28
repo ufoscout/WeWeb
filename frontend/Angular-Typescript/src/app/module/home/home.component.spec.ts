@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HomeModule } from './';
 import { HomeComponent } from './home.component';
+import { NgxsModule } from '@ngxs/store';
 
 describe(`HomeComponent`, () => {
 
@@ -11,6 +12,7 @@ describe(`HomeComponent`, () => {
             imports: [
                 HttpClientTestingModule,
                 RouterTestingModule,
+                NgxsModule.forRoot([]),
                 HomeModule,
             ],
             providers: [

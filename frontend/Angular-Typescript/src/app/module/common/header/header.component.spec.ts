@@ -3,6 +3,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommonModule } from '../';
 import { HeaderComponent } from './header.component';
+import { NgxsModule } from '@ngxs/store';
+import { CommonState } from '../common.state';
 
 describe(`HeaderComponent`, () => {
 
@@ -11,6 +13,7 @@ describe(`HeaderComponent`, () => {
             imports: [
                 HttpClientTestingModule,
                 RouterTestingModule,
+                NgxsModule.forRoot([]),
                 CommonModule,
             ],
             providers: [
