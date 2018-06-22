@@ -1,9 +1,8 @@
-package com.weweb.um.login
+package com.weweb.um.service
 
-import com.ufoscout.vertxk.kodein.auth.BadCredentialsException
+import com.ufoscout.coreutils.validation.SimpleValidatorService
+import com.ufoscout.vertk.kodein.auth.BadCredentialsException
 import com.weweb.BaseTest
-import com.weweb.um.login.BCryptPasswordEncoder
-import com.weweb.um.login.InMemoryUserService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.assertThrows
 
 class InMemoryUserServiceTest: BaseTest() {
 
-    internal var service = InMemoryUserService(BCryptPasswordEncoder())
+    internal var service = InMemoryUserService(BCryptPasswordEncoder(), SimpleValidatorService())
 
     @Test
     fun shouldReturnUser() {

@@ -17,9 +17,9 @@ package com.weweb.core.config
 
 import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.properlty.Properlty
-import com.ufoscout.vertxk.kodein.config.RouterConfig
+import com.ufoscout.vertk.kodein.web.RouterConfig
 
-data class CoreConfig(val server: RouterConfig,
+data class CoreConfig(val routerConfig: RouterConfig,
                       val jwt: JwtConfig ) {
 
     companion object {

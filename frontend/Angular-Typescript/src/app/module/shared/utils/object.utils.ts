@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 /**
  * Returns true if the object is not undefined and not null.
  */

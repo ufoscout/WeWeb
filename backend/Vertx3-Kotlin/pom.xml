@@ -23,7 +23,7 @@
     <logback.version>1.2.3</logback.version>
     <properlty.version>1.6.1</properlty.version>
     <vertx.version>3.5.2</vertx.version>
-    <vertxk.version>1.6.4</vertxk.version>
+    <vertk.version>2.2.3-SNAPSHOT</vertk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
@@ -55,14 +55,19 @@
       <version>${properlty.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout.vertxk</groupId>
-      <artifactId>vertxk-kodein</artifactId>
-      <version>${vertxk.version}</version>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-kodein-web</artifactId>
+      <version>${vertk.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout.vertxk</groupId>
-      <artifactId>vertxk-kodein-auth-jwt</artifactId>
-      <version>${vertxk.version}</version>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-kodein-auth-jwt</artifactId>
+      <version>${vertk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-kodein-mail</artifactId>
+      <version>${vertk.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mindrot</groupId>

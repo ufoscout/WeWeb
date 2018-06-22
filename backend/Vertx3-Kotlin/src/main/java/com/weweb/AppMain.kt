@@ -4,22 +4,21 @@ import com.ufoscout.properlty.Properlty
 import com.ufoscout.properlty.reader.EnvironmentVariablesReader
 import com.ufoscout.properlty.reader.SystemPropertiesReader
 import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
-import com.ufoscout.vertxk.kodein.VertxK
-import com.ufoscout.vertxk.kodein.VertxKModule
-import com.ufoscout.vertxk.kodein.json.JsonModule
-import com.ufoscout.vertxk.kodein.router.RouterModule
+import com.ufoscout.vertk.Vertk
+import com.ufoscout.vertk.kodein.VertkKodein
+import com.ufoscout.vertk.kodein.VertkKodeinModule
+import com.ufoscout.vertk.kodein.json.JsonModule
+import com.ufoscout.vertk.kodein.web.RouterModule
 import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
 import com.weweb.um.UmModule
 import io.vertx.core.DeploymentOptions
-import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.core.logging.SLF4JLogDelegateFactory
 import kotlinx.coroutines.experimental.runBlocking
 import org.kodein.di.Kodein
 import java.io.IOException
-
 
 object AppMain {
 
@@ -42,11 +41,11 @@ object AppMain {
         }
     }
 
-    suspend fun start(vararg modules: VertxKModule): Kodein {
+    suspend fun start(vararg modules: VertkKodeinModule): Kodein {
 
         log.info("Starting kotlin main")
 
-        val vertx = Vertx.vertx()
+        val vertk = Vertk.vertk()
 
         val properlty = Properlty.builder()
                 .add("classpath:conf/config.properties")
@@ -61,14 +60,14 @@ object AppMain {
         val deploymentOptions = DeploymentOptions()
         deploymentOptions.setInstances(Runtime.getRuntime().availableProcessors())
 
-        return VertxK.start(
-                vertx,
+        return VertkKodein.start(
+                vertk,
                 AuthModule(),
                 CoreModule(coreConfig),
                 UmModule(deploymentOptions),
                 JsonModule(),
-                com.ufoscout.vertxk.kodein.auth.AuthModule(coreConfig.jwt),
-                RouterModule(coreConfig.server),
+                com.ufoscout.vertk.kodein.auth.AuthModule(coreConfig.jwt),
+                RouterModule(coreConfig.routerConfig),
                 *modules
         )
 

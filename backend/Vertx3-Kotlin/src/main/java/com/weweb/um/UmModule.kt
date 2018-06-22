@@ -1,28 +1,28 @@
 package com.weweb.um
 
-import com.ufoscout.vertxk.kodein.VertxKModule
-import com.ufoscout.vertxk.kodein.deployKodeinVerticle
-import com.weweb.um.login.BCryptPasswordEncoder
-import com.weweb.um.login.InMemoryUserService
-import com.weweb.um.login.PasswordEncoder
-import com.weweb.um.login.UserService
-import com.weweb.um.web.LoginControllerVerticle
+import com.ufoscout.vertk.Vertk
+import com.ufoscout.vertk.kodein.VertkKodeinModule
+import com.ufoscout.vertk.kodein.deployKodeinVerticle
+import com.weweb.um.service.BCryptPasswordEncoder
+import com.weweb.um.service.InMemoryUserService
+import com.weweb.um.service.PasswordEncoder
+import com.weweb.um.service.UserService
+import com.weweb.um.web.UmControllerVerticle
 import io.vertx.core.DeploymentOptions
-import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 
-class UmModule(val deploymentOptions: DeploymentOptions): VertxKModule {
+class UmModule(val deploymentOptions: DeploymentOptions): VertkKodeinModule {
 
     override fun module() = Kodein.Module {
         bind<PasswordEncoder>() with singleton { BCryptPasswordEncoder() }
-        bind<UserService>() with singleton { InMemoryUserService(instance()) }
+        bind<UserService>() with singleton { InMemoryUserService(instance(), instance()) }
     }
 
-    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
-        vertx.deployKodeinVerticle<LoginControllerVerticle>(deploymentOptions)
+    override suspend fun onInit(vertk: Vertk, kodein: Kodein) {
+        vertk.deployKodeinVerticle<UmControllerVerticle>(deploymentOptions)
     }
 
 }
