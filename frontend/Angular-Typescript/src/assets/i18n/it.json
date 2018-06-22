@@ -1,5 +1,44 @@
 {
+    "global": {
+    },
+    "header": {
+        "main_title": "Angular!",
+        "login": "Login",
+        "logout": "Logout",
+        "sign_up": "Crea account",
+        "account": "Conto",
+        "profile": "Profilo",
+        "orderboard": "Compra/Vendi"
+    },
     "hello": {
         "world" : "Ciao, Mondo!"
+    },
+    "home": {
+    },
+    "login": {
+        "title": "Login",
+        "form" : {
+            "username": "username",
+            "username_error_required": "Lo username è necessario",
+            "password": "password",
+            "password_error_required": "La password è necessaria",
+            "submit": "Invia",
+            "submit_error": "Le credentiali immesse non sono valide"
+        }
+    },
+    "um": {
+        "createAccount": {
+            "title": "Crea account",
+            "email": "Email",
+            "email_error_not_valid": "L'email immessa non è valida'",
+            "password": "Password",
+            "password_confirm": "Conferma password",
+            "password_error_required": "La password deve avere almeno 6 caratteri",
+            "password_confirm_error_required": "Confermare la password",
+            "password_confirm_error_does_not_match": "Le password immesse sono diverse",
+            "submit": "Invia",
+            "submit_error": "Le informazione immesse non sono valide",
+            "error_notUnique": "L'email immessa è già stata usata"
+        }
     }
 }

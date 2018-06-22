@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { HomeModule } from './module/home';
 import { LoginModule } from './module/login';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { UmModule } from './module/um';
 
 @NgModule({
   declarations: [
@@ -15,9 +18,15 @@ import { LoginModule } from './module/login';
     BrowserModule,
     NgbModule.forRoot(),
     NgxsModule.forRoot([]),
+    NgxsStoragePluginModule.forRoot({
+//      key: '@MyKey'
+    }),
     AppRoutingModule,
     HomeModule,
     LoginModule,
+    UmModule,
+    // NgxsLoggerPluginModule must be loaded at the end
+    NgxsLoggerPluginModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

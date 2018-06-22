@@ -5,18 +5,26 @@ import { LoginComponent } from './login.component';
 import { LoginRoutingModule } from './login.routing';
 import { AuthModule } from '../auth';
 import { SharedModule } from '../shared';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
     LoginComponent,
   ],
   imports: [
+    TranslateModule,
     CommonModule,
     FormsModule,
+    NgxSpinnerModule,
     AuthModule,
     LoginRoutingModule,
     SharedModule,
   ],
-  providers: []
+  providers: [
+  ],
+  exports: [
+    TranslateModule
+  ]
 })
 export class LoginModule { }

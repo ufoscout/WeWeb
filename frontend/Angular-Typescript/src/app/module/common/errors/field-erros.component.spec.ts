@@ -1,31 +1,27 @@
 import { TestBed, async, inject, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { CommonModule } from '../';
-import { HeaderComponent } from './header.component';
 import { NgxsModule, Store } from '@ngxs/store';
-import { CommonStateModel } from '../common.state';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Component } from '@angular/core';
 
-describe('HeaderComponent', () => {
-    let fixture: ComponentFixture<HeaderComponent>;
-    let component: HeaderComponent;
-    let store: Store;
+describe('FieldErrorsComponent', () => {
+    let fixture: ComponentFixture<TesterComponent>;
+    let component: TesterComponent;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule,
-                RouterTestingModule,
                 NgbModule.forRoot(),
                 NgxsModule.forRoot([]),
                 CommonModule,
             ],
-            providers: []
+            declarations: [
+                TesterComponent,
+            ]
         }).compileComponents().then(() => {
-            fixture = TestBed.createComponent(HeaderComponent);
+            fixture = TestBed.createComponent(TesterComponent);
             component = fixture.componentInstance;
-            store = TestBed.get(Store);
+            fixture.detectChanges();
         });
     }));
 
@@ -33,13 +29,39 @@ describe('HeaderComponent', () => {
         expect(component).not.toBeUndefined();
     }));
 
-    it('should show the current language', fakeAsync(() => {
-        fixture.detectChanges();
-        const state = store.selectSnapshot<CommonStateModel>(s => s.common);
-        const selectedLanguage = fixture.debugElement.nativeElement.querySelector('#dropdownLanguage');
-        expect(selectedLanguage.textContent.trim()).toBe(state.language);
+    it('should be empty if no errors', fakeAsync(() => {
+        const children: HTMLCollection = fixture.nativeElement.querySelector('app-field-errors').children;
+        expect(children.length).toBe(0);
     }));
 
+    it('should show the errors', fakeAsync(() => {
+        component.errors = ['one', 'two', 'three'];
+        fixture.detectChanges();
+
+        const children: HTMLCollection = fixture.nativeElement.querySelector('app-field-errors').children;
+        console.log(children);
+
+        expect(children.length).toBe(3);
+        expect(children.item(0).textContent).toContain('errors.messages.one');
+        expect(children.item(1).textContent).toContain('errors.messages.two');
+        expect(children.item(2).textContent).toContain('errors.messages.three');
+    }));
+
+    it('should show the errors using a custom key', fakeAsync(() => {
+        component.errors = ['one', 'two'];
+        component.key = 'key.key-';
+        fixture.detectChanges();
+
+        const children: HTMLCollection = fixture.nativeElement.querySelector('app-field-errors').children;
+        console.log(children);
+
+        expect(children.length).toBe(2);
+        expect(children.item(0).textContent).toContain('key.key-one');
+        expect(children.item(1).textContent).toContain('key.key-two');
+    }));
+
+
+    /*
     it('should list all languages', fakeAsync(() => {
         fixture.detectChanges();
         const state = store.selectSnapshot<CommonStateModel>(s => s.common);
@@ -86,5 +108,21 @@ describe('HeaderComponent', () => {
         expect(selectedLanguage.textContent.trim()).not.toBe(previouslySelectedLanguage);
         expect(selectedLanguage.textContent.trim()).toBe(state.allLanguages[notDefaultLanguageIndex]);
     }));
-
+*/
 });
+
+@Component({
+    selector: `tester-component`,
+    template: `
+    <app-field-errors
+        [errors]="errors"
+        [translateKey]="key">
+    </app-field-errors>`
+})
+class TesterComponent {
+
+    errors: String[];
+    key: String;
+
+}
+

@@ -1,5 +1,24 @@
 {
+    "header": {
+        "main_title": "Angular!",
+        "login": "Login",
+        "logout": "Logout",
+        "sign_up": "Sign up",
+        "account": "Account"
+    },
     "hello": {
         "world" : "Hello, World!"
+    },
+    "home": {
+    },
+    "login": {
+        "title": "Login",
+        "form" : {
+            "username": "username",
+            "username_error_required": "Username is required",
+            "password": "password",
+            "password_error_required": "Password is required",
+            "submit_error": "The username or password you entered is incorrect"
+        }
     }
 }

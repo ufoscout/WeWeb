@@ -12,20 +12,18 @@
     <!-- properties -->
     <main.class>com.weweb.AppMain</main.class>
     <java.version>1.8</java.version>
-    <kotlin.version>1.2.40</kotlin.version>
+    <kotlin.version>1.2.41</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>utf8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <jackson.version>2.9.5</jackson.version>
     <jbcrypt.version>0.4</jbcrypt.version>
-    <jjwt.version>0.9.0</jjwt.version>
     <junit.version>5.1.1</junit.version>
     <logback.version>1.2.3</logback.version>
-    <properlty.version>1.6.0</properlty.version>
-    <vertx.version>3.5.1</vertx.version>
-    <vertxk.version>1.6.1</vertxk.version>
+    <properlty.version>1.6.1</properlty.version>
+    <vertx.version>3.5.2</vertx.version>
+    <vertxk.version>1.6.4</vertxk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
@@ -65,42 +63,6 @@
       <groupId>com.ufoscout.vertxk</groupId>
       <artifactId>vertxk-kodein-auth-jwt</artifactId>
       <version>${vertxk.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-lang-kotlin</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-lang-kotlin-coroutines</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jdk8</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-kotlin</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mindrot</groupId>

@@ -1,0 +1,41 @@
+<div class="text-center mt-4 mb-2">
+    <h2>{{'um.createAccount.title' | translate}}</h2>
+</div>
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <form #createAccountForm="ngForm">
+            <div *ngIf="submitError" class="text-danger text-center">
+                <span>{{'um.createAccount.submit_error' | translate}}</span>
+            </div>
+            <div class="form-group">
+                <label for="email">{{'um.createAccount.email' | translate}}</label>
+                <input type="email" class="form-control" placeholder="{{'um.createAccount.email' | translate}}" [(ngModel)]="model.email" name="email" id="email"
+                    #email="ngModel" required email>
+                <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+                    {{'um.createAccount.email_error_not_valid' | translate}}
+                </div>
+                <app-field-errors [errors]="submitError?.details['username']" [translateKey]="'um.createAccount.error_'"></app-field-errors>
+            </div>
+            <div class="form-group">
+                <label for="password">{{'um.createAccount.password' | translate}}</label>
+                <input type="password" class="form-control" placeholder="{{'um.createAccount.password' | translate}}" [(ngModel)]="model.password" name="password" id="password"
+                    #password="ngModel" required minlength="6">
+                <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
+                    {{'um.createAccount.password_error_required' | translate}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="passwordConfirm">{{'um.createAccount.password_confirm' | translate}}</label>
+                <input type="password" class="form-control" placeholder="{{'um.createAccount.password_confirm' | translate}}" [(ngModel)]="model.passwordConfirm" name="passwordConfirm" id="passwordConfirm"
+                    #passwordConfirm="ngModel" required>
+                <div [hidden]="passwordsMatch()" class="alert alert-danger">
+                    {{'um.createAccount.password_confirm_error_does_not_match' | translate}}
+                </div>
+            </div>
+            <div class="float-right">
+                <button [disabled]="!createAccountForm.form.valid || !passwordsMatch()" class="btn btn-primary" (click)="submit()">{{'um.createAccount.submit' | translate}}</button>
+            </div>
+
+        </form>
+    </div>
+</div>

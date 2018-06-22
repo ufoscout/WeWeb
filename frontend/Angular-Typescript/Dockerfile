@@ -11,5 +11,5 @@ RUN ./build.sh
 # Build application image
 FROM abiosoft/caddy
 
-COPY --from=builder /src/dist /dist
+COPY --from=builder /src/dist/Angular-Typescript /dist
 COPY --from=builder /src/Caddyfile /etc/Caddyfile

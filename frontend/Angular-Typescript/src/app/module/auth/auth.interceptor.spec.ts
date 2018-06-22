@@ -8,6 +8,8 @@ import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { Store, NgxsModule } from '@ngxs/store';
 import { AuthState } from './auth.state';
 import { SetAuthData } from './auth.events';
+import { AuthService } from './auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 describe(`[Auth] AuthInterceptor`, () => {
 
@@ -22,6 +24,8 @@ describe(`[Auth] AuthInterceptor`, () => {
                 NgxsModule.forRoot([AuthState]),
             ],
             providers: [
+                AuthService,
+                NgxSpinnerService,
                 {
                     provide: HTTP_INTERCEPTORS,
                     useClass: AuthInterceptor,

@@ -1,50 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthState, AuthStateModel } from '../auth/auth.state';
-import { Login } from './login.model';
-import { SetAuthData } from '../auth/auth.events';
+import { Component } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Login } from '../auth/auth.events';
+import { LoginDto } from '../um/generated/dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styles: ['./header.component.css']
+  templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  @Select(AuthState) auth$: Observable<AuthStateModel>;
-  model = new Login('', '');
+  submitError = false;
+  model: LoginDto = {
+    username: '',
+    password: ''
+  };
 
-  constructor(private store: Store, private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.auth$.subscribe(auth => {
-      console.log("Auth data is: " + JSON.stringify(auth));
-    });
-  }
+  constructor(private store: Store, private router: Router) { }
 
   submitLogin(): void {
-    //this.store.dispatch(new SetAuthData({username: this.model.username, token: this.model.password}));
-    this.http.post("/api/auth/login", {
-      username: this.model.username,
-      password: this.model.password,
-    }).subscribe(response => {
-      console.log("Response: " + JSON.stringify(response));
-      this.store.dispatch(new SetAuthData({username: this.model.username, token: response['token']}));
-    });
-  }
-
-  callPublic(): void {
-    this.http.get("/api/auth/test/public").subscribe(response => {
-      console.log("Response: " + JSON.stringify(response));
-    });
-  }
-
-  callProtected(): void {
-    this.http.get("/api/auth/test/protected").subscribe(response => {
-      console.log("Response: " + JSON.stringify(response));
-    });
+    this.submitError = false;
+    this.store
+      .dispatch(new Login(this.model))
+      .subscribe(value => {
+        this.router.navigate(['/']);
+      },
+      err => {
+        this.submitError = true;
+      });
   }
 
 }

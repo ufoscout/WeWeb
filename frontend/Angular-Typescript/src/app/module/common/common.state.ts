@@ -1,13 +1,10 @@
 import { State, Action, StateContext } from '@ngxs/store';
-import { TranslateService } from '@ngx-translate/core';
 import * as events from './common.events';
-
-export const defaultLanguage = 'it';
+import { defaultLanguage } from './common.constants';
 
 export class CommonStateModel {
   allLanguages = ['en', 'it'];
   language = defaultLanguage;
-  defaultLanguage = defaultLanguage;
 }
 
 @State<CommonStateModel>({
@@ -16,11 +13,6 @@ export class CommonStateModel {
 })
 export class CommonState {
 
-  constructor(private translate: TranslateService) {
-    translate.setDefaultLang(defaultLanguage);
-    translate.use(defaultLanguage);
-  }
-
   @Action(events.SetLanguage)
   setToken({ getState, setState }: StateContext<CommonStateModel>, { payload }: events.SetLanguage) {
     const state = getState();
@@ -28,7 +20,6 @@ export class CommonState {
       ...state,
       language: payload.language,
     });
-    this.translate.use(payload.language);
   }
 
 }
