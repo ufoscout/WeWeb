@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/configuration"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/module"
 )
@@ -11,7 +11,7 @@ func main() {
 }
 
 func StartApp() {
-	config := configuration.Load(configuration.CONFIG_FILE_NAME)
+	config := config.Load(config.CONFIG_FILE_NAME)
 
 	coreModule := core.New(&config)
 

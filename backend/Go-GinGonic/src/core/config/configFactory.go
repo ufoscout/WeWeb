@@ -1,4 +1,4 @@
-package configuration
+package config
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 /*
-Load the configuration from the path folder
+Load the config from the path folder
 */
 func Load(configFile string) Config {
 

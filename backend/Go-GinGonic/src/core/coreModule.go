@@ -5,79 +5,80 @@ import (
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/configuration"
-
-	"context"
+		"context"
 	"log"
 		"net/http"
 	"time"
 	"net"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
 )
 
+type Service struct {
+	Config  *config.Config
+	Router  *gin.Engine
+}
+
 type Module struct {
-	config     *configuration.Config
-	ginRouter  *gin.Engine
+	Services   Service
 	httpServer *http.Server
 	port       int
 }
 
-func New(config *configuration.Config) *Module {
+func New(config *config.Config) *Module {
 	module := Module{}
 
-	module.config = config
-	module.ginRouter = gin.Default()
+	module.Services = Service{
+		Config: config,
+		Router: gin.Default(),
+	}
 
 	return &module
 }
 
-func (c *Module) Server() *gin.Engine {
-	return c.ginRouter
-}
-
-func (c *Module) Init() error {
+func (core *Module) Init() error {
 	return nil
 }
 
-func (c *Module) Start() error {
+func (core *Module) Start() error {
 
-	if c.config.Frontend.Enabled {
-		fmt.Printf("Loading static resources from %s\n", c.config.Frontend.ResourcesPath)
-		c.ginRouter.Use(static.Serve("/", static.LocalFile(c.config.Frontend.ResourcesPath, true)))
-		c.ginRouter.NoRoute(func(context *gin.Context){
-			context.File(c.config.Frontend.ResourcesPath + "/index.html")
+	if core.Services.Config.Frontend.Enabled {
+		fmt.Printf("Loading static resources from %s\n", core.Services.Config.Frontend.ResourcesPath)
+		core.Services.Router.Use(static.Serve("/", static.LocalFile(core.Services.Config.Frontend.ResourcesPath, true)))
+		core.Services.Router.NoRoute(func(context *gin.Context){
+			context.File(core.Services.Config.Frontend.ResourcesPath + "/index.html")
 		})
 	}
 
 	return nil
 }
 
-func (c *Module) StartServer() {
-	fmt.Printf("Starting Server at requested port %s\n", c.config.Server.Port)
+func (core *Module) StartServer() {
+	fmt.Printf("Starting Server at requested port %s\n", core.Services.Config.Server.Port)
 
-	listener, err := net.Listen("tcp", c.config.Server.Port)
+	listener, err := net.Listen("tcp", core.Services.Config.Server.Port)
 	if err != nil {
 		panic(err)
 	}
 
-	c.port = listener.Addr().(*net.TCPAddr).Port
+	core.port = listener.Addr().(*net.TCPAddr).Port
 
-	c.httpServer = &http.Server{
-		Handler: c.ginRouter,
+	core.httpServer = &http.Server{
+		Handler: core.Services.Router,
 	}
 
-	fmt.Printf("Starting Server at real port %d\n", c.port)
+	fmt.Printf("Starting Server at real port %d\n", core.port)
 
-	c.httpServer.Serve(listener)
+	core.httpServer.Serve(listener)
 }
 
-func (c *Module) ServerPort() int {
-	return c.port
+func (core *Module) ServerPort() int {
+	return core.port
 }
 
-func (c *Module) Stop() {
+func (core *Module) Stop() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := c.httpServer.Shutdown(ctx); err != nil {
+	if err := core.httpServer.Shutdown(ctx); err != nil {
 		log.Fatal("Server Shutdown:", err)
 	}
 }
