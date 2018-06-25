@@ -36,8 +36,13 @@ func (c *CoreModule) Server() *gin.Engine {
 
 func (c *CoreModule) Start() {
 
-	fmt.Printf("Loading static resources from %s\n", c.config.Frontend.ResourcesPath)
-	c.ginRouter.Use(static.Serve("/", static.LocalFile(c.config.Frontend.ResourcesPath, true)))
+	if c.config.Frontend.Enabled {
+		fmt.Printf("Loading static resources from %s\n", c.config.Frontend.ResourcesPath)
+		c.ginRouter.Use(static.Serve("/", static.LocalFile(c.config.Frontend.ResourcesPath, true)))
+		c.ginRouter.NoRoute(func(context *gin.Context){
+			context.File(c.config.Frontend.ResourcesPath + "/index.html")
+		})
+	}
 
 	fmt.Printf("Starting Server at requested port %s\n", c.config.Server.Port)
 

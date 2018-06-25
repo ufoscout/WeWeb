@@ -1,7 +1,7 @@
 #!/bin/bash
 
-## Backend
-cd backend
+## Frontend
+cd frontend
 ./build.sh
 rc=$?
 if [[ $rc -ne 0 ]] ; then
@@ -9,8 +9,9 @@ if [[ $rc -ne 0 ]] ; then
 fi
 cd ..
 
-## Frontend
-cd frontend
+
+## Backend
+cd backend
 ./build.sh
 rc=$?
 if [[ $rc -ne 0 ]] ; then

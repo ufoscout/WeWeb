@@ -8,12 +8,12 @@ import (
 )
 
 /*
-MainFolderPath returns the folder where the main.go file is stored.
+MainFolderPath returns the folder where the go.mod file is stored.
 This is useful to access project relative folders from unit tests
 */
 func MainFolderPath() string {
 
-	referenceFile := "main.go"
+	referenceFile := "go.mod"
 
 	pwd, _ := os.Getwd()
 	end := false
