@@ -15,13 +15,14 @@ func Test(t *testing.T) {
 	config := configuration.Load(path.Join(util.MainFolderPath(), configuration.CONFIG_FILE_NAME))
 	config.Server.Port = ":0"
 
-	module := NewModule(&config)
-	go module.Start()
+	coreModule := New(&config)
+	coreModule.Start()
+	go coreModule.StartServer()
 
 	time.Sleep(300 * time.Millisecond)
 
-	assert.True(t, module.ServerPort() > 0)
+	assert.True(t, coreModule.ServerPort() > 0)
 
-	module.Stop()
+	coreModule.Stop()
 
 }
