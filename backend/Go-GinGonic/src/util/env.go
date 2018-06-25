@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	s "strings"
-)
+					)
 
 /*
 MainFolderPath returns the folder where the go.mod file is stored.

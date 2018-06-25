@@ -1,21 +1,16 @@
-package jwt
+package jwt_test
 
 import (
 	"testing"
-	config2 "github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-	"github.com/stretchr/testify/assert"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/starter"
 )
 
 func Test(t *testing.T) {
 
-	config := config2.JwtConfig{
-		Secret: "mySecret",
-		SignatureAlgorithm: "HS512",
-		TokenValidityMinutes: 10,
-	}
-	jwt, err := New(config)
-	assert.Nil(t, err)
-	
+	context := starter.StaticAppContext()
+
+	jwt := context.Services.Jwt
+
 	jwt.Example()
 
 }

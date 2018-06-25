@@ -13,7 +13,7 @@ import (
 func Test(t *testing.T) {
 
 	config := config.Load(path.Join(util.MainFolderPath(), config.CONFIG_FILE_NAME))
-	config.Server.Port = ":0"
+	config.Server.Port = "0"
 
 	coreModule := New(&config)
 	coreModule.Start()

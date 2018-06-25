@@ -44,7 +44,7 @@ func (jwtService *JwtService) Example() {
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString(jwtService.secret)
+	tokenString, err := token.SignedString(*jwtService.secret)
 
 	fmt.Println(tokenString, err)
 }

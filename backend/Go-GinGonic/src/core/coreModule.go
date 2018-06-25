@@ -66,7 +66,7 @@ func (core *Module) Start() error {
 func (core *Module) StartServer() {
 	fmt.Printf("Starting Server at requested port %s\n", core.Services.Config.Server.Port)
 
-	listener, err := net.Listen("tcp", core.Services.Config.Server.Port)
+	listener, err := net.Listen("tcp", ":" + core.Services.Config.Server.Port)
 	if err != nil {
 		panic(err)
 	}
