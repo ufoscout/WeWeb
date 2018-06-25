@@ -5,17 +5,21 @@ import (
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-		"context"
+	"context"
 	"log"
-		"net/http"
+	"net/http"
 	"time"
 	"net"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/json"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/jwt"
 )
 
 type Service struct {
 	Config  *config.Config
 	Router  *gin.Engine
+	Json    *json.JsonService
+	Jwt     *jwt.JwtService
 }
 
 type Module struct {
@@ -27,9 +31,16 @@ type Module struct {
 func New(config *config.Config) *Module {
 	module := Module{}
 
+	jwtService, err := jwt.New(config.Jwt)
+	if err!=nil {
+		panic(err)
+	}
+
 	module.Services = Service{
 		Config: config,
 		Router: gin.Default(),
+		Json: json.New(),
+		Jwt: jwtService,
 	}
 
 	return &module

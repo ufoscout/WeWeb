@@ -27,6 +27,11 @@ func Load(configFile string) Config {
 			Enabled: up.GetBool("server.resources.static.enabled"),
 			ResourcesPath: up.GetString("server.resources.static.path"),
 		},
+		Jwt: JwtConfig{
+			Secret: up.GetString("jwt.secret"),
+			SignatureAlgorithm: up.GetString("jwt.signatureAlgorithm"),
+			TokenValidityMinutes: up.GetInt("jwt.tokenValidityMinutes"),
+		},
 	}
 
 	return config
