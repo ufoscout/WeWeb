@@ -43,7 +43,7 @@ func SigningMethod(method string) (*jwt.SigningMethodHMAC, error) {
 	}
 }
 
-type tokenClaims struct {
+type TokenClaims struct {
 	Payload        string `json:"payload"`
 	jwt.StandardClaims
 }
@@ -54,7 +54,7 @@ func (jwtService *JwtService) Generate(payload interface{}) (string, error) {
 
 func (jwtService *JwtService) GenerateWithSubject(subject string, payload interface{}) (string, error) {
     issuedAt := time.Now()
-	expireDate := time.Now().Add(time.Minute * time.Duration(jwtService.tokenValidityMinutes))
+	expireDate := issuedAt.Add(time.Minute * time.Duration(jwtService.tokenValidityMinutes))
 	return jwtService.GenerateWithSubjectAndDates(subject, payload, issuedAt, expireDate)
 }
 
@@ -66,7 +66,7 @@ func (jwtService *JwtService) GenerateWithSubjectAndDates(
 		return "", err
 	}
 
-	claims := tokenClaims{
+	claims := TokenClaims{
 		Payload:        string(jsonPayload),
 		StandardClaims: jwt.StandardClaims{
 			Subject: subject,
@@ -83,11 +83,27 @@ func (jwtService *JwtService) GenerateWithSubjectAndDates(
 
 func (jwtService *JwtService) Parse(tokenString string, v interface{}) error {
 
-	// Parse takes the token string and a function for looking up the key. The latter is especially
-	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
-	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
-	// to the callback, providing flexibility.
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwtService.GetDecodedToken(tokenString)
+
+	if (err==nil && token.Valid()==nil) {
+		fmt.Println("Token Payload is:")
+		fmt.Println(token.Payload)
+		err = jwtService.jsonService.FromJson([]byte(token.Payload), v)
+		if err!=nil {
+			return err
+		}
+		return nil
+	} else {
+		fmt.Println("Error")
+		fmt.Println(err)
+		return err
+	}
+}
+
+func (jwtService *JwtService) GetDecodedToken(tokenString string) (*TokenClaims, error) {
+
+	var tokenClaims TokenClaims
+	_, err := jwt.ParseWithClaims(tokenString, &tokenClaims, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -97,14 +113,27 @@ func (jwtService *JwtService) Parse(tokenString string, v interface{}) error {
 		return *jwtService.secret, nil
 	})
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		payload := claims["payload"].(string)
-		err = jwtService.jsonService.FromJson([]byte(payload), v)
-		if err!=nil {
-			return err
+	fmt.Println("------------------")
+	fmt.Println(tokenClaims)
+	fmt.Println(tokenClaims.IssuedAt)
+	fmt.Println(tokenClaims.ExpiresAt)
+	fmt.Println(tokenClaims.Valid())
+	fmt.Println("------------------")
+
+	return &tokenClaims, err
+	// Parse takes the token string and a function for looking up the key. The latter is especially
+	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
+	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
+	// to the callback, providing flexibility.
+	/*
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return nil
-	} else {
-		return err
-	}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return *jwtService.secret, nil
+	})
+*/
 }
