@@ -2,13 +2,14 @@ package com.weweb.auth.service;
 
 import static org.junit.Assert.*;
 
+import com.ufoscout.coreutils.validation.SimpleValidatorService;
 import org.junit.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class InMemoryUserServiceTest {
 
-    InMemoryUserService service = new InMemoryUserService(new BCryptPasswordEncoder());
+    InMemoryUserService service = new InMemoryUserService(new BCryptPasswordEncoder(), new SimpleValidatorService());
 
     @Test
     public void shouldReturnUser() {

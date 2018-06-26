@@ -6,6 +6,8 @@ import com.ufoscout.coreutils.jwt.CoreJsonProvider;
 import com.ufoscout.coreutils.jwt.JwtConfig;
 import com.ufoscout.coreutils.jwt.JwtService;
 import com.ufoscout.coreutils.jwt.JwtServiceJJWT;
+import com.ufoscout.coreutils.validation.SimpleValidatorService;
+import com.ufoscout.coreutils.validation.ValidatorService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,4 +36,8 @@ public class CoreConfig {
         );
     }
 
+    @Bean
+    public ValidatorService validatorService() {
+        return new SimpleValidatorService();
+    }
 }

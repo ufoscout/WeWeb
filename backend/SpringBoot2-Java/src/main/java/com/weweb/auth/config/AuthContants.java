@@ -4,6 +4,6 @@ import com.weweb.core.config.CoreConstants;
 
 public interface AuthContants {
 
-    String BASE_AUTH_API = CoreConstants.BASE_API + "/auth";
+    String BASE_AUTH_API = CoreConstants.BASE_API + "/um";
 
 }

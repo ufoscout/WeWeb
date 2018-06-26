@@ -2,13 +2,12 @@ package com.weweb.auth.web;
 
 import com.ufoscout.coreutils.jwt.JwtService;
 import com.weweb.auth.config.AuthContants;
+import com.weweb.auth.dto.CreateUserDto;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
 import com.weweb.auth.model.UserContext;
 import com.weweb.auth.service.User;
 import com.weweb.auth.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,24 +33,13 @@ public class AuthenticationController {
         String token = jwtService.generate(login.getUsername(),
                 new UserContext(login.getUsername(), login.getRoles().toArray(roles)));
 
-        return new LoginResponseDto(token);
+        return new LoginResponseDto(token, login.getUsername());
     }
 
-    @GetMapping("/test/public")
-    public UserContext testPublic(UserContext userContext) {
-        return userContext;
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/test/authenticated")
-    public UserContext testAuthenticated(UserContext userContext) {
-        return userContext;
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/test/protected")
-    public UserContext testProtected(UserContext userContext) {
-        return userContext;
+    @PostMapping("/create")
+    public String createUser(@RequestBody CreateUserDto dto) {
+        userService.createUser(dto);
+        return "";
     }
 
 }

@@ -7,7 +7,7 @@ import com.weweb.auth.config.AuthContants;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
 import com.weweb.auth.model.UserContext;
-import com.weweb.auth.web.RestControllerAdvice.ErrorDetails;
+import com.weweb.core.web.ErrorDetails;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

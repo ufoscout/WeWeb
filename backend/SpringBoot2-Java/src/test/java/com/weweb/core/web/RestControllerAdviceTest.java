@@ -1,11 +1,13 @@
-package com.weweb.auth.web;
+package com.weweb.core.web;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ufoscout.coreutils.validation.ValidationException;
+import com.ufoscout.coreutils.validation.ValidationResult;
+import com.ufoscout.coreutils.validation.ValidationResultImpl;
 import com.weweb.BaseMockitoTest;
-import com.weweb.auth.web.RestControllerAdvice.ErrorDetails;
-import com.weweb.core.jwt.TokenExpiredException;
+
 import java.util.UUID;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -51,6 +53,21 @@ public class RestControllerAdviceTest extends BaseMockitoTest {
         ResponseEntity<ErrorDetails> response = advice.handleBadCredentialsException(exception);
         //Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void handleValidationException() throws Exception {
+        // Arrange
+        String message = UUID.randomUUID().toString();
+        ValidationResultImpl<?> validationResult = new ValidationResultImpl<Object>(new Object());
+        validationResult.addViolation("key", "errorForKey");
+        ValidationException exception = new ValidationException(validationResult);
+        // Act
+        ResponseEntity<ErrorDetails> response = advice.handleValidationException(exception);
+        //Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(422);
+        assertThat(response.getBody().getDetails().size()).isEqualTo(1);
+        assertThat(response.getBody().getDetails().get("key").get(0)).isEqualTo("errorForKey");
     }
 
 }
