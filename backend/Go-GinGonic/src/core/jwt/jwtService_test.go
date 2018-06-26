@@ -47,8 +47,8 @@ func Test_ShouldGenerateAndParseCustomBeans(t *testing.T) {
 	jwtService := context.Services.Jwt
 
 	message := simpleMailMessage{}
-	message.From = "from-" + string(rand.Int())
-	message.Subject = "sub-" + string(rand.Int())
+	message.From = "from-" + strconv.Itoa(rand.Int())
+	message.Subject = "sub-" + strconv.Itoa(rand.Int())
 	message.SentDate = time.Now()
 
 	jwtString, err := jwtService.Generate(message)
@@ -89,53 +89,64 @@ func Test_ShouldSetTheExpirationDate(t *testing.T) {
 
 	assert.True(t, token.IssuedAt >= beforeTime.Unix());
 	assert.True(t, token.IssuedAt <= afterTime.Unix());
-
 	tokenValidityMinutes := context.Services.Config.Jwt.TokenValidityMinutes
 	expireTime := token.ExpiresAt
-	assert.Equal(t, token.IssuedAt + int64((time.Duration(tokenValidityMinutes) * time.Minute).Seconds()), expireTime );
+	assert.Equal(t, token.IssuedAt+int64((time.Duration(tokenValidityMinutes) * time.Minute).Seconds()), expireTime);
 }
 
-/*
 func Test_ShouldFailParsingTamperedJwt(t *testing.T) {
-assertThrows(SignatureException.class,
-()->{
 
-		context := testUtil.StaticAppContext()
-		jwtService := context.Services.Jwt
-		
-message := simpleMailMessage{}
-		message.From = "from-" + string(rand.Int())
-		message.Subject = "sub-" + string(rand.Int())
-		message.SentDate = time.Now()
+	context := testUtil.StaticAppContext()
+	jwtService := context.Services.Jwt
 
-		jwt, err := jwtService.Generate(message)
-		assert.Nil(t, err)
-		fmt.Println("Generated JWT:\n" + jwt)
+	message := simpleMailMessage{}
+	message.From = "from-" + strconv.Itoa(rand.Int())
+	message.Subject = "sub-" + strconv.Itoa(rand.Int())
+	message.SentDate = time.Now()
 
-jwtService.parse(jwt + 1, String.class);
-});
+	jwtString, err := jwtService.Generate(message)
+	assert.Nil(t, err)
+	fmt.Println("Generated JWT:\n" + jwtString)
+
+	var parsedMessage simpleMailMessage
+	err = jwtService.Parse(jwtString+"1", &parsedMessage)
+	assert.NotNil(t, err)
 }
+
 
 func Test_ShouldFailParsingExpiredBeans(t *testing.T) {
 	context := testUtil.StaticAppContext()
 	jwtService := context.Services.Jwt
-assertThrows(TokenExpiredException.class,
-()->{
-final SimpleMailMessage userContext = new SimpleMailMessage();
-jwt := jwtService.generate("", userContext, new Date(), new Date(System.currentTimeMillis() -1 ));
-jwtService.parse(JWT, SimpleMailMessage.class);
-});
+
+	message := simpleMailMessage{}
+
+	issuedTime := time.Now()
+	expireTime := issuedTime.Add(time.Second * time.Duration(-10))
+	tokenString, err := jwtService.GenerateWithSubjectAndDates("", message, issuedTime, expireTime)
+	assert.Nil(t, err)
+
+	var parsedMessage simpleMailMessage
+	err = jwtService.Parse(tokenString, &parsedMessage)
+	assert.NotNil(t, err)
 }
+
 
 func Test_ShouldAcceptNotExpiredBeans(t *testing.T) {
 	context := testUtil.StaticAppContext()
 	jwtService := context.Services.Jwt
-final SimpleMailMessage userContext = new SimpleMailMessage();
-jwt := jwtService.generate(userContext);
-assertNotNull(jwtService.parse(jwt, SimpleMailMessage.class));
+	message := simpleMailMessage{}
+
+	tokenString, err := jwtService.Generate(message)
+	assert.Nil(t, err)
+
+	var parsedMessage simpleMailMessage
+	err = jwtService.Parse(tokenString, &parsedMessage)
+	assert.Nil(t, err)
+	assert.NotNil(t, parsedMessage)
 }
 
-*/
+
+
 type simpleMailMessage struct {
 	From     string    `json:"from"`
 	SentDate time.Time `json:"sentDate"`

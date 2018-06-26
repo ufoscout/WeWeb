@@ -2,14 +2,12 @@ package jwt
 
 import (
 	"time"
-		"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 	"errors"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/json"
 	"fmt"
 )
-
-var PAYLOAD_CLAIM_KEY = "payload"
 
 type JwtService struct {
 	secret               *[]byte
@@ -86,16 +84,16 @@ func (jwtService *JwtService) Parse(tokenString string, v interface{}) error {
 	token, err := jwtService.GetDecodedToken(tokenString)
 
 	if (err==nil && token.Valid()==nil) {
-		fmt.Println("Token Payload is:")
-		fmt.Println(token.Payload)
+		//fmt.Println("Token Payload is:")
+		//fmt.Println(token.Payload)
 		err = jwtService.jsonService.FromJson([]byte(token.Payload), v)
 		if err!=nil {
 			return err
 		}
 		return nil
 	} else {
-		fmt.Println("Error")
-		fmt.Println(err)
+		//fmt.Println("Error")
+		//fmt.Println(err)
 		return err
 	}
 }
@@ -113,27 +111,13 @@ func (jwtService *JwtService) GetDecodedToken(tokenString string) (*TokenClaims,
 		return *jwtService.secret, nil
 	})
 
-	fmt.Println("------------------")
-	fmt.Println(tokenClaims)
-	fmt.Println(tokenClaims.IssuedAt)
-	fmt.Println(tokenClaims.ExpiresAt)
-	fmt.Println(tokenClaims.Valid())
-	fmt.Println("------------------")
+	//fmt.Println("------------------")
+	//fmt.Println(tokenClaims)
+	//fmt.Println(tokenClaims.IssuedAt)
+	//fmt.Println(tokenClaims.ExpiresAt)
+	//fmt.Println(tokenClaims.Valid())
+	//fmt.Println("------------------")
 
 	return &tokenClaims, err
-	// Parse takes the token string and a function for looking up the key. The latter is especially
-	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
-	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
-	// to the callback, providing flexibility.
-	/*
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
 
-		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return *jwtService.secret, nil
-	})
-*/
 }
