@@ -1,8 +1,9 @@
-package json
+package json_test
 
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
 )
 
 func Test_shouldMarshalToJson(t *testing.T) {
@@ -13,7 +14,7 @@ func Test_shouldMarshalToJson(t *testing.T) {
 		Colors: []string{"Crimson", "Red", "Ruby", "Maroon"},
 	}
 
-    json := New()
+    json := testUtil.StaticAppContext().Services.Json
 	b, err := json.ToJson(group)
 	assert.Nil(t, err)
 	assert.NotNil(t, b)
@@ -25,7 +26,7 @@ func Test_shouldUnmarshalFromJson(t *testing.T) {
 
 	var v colorGroup
 
-	json := New()
+	json := testUtil.StaticAppContext().Services.Json
 	err := json.FromJson([]byte(`{"ID":1,"Name":"Grays","Colors":["Black","White"]}`), &v)
 	assert.Nil(t, err)
 
