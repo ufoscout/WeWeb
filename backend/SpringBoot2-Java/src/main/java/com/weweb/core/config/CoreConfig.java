@@ -1,10 +1,11 @@
 package com.weweb.core.config;
 
-import com.weweb.core.json.JacksonJsonSerializerService;
-import com.weweb.core.json.JsonSerializerService;
-import com.weweb.core.jwt.JwtService;
-import com.weweb.core.jwt.JwtServiceJJWT;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.ufoscout.coreutils.json.JacksonJsonSerializerService;
+import com.ufoscout.coreutils.json.JsonSerializerService;
+import com.ufoscout.coreutils.jwt.CoreJsonProvider;
+import com.ufoscout.coreutils.jwt.JwtConfig;
+import com.ufoscout.coreutils.jwt.JwtService;
+import com.ufoscout.coreutils.jwt.JwtServiceJJWT;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,10 +26,11 @@ public class CoreConfig {
     @Bean
     public JwtService jwtService() {
         return new JwtServiceJJWT(
-                coreProperties.getSecret(),
-                SignatureAlgorithm.forName(coreProperties.getSignatureAlgorithm()),
-                coreProperties.getTokenValidityMinutes(),
-                jsonSerializerService()
+                new JwtConfig(
+                        coreProperties.getSecret(),
+                        coreProperties.getSignatureAlgorithm(),
+                        coreProperties.getTokenValidityMinutes()),
+                new CoreJsonProvider(jsonSerializerService())
         );
     }
 

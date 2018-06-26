@@ -1,12 +1,12 @@
 package com.weweb.auth.web;
 
+import com.ufoscout.coreutils.jwt.JwtService;
 import com.weweb.auth.config.AuthContants;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
 import com.weweb.auth.model.UserContext;
 import com.weweb.auth.service.User;
 import com.weweb.auth.service.UserService;
-import com.weweb.core.jwt.JwtService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,21 +1,21 @@
 package com.weweb.auth.config;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
+import com.ufoscout.coreutils.jwt.JwtService;
+import com.ufoscout.coreutils.jwt.TokenExpiredException;
 import com.weweb.auth.model.UserAuthentication;
 import com.weweb.auth.model.UserContext;
-import com.weweb.core.jwt.JwtService;
-import com.weweb.core.jwt.TokenExpiredException;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {

@@ -1,28 +1,23 @@
 package com.weweb.auth.web;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import com.ufoscout.coreutils.jwt.JwtService;
 import com.weweb.BaseIT;
 import com.weweb.auth.config.AuthConfig;
 import com.weweb.auth.config.AuthContants;
-import com.weweb.auth.model.UserContext;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
+import com.weweb.auth.model.UserContext;
 import com.weweb.auth.web.RestControllerAdvice.ErrorDetails;
-import com.weweb.core.json.JsonSerializerService;
-import com.weweb.core.jwt.JwtService;
-import com.weweb.core.jwt.JwtServiceJJWT;
-import java.util.Date;
-import java.util.UUID;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+
+import java.util.Date;
+import java.util.UUID;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class AuthenticationControllerIT extends BaseIT {
