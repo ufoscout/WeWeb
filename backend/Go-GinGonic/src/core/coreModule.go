@@ -31,7 +31,8 @@ type Module struct {
 func New(config *config.Config) *Module {
 	module := Module{}
 
-	jwtService, err := jwt.New(config.Jwt)
+	jsonService := json.New()
+	jwtService, err := jwt.New(config.Jwt, jsonService)
 	if err!=nil {
 		panic(err)
 	}
@@ -39,7 +40,7 @@ func New(config *config.Config) *Module {
 	module.Services = Service{
 		Config: config,
 		Router: gin.Default(),
-		Json: json.New(),
+		Json: jsonService,
 		Jwt: jwtService,
 	}
 
