@@ -1,4 +1,4 @@
-package core
+package core_test
 
 import (
 	"path"
@@ -6,16 +6,17 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/util"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
+	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core"
 )
 
 func Test(t *testing.T) {
 
-	config := config.Load(path.Join(util.MainFolderPath(), config.CONFIG_FILE_NAME))
+	config := config.Load(path.Join(testUtil.MainFolderPath(), config.CONFIG_FILE_NAME))
 	config.Server.Port = "0"
 
-	coreModule := New(&config)
+	coreModule := core.New(&config)
 	coreModule.Start()
 	go coreModule.StartServer()
 

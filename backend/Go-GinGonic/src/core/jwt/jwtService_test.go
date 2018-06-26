@@ -2,12 +2,12 @@ package jwt_test
 
 import (
 	"testing"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/starter"
+		"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
 )
 
 func Test(t *testing.T) {
 
-	context := starter.StaticAppContext()
+	context := testUtil.StaticAppContext()
 
 	jwt := context.Services.Jwt
 
