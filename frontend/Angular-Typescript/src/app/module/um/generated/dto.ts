@@ -1,3 +1,5 @@
+import { AuthModel } from "../../auth/auth.model";
+
 /* tslint:disable */
 
 export interface CreateUserDto {
@@ -13,5 +15,5 @@ export interface LoginDto {
 
 export interface LoginResponseDto {
     token: string;
-    username: string;
+    auth: AuthModel;
 }

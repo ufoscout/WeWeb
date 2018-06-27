@@ -1,6 +1,7 @@
 package com.weweb.um.dto
 
-data class LoginResponseDto (val token: String,
-                             val username: String) {
+import com.ufoscout.vertk.kodein.auth.User
 
-}
+data class LoginResponseDto (
+        val token: String,
+        val auth: User) {}

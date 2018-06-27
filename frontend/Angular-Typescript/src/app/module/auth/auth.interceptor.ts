@@ -4,29 +4,27 @@ import {
     HttpHandler,
     HttpEvent,
     HttpInterceptor,
-    HttpResponse,
     HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, pipe, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { AuthState, AuthStateModel } from './auth.state';
 import * as str from '../shared/utils/string.utils';
-import * as obj from '../shared/utils/object.utils';
 import { SessionExpired } from './auth.events';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-    constructor(private _store: Store) { }
+    constructor(private _store: Store, private authService: AuthService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const authState = this._store.selectSnapshot<AuthStateModel>((state) => state.auth);
 
-        if (obj.exists(authState) && !str.isBlank(authState.tokenString)) {
+        const tokenString = this.authService.getToken()
+        if (!str.isBlank(tokenString)) {
             req = req.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${authState.tokenString}`
+                    Authorization: `Bearer ${tokenString}`
                 }
             });
         }
