@@ -13,3 +13,7 @@ export class SetAuthData {
     static type = '[Auth] Set Auth data';
     constructor(public readonly payload: LoginResponseDto) { }
 }
+
+export class SessionExpired {
+    static type = '[Auth] SessionExpired';
+}

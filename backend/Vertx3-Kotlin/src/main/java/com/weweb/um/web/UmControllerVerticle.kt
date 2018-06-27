@@ -30,6 +30,11 @@ class UmControllerVerticle (val routerService: RouterService,
             ""
         }
 
+        router.restGet(UmContants.BASE_UM_API + "/temp") { rc ->
+            auth.from(rc).auth
+            ""
+        }
+
     }
 
 }

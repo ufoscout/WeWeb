@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app.routing';
 import { HomeModule } from './module/home';
 import { LoginModule } from './module/login';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+//import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { UmModule } from './module/um';
 
 @NgModule({
@@ -18,9 +18,9 @@ import { UmModule } from './module/um';
     BrowserModule,
     NgbModule.forRoot(),
     NgxsModule.forRoot([]),
-    NgxsStoragePluginModule.forRoot({
+//    NgxsStoragePluginModule.forRoot({
 //      key: '@MyKey'
-    }),
+//    }),
     AppRoutingModule,
     HomeModule,
     LoginModule,

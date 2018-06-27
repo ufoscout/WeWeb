@@ -4,10 +4,16 @@ import { AuthService } from '../auth/auth.service';
 import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthModel } from './auth.model';
+import * as JWT from 'jwt-decode';
 
 export class AuthStateModel {
-    username = '';
-    token = '';
+    tokenString = '';
+    authModel: AuthModel = {
+      id: 0,
+      roles: [],
+      username: ''
+    }
     valid = false;
 }
 
@@ -25,8 +31,8 @@ export class AuthState {
     const state = getState();
     setState({
       ...state,
-      username: payload.username,
-      token: payload.token,
+      authModel: JSON.parse(JWT<any>(payload.token).payload),
+      tokenString: payload.token,
       valid: true
     });
   }
@@ -51,8 +57,12 @@ export class AuthState {
         const state = getState();
         setState({
           ...state,
-          username: '',
-          token: '',
+          authModel: {
+            id: 0,
+            roles: [],
+            username: ''
+          },
+          tokenString: '',
           valid: false
         });
   }

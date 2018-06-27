@@ -17,13 +17,15 @@
     },
     "login": {
         "title": "Login",
+        "session_expired": "Sessione scaduta",
         "form" : {
             "username": "username",
             "username_error_required": "Lo username è necessario",
             "password": "password",
             "password_error_required": "La password è necessaria",
             "submit": "Invia",
-            "submit_error": "Le credentiali immesse non sono valide"
+            "submit_error": "Le credentiali immesse non sono valide",
+            "cancel": "Annulla"
         }
     },
     "um": {

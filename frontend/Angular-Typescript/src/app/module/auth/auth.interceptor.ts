@@ -13,6 +13,7 @@ import { Store } from '@ngxs/store';
 import { AuthState, AuthStateModel } from './auth.state';
 import * as str from '../shared/utils/string.utils';
 import * as obj from '../shared/utils/object.utils';
+import { SessionExpired } from './auth.events';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -22,33 +23,29 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const authState = this._store.selectSnapshot<AuthStateModel>((state) => state.auth);
 
-        if (obj.exists(authState) && !str.isBlank(authState.token)) {
+        if (obj.exists(authState) && !str.isBlank(authState.tokenString)) {
             req = req.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${authState.token}`
+                    Authorization: `Bearer ${authState.tokenString}`
                 }
             });
         }
 
         return next.handle(req).pipe(
             map((event: HttpEvent<any>) => {
-                if (event instanceof HttpResponse) {
-                    console.info('HttpResponse::event =', event, ';');
-                }
+                //if (event instanceof HttpResponse) {
+                //    console.info('HttpResponse::event =', event, ';');
+                //}
                 return event;
             }),
             catchError((err: any, caught) => {
                 if (err instanceof HttpErrorResponse) {
-                    console.info('err.error =', err.error, ';');
-                    if (err.status === 403 || err.status === 401) {
+                    if (err.status === 401 || err.status === 403) {
                         const message = str.getOrEmpty(err.error['message']);
-                        console.log("Error message is: " + message);
                         switch (message) {
-                            case "AccessDenied":
-                                console.log("UC: not authenticated or does not have the rights to access");
-                                break;
+                            case "NotAuthenticated":
                             case "TokenExpired":
-                                console.log("UC: The token is not valid any more");
+                                this._store.dispatch(new SessionExpired())
                                 break;
                         }
                     }

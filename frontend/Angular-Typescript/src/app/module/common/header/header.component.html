@@ -31,7 +31,7 @@
 
           <li *ngIf="(authState$ | async).valid" ngbDropdown class="nav-item dropdown">
               <div class="nav-link dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle id="dropdownAccount">
-                  {{(authState$ | async).username}}
+                  {{(authState$ | async).authModel?.username}}
                 <span class="caret"></span>
               </div>
               <div ngbDropdownMenu aria-labelledby="dropdownAccount" id="dropdownAccountMenu">
