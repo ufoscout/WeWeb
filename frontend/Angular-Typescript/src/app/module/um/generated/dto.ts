@@ -1,4 +1,4 @@
-import { AuthModel } from "../../auth/auth.model";
+import { AuthModel } from '../../auth/auth.model';
 
 /* tslint:disable */
 

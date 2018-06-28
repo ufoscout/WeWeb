@@ -5,16 +5,17 @@ import { UmParentComponent } from './pages/umParent.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
-  { path: 'um', component: UmParentComponent, 
-  children: [
-    { path: 'profile', component: ProfileComponent },
-    { path: 'createAccount', component: CreateAccountComponent }
-  ]
- },
+  {
+    path: 'um', component: UmParentComponent,
+    children: [
+      { path: 'profile', component: ProfileComponent },
+      { path: 'createAccount', component: CreateAccountComponent }
+    ]
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class UmRoutingModule {}
+export class UmRoutingModule { }

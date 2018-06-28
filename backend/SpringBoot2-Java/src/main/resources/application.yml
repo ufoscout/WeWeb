@@ -1,4 +1,4 @@
 core:
   jwt:
     secret: mySecret
-    tokenValidityMinutes: 1
+    tokenValidityMinutes: 15

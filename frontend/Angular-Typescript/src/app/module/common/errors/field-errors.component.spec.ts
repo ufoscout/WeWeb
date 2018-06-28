@@ -1,8 +1,23 @@
-import { TestBed, async, inject, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { CommonModule } from '../';
-import { NgxsModule, Store } from '@ngxs/store';
+import { NgxsModule } from '@ngxs/store';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component } from '@angular/core';
+
+@Component({
+    selector: `app-tester-component`,
+    template: `
+    <app-field-errors
+        [errors]="errors"
+        [translateKey]="key">
+    </app-field-errors>`
+})
+class TesterComponent {
+
+    errors: String[];
+    key: String;
+
+}
 
 describe('FieldErrorsComponent', () => {
     let fixture: ComponentFixture<TesterComponent>;
@@ -110,19 +125,3 @@ describe('FieldErrorsComponent', () => {
     }));
 */
 });
-
-@Component({
-    selector: `tester-component`,
-    template: `
-    <app-field-errors
-        [errors]="errors"
-        [translateKey]="key">
-    </app-field-errors>`
-})
-class TesterComponent {
-
-    errors: String[];
-    key: String;
-
-}
-

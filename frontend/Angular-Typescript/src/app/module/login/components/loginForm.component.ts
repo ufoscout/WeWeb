@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginFormComponent {
 
-  @Output() onSuccess: EventEmitter<any> = new EventEmitter();
-  @Output() onCancel: EventEmitter<any> = new EventEmitter();
+  @Output() success: EventEmitter<any> = new EventEmitter();
+  @Output() cancel: EventEmitter<any> = new EventEmitter();
 
   submitError = false;
   model: LoginDto = {
@@ -22,7 +22,7 @@ export class LoginFormComponent {
   constructor(private store: Store, private router: Router) { }
 
   cancelLogin(): void {
-    this.onCancel.emit();
+    this.cancel.emit();
   }
 
   submitLogin(): void {
@@ -30,7 +30,7 @@ export class LoginFormComponent {
     this.store
       .dispatch(new Login(this.model))
       .subscribe(value => {
-       this.onSuccess.emit();
+       this.success.emit();
       },
       err => {
         this.submitError = true;

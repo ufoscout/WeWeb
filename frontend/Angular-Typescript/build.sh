@@ -6,6 +6,7 @@ declare -a steps=(
   "rm -rf dist"
   "rm -rf node_modules"
   "npm install"
+  "npm run lint"
   "npm run test-single-run"
   "npm run build"
 )

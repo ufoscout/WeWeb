@@ -1,5 +1,5 @@
 export class AuthModel {
-    id: number; 
+    id: number;
     username: string;
     roles: string[];
 }
