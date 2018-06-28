@@ -13,12 +13,12 @@ describe('[Common] Common State', () => {
         store = TestBed.get(Store);
     }));
 
-    it('it should set the current language', () => {
+    it('it should set the current language', async(() => {
         const newLanguage = 'fr';
         store.dispatch(new SetLanguage({ language: newLanguage }));
         store.selectOnce(CommonState).subscribe((state: CommonStateModel) => {
             expect(state.language).toBe(newLanguage);
         });
-    });
+    }));
 
 });

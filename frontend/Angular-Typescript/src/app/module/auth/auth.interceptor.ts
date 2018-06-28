@@ -37,9 +37,13 @@ export class AuthInterceptor implements HttpInterceptor {
                 return event;
             }),
             catchError((err: any, caught) => {
+                // console.log(err)
                 if (err instanceof HttpErrorResponse) {
+                    // console.log('is error')
                     if (err.status === 401 || err.status === 403) {
+                        // console.log('is 401')
                         const message = str.getOrEmpty(err.error['message']);
+                        // console.log('message: ' + message)
                         switch (message) {
                             case 'NotAuthenticated':
                             case 'TokenExpired':

@@ -38,7 +38,7 @@ describe('[Common] LanguageService', () => {
         languageService = TestBed.get(LanguageService);
     }));
 
-    it('it should set the current language', () => {
+    it('it should set the current language', async(() => {
 
         expect(languageService).not.toBeNull();
 
@@ -48,6 +48,6 @@ describe('[Common] LanguageService', () => {
             expect(state.language).toBe(newLanguage);
         });
         expect(translateService.lang).toBe(newLanguage);
-    });
+    }));
 
 });

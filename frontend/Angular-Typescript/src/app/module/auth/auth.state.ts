@@ -69,7 +69,7 @@ export class AuthState implements NgxsOnInit {
     return this.authService.login(payload).pipe(
       map(response => {
         this.spinner.hide();
-        if (response.auth.username === ctx.getState().authModel.username) {
+        if (ctx.getState().valid && (response.auth.username === ctx.getState().authModel.username)) {
           ctx.dispatch([new events.SetToken(response.token), new events.SetAuthData(response.auth)]);
         } else {
           ctx.dispatch([new events.ResetState(), new events.SetToken(response.token), new events.SetAuthData(response.auth)]);

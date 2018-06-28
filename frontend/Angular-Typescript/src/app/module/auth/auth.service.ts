@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginResponseDto, LoginDto } from '../um/generated/dto';
-import { AuthModel } from './auth.model';
 
-const TOKEN_KEY = 'TOKEN'
+const TOKEN_KEY = 'TOKEN';
 
 @Injectable()
 export class AuthService {
@@ -21,14 +20,14 @@ export class AuthService {
     }
 
     getToken(): string {
-        return localStorage.getItem(TOKEN_KEY)
+        return localStorage.getItem(TOKEN_KEY);
     }
 
     setToken(token: string): void {
-        localStorage.setItem(TOKEN_KEY, token)
+        localStorage.setItem(TOKEN_KEY, token);
     }
 
     removeToken(): void {
-        localStorage.removeItem(TOKEN_KEY)
+        localStorage.removeItem(TOKEN_KEY);
     }
 }

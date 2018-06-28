@@ -12,8 +12,8 @@ describe(`UmParentComponent`, () => {
             imports: [
                 HttpClientTestingModule,
                 RouterTestingModule,
-                UmModule,
                 NgxsModule.forRoot(),
+                UmModule,
             ],
             providers: [
             ],
