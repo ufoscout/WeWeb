@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        const tokenString = this.authService.getToken()
+        const tokenString = this.authService.getToken();
         if (!str.isBlank(tokenString)) {
             req = req.clone({
                 setHeaders: {
@@ -31,9 +31,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(req).pipe(
             map((event: HttpEvent<any>) => {
-                //if (event instanceof HttpResponse) {
+                // if (event instanceof HttpResponse) {
                 //    console.info('HttpResponse::event =', event, ';');
-                //}
+                // }
                 return event;
             }),
             catchError((err: any, caught) => {
@@ -41,9 +41,9 @@ export class AuthInterceptor implements HttpInterceptor {
                     if (err.status === 401 || err.status === 403) {
                         const message = str.getOrEmpty(err.error['message']);
                         switch (message) {
-                            case "NotAuthenticated":
-                            case "TokenExpired":
-                                this._store.dispatch(new SessionExpired())
+                            case 'NotAuthenticated':
+                            case 'TokenExpired':
+                                this._store.dispatch(new SessionExpired());
                                 break;
                         }
                     }

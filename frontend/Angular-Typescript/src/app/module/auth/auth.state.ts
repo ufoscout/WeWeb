@@ -1,4 +1,4 @@
-import { State, Action, StateContext, NgxsOnInit } from '@ngxs/store';
+import { State, Action, StateContext, NgxsOnInit, getActionTypeFromInstance } from '@ngxs/store';
 import * as events from './auth.events';
 import { AuthService } from '../auth/auth.service';
 import { catchError, map } from 'rxjs/operators';
@@ -12,7 +12,7 @@ export class AuthStateModel {
     id: 0,
     roles: [],
     username: ''
-  }
+  };
   valid = false;
 }
 
@@ -69,7 +69,11 @@ export class AuthState implements NgxsOnInit {
     return this.authService.login(payload).pipe(
       map(response => {
         this.spinner.hide();
-        ctx.dispatch([new events.SetToken(response.token), new events.SetAuthData(response.auth)]);
+        if (response.auth.username === ctx.getState().authModel.username) {
+          ctx.dispatch([new events.SetToken(response.token), new events.SetAuthData(response.auth)]);
+        } else {
+          ctx.dispatch([new events.ResetState(), new events.SetToken(response.token), new events.SetAuthData(response.auth)]);
+        }
       }),
       catchError(err => {
         this.spinner.hide();
@@ -79,18 +83,14 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Action(events.Logout)
-  logout({ getState, setState }: StateContext<AuthStateModel>) {
+  logout(ctx: StateContext<AuthStateModel>) {
+    ctx.dispatch([new events.ResetState()]);
+  }
+
+  @Action(events.ResetState)
+  resetSession({ getState, setState }: StateContext<AuthStateModel>) {
     this.authService.removeToken();
-    const state = getState();
-    setState({
-      ...state,
-      authModel: {
-        id: 0,
-        roles: [],
-        username: ''
-      },
-      valid: false
-    });
+    setState(new AuthStateModel());
   }
 
 }

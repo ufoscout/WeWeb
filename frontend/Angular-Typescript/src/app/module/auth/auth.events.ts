@@ -6,6 +6,10 @@ export class Login {
     constructor(public readonly payload: LoginDto) { }
 }
 
+export class ResetState {
+    static type = '[Auth] ResetSession';
+}
+
 export class Logout {
     static type = '[Auth] Logout';
 }

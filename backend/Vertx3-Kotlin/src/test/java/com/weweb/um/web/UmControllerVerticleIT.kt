@@ -1,6 +1,7 @@
 package com.weweb.um.web
 
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
+import com.ufoscout.vertk.kodein.auth.AuthContants
 import com.ufoscout.vertk.kodein.auth.User
 import com.ufoscout.vertk.kodein.auth.UserAuthService
 import com.ufoscout.vertk.kodein.web.ErrorDetails
@@ -21,10 +22,10 @@ import java.util.*
 
 class UmControllerVerticleIT : BaseIT() {
 
-    val client = vertk().createHttpClient()
-    val jwt: JwtService = kodein().instance()
-    val authService: UserAuthService = kodein().instance()
-    val userService: UserService = kodein().instance()
+    private val client = vertk().createHttpClient()
+    private val jwt: JwtService = kodein().instance()
+    private val authService: UserAuthService = kodein().instance()
+    private val userService: UserService = kodein().instance()
 
     @Test
     fun shouldSuccessfulLoginWithValidCredentials() = runBlocking<Unit> {
@@ -118,4 +119,63 @@ class UmControllerVerticleIT : BaseIT() {
         assertNotNull( responseCreate.body!!.details.get("username") )
 
     }
+
+    @Test
+    fun shouldReturnCurrentAuthLinkedWithTheToken() = runBlocking<Unit> {
+
+        val user = User(10, UUID.randomUUID().toString(), 0)
+        val tokenString = authService.generateToken(user)
+        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+
+        val response = client.restGet<LoginResponseDto>(
+                port(),
+                "localhost",
+                UmContants.BASE_UM_API + "/current",
+                headers)
+
+        assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
+        val responseDto = response.body
+        assertNotNull(responseDto)
+        assertEquals(tokenString, responseDto!!.token)
+        assertEquals(user.username, responseDto!!.auth.username)
+    }
+
+    @Test
+    fun shouldReturnEmptyAuthIfBadToken() = runBlocking<Unit> {
+
+        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}${UUID.randomUUID().toString()}")
+
+        val response = client.restGet<LoginResponseDto>(
+                port(),
+                "localhost",
+                UmContants.BASE_UM_API + "/current",
+                headers)
+
+        assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
+        val responseDto = response.body
+        assertNotNull(responseDto)
+        assertEquals("", responseDto!!.token)
+        assertEquals("", responseDto!!.auth.username)
+    }
+
+    @Test
+    fun shouldReturnEmptyAuthIfExpiredToken() = runBlocking<Unit> {
+
+        val user = User(10, UUID.randomUUID().toString(), 0)
+        val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
+        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+
+        val response = client.restGet<LoginResponseDto>(
+                port(),
+                "localhost",
+                UmContants.BASE_UM_API + "/current",
+                headers)
+
+        assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
+        val responseDto = response.body
+        assertNotNull(responseDto)
+        assertEquals("", responseDto!!.token)
+        assertEquals("", responseDto!!.auth.username)
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.weweb.um.web
 
-import com.ufoscout.coreutils.jwt.TokenExpiredException
 import com.ufoscout.vertk.kodein.auth.User
 import com.ufoscout.vertk.kodein.auth.UserAuthService
 import com.ufoscout.vertk.kodein.web.RouterService
@@ -20,10 +19,10 @@ class UmControllerVerticle (val routerService: RouterService,
         val router = routerService.router()
 
         router.restPost<LoginDto>(UmContants.BASE_UM_API + "/login") { rc, loginDto ->
-            println("Called Login ${loginDto.username} ${loginDto.password}")
+            // println("Called Login ${loginDto.username} ${loginDto.password}")
             val login = userService.login(loginDto.username, loginDto.password)
             val token = auth.generateToken(login)
-            println("Token is ${token}")
+            // println("Token is ${token}")
             LoginResponseDto(token, login)
         }
 
@@ -36,7 +35,7 @@ class UmControllerVerticle (val routerService: RouterService,
             try {
                 val token = auth.tokenFrom(rc) ?: ""
                 LoginResponseDto(token, auth.from(rc).auth)
-            } catch (e: TokenExpiredException) {
+            } catch (e: RuntimeException) {
                 LoginResponseDto("", User(id=-1L, username = "", roles = 0))
             }
         }

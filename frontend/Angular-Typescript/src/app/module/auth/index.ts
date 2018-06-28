@@ -21,7 +21,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
   ]
 })
 export class AuthModule { }
