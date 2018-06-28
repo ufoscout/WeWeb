@@ -10,8 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class AuthConfig {
 
-    private final String jwtHeaderKey = "Authorization";
-    private final String userContextAttributeKey = "[Auth] UserContextAttributeKey";
+    public final static String JWT_TOKEN_HEADER_KEY = "Authorization";
+    public final static String AUTH_USER_CONTEXT_ATTRIBUTE_KEY = "[Auth] UserContextAttributeKey";
+    public static final String JWT_TOKEN_HEADER_SUFFIX = "Bearer ";
 
     @Bean
     public PasswordEncoder passwordEncoderBean() {
@@ -20,6 +21,6 @@ public class AuthConfig {
 
     @Bean
     public UserContextResolver userContextResolver() {
-        return new UserContextResolver(getUserContextAttributeKey());
+        return new UserContextResolver(AUTH_USER_CONTEXT_ATTRIBUTE_KEY);
     }
 }

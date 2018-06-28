@@ -18,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class UserContextResolver implements HandlerMethodArgumentResolver {
 
     private final String userContextAttributeKey;
-    private final UserContext emptyUserContext = new UserContext();
+    private final UserContext emptyUserContext = new UserContext("", new String[0]);
 
     UserContextResolver(String userContextAttributeKey) {
         this.userContextAttributeKey = userContextAttributeKey;

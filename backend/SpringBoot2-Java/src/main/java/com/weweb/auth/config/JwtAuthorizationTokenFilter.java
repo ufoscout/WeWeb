@@ -37,8 +37,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         final String requestHeader = request.getHeader(this.tokenHeader);
 
         UserContext userContext = null;
-        if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
-            String authToken = requestHeader.substring(7);
+        if (requestHeader != null && requestHeader.startsWith(AuthConfig.JWT_TOKEN_HEADER_SUFFIX)) {
+            String authToken = requestHeader.substring(AuthConfig.JWT_TOKEN_HEADER_SUFFIX.length());
             log.debug("Found jwt [{}]", authToken);
             try {
                 userContext = jwtTokenUtil.parse(authToken, UserContext.class);

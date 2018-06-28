@@ -17,11 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class JwtWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-    private final AuthConfig config;
     private final JwtService jwtService;
 
-    public JwtWebSecurityConfigurerAdapter(AuthConfig config, JwtService jwtService) {
-        this.config = config;
+    public JwtWebSecurityConfigurerAdapter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
@@ -29,8 +27,8 @@ public class JwtWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // Custom JWT based security filter
         JwtAuthorizationTokenFilter authenticationTokenFilter =
-                new JwtAuthorizationTokenFilter(jwtService, config.getJwtHeaderKey(),
-                        config.getUserContextAttributeKey());
+                new JwtAuthorizationTokenFilter(jwtService, AuthConfig.JWT_TOKEN_HEADER_KEY,
+                        AuthConfig.AUTH_USER_CONTEXT_ATTRIBUTE_KEY);
 
         httpSecurity
                 // we don't need CSRF because our token is invulnerable
@@ -44,7 +42,7 @@ public class JwtWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
 
                 .authorizeRequests()
 
-                .antMatchers(AuthContants.BASE_AUTH_API + "/**").permitAll()
+                .antMatchers(AuthContants.BASE_UM_API + "/**").permitAll()
                 .antMatchers(CoreConstants.BASE_PUBLIC_API+ "/**").permitAll()
                 .anyRequest().authenticated();
 
@@ -58,6 +56,7 @@ public class JwtWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
                 .antMatchers(
                         HttpMethod.GET,
                         "/",
+                        AuthContants.BASE_UM_API + AuthContants.CURRENT_USER_AUTH_URL,
                         "/*.html",
                         "/favicon.ico",
                         "/**/*.html",

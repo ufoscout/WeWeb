@@ -24,14 +24,11 @@ public class AuthenticationControllerIT extends BaseIT {
 
     @Autowired
     private JwtService jwt;
-    @Autowired
-    private AuthConfig authConfig;
-
 
     @Test
     public void shouldGetUnauthorizedWithAnonymousUser() throws Exception {
         ResponseEntity<ErrorDetails> response = restTemplate
-                .getForEntity(AuthContants.BASE_AUTH_API + "/test/authenticated", ErrorDetails.class);
+                .getForEntity(AuthContants.BASE_UM_API + "/test/authenticated", ErrorDetails.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("AccessDenied", response.getBody().getMessage());
     }
@@ -39,7 +36,7 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldGetUnauthorizedWithAnonymousUserOnProtectedUri() throws Exception {
         ResponseEntity<ErrorDetails> response = restTemplate
-                .getForEntity(AuthContants.BASE_AUTH_API + "/test/protected", ErrorDetails.class);
+                .getForEntity(AuthContants.BASE_UM_API + "/test/protected", ErrorDetails.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("AccessDenied", response.getBody().getMessage());
     }
@@ -47,16 +44,16 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldSuccessfulAccessAuthenticatedApiWithToken() throws Exception {
 
-        UserContext sentUserContext = new UserContext();
+        UserContext sentUserContext = new UserContext("", new String[0]);
         sentUserContext.setUsername(UUID.randomUUID().toString());
         sentUserContext.setRoles(new String[]{"ADMIN", "OTHER"});
 
         String token = jwt.generate(sentUserContext);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(authConfig.getJwtHeaderKey(), "Bearer " + token);
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + token);
         ResponseEntity<UserContext> response =
-                restTemplate.exchange(AuthContants.BASE_AUTH_API + "/test/authenticated", HttpMethod.GET, new HttpEntity<>(headers), UserContext.class);
+                restTemplate.exchange(AuthContants.BASE_UM_API + "/test/authenticated", HttpMethod.GET, new HttpEntity<>(headers), UserContext.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -70,7 +67,7 @@ public class AuthenticationControllerIT extends BaseIT {
     public void shouldAccessPublicUriWithAnonymousUser() throws Exception {
 
         ResponseEntity<UserContext> response = restTemplate
-                .getForEntity(AuthContants.BASE_AUTH_API + "/test/public", UserContext.class);
+                .getForEntity(AuthContants.BASE_UM_API + "/test/public", UserContext.class);
 
         UserContext userContext = response.getBody();
         assertNotNull(userContext);
@@ -85,7 +82,7 @@ public class AuthenticationControllerIT extends BaseIT {
         LoginDto loginDto = new LoginDto("user", "user");
 
         ResponseEntity<LoginResponseDto> response = restTemplate
-                .postForEntity(AuthContants.BASE_AUTH_API + "/login", loginDto, LoginResponseDto.class);
+                .postForEntity(AuthContants.BASE_UM_API + "/login", loginDto, LoginResponseDto.class);
 
         LoginResponseDto responseDto = response.getBody();
         assertNotNull(responseDto);
@@ -102,7 +99,7 @@ public class AuthenticationControllerIT extends BaseIT {
         LoginDto loginDto = new LoginDto("user", UUID.randomUUID().toString());
 
         ResponseEntity<ErrorDetails> response = restTemplate
-                .postForEntity(AuthContants.BASE_AUTH_API + "/login", loginDto, ErrorDetails.class);
+                .postForEntity(AuthContants.BASE_UM_API + "/login", loginDto, ErrorDetails.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("BadCredentials", response.getBody().getMessage());
@@ -112,14 +109,14 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldNotAccessProtectedApiWithoutAdminRole() throws Exception {
 
-        UserContext sentUserContext = new UserContext();
+        UserContext sentUserContext = new UserContext("", new String[0]);
         sentUserContext.setUsername(UUID.randomUUID().toString());
 
         String token = jwt.generate(sentUserContext);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(authConfig.getJwtHeaderKey(), "Bearer " + token);
-        ResponseEntity<ErrorDetails> response = restTemplate.exchange(AuthContants.BASE_AUTH_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), ErrorDetails.class);
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + token);
+        ResponseEntity<ErrorDetails> response = restTemplate.exchange(AuthContants.BASE_UM_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), ErrorDetails.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals("AccessDenied", response.getBody().getMessage());
@@ -129,15 +126,15 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldSuccessfulAccessProtectedApiWithAdminRole() throws Exception {
 
-        UserContext sentUserContext = new UserContext();
+        UserContext sentUserContext = new UserContext("", new String[0]);
         sentUserContext.setUsername(UUID.randomUUID().toString());
         sentUserContext.setRoles(new String[]{"ADMIN"});
 
         String token = jwt.generate(sentUserContext);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(authConfig.getJwtHeaderKey(), "Bearer " + token);
-        ResponseEntity<UserContext> response = restTemplate.exchange(AuthContants.BASE_AUTH_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), UserContext.class);
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + token);
+        ResponseEntity<UserContext> response = restTemplate.exchange(AuthContants.BASE_UM_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), UserContext.class);
 
         UserContext receivedUserContext = response.getBody();
         assertNotNull(receivedUserContext);
@@ -147,18 +144,79 @@ public class AuthenticationControllerIT extends BaseIT {
     @Test
     public void shouldGetTokenExpiredExceptionIfTokenNotValid() throws Exception {
 
-        UserContext sentUserContext = new UserContext();
+        UserContext sentUserContext = new UserContext("", new String[0]);
         sentUserContext.setUsername(UUID.randomUUID().toString());
 
         String token = jwt.generate("", sentUserContext, new Date(System.currentTimeMillis()-1000), new Date(System.currentTimeMillis()-1000));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(authConfig.getJwtHeaderKey(), "Bearer " + token);
-        ResponseEntity<ErrorDetails> response = restTemplate.exchange(AuthContants.BASE_AUTH_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), ErrorDetails.class);
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + token);
+        ResponseEntity<ErrorDetails> response = restTemplate.exchange(AuthContants.BASE_UM_API + "/test/protected", HttpMethod.GET, new HttpEntity<>(headers), ErrorDetails.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("TokenExpired", response.getBody().getMessage());
 
     }
+
+    @Test
+    public void shouldReturnCurrentAuthLinkedWithTheToken() {
+
+        UserContext user = new UserContext("", new String[0]);
+        user.setUsername(UUID.randomUUID().toString());
+        String tokenString = jwt.generate(user);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + tokenString);
+
+        ResponseEntity<LoginResponseDto> response = restTemplate
+                .exchange(AuthContants.BASE_UM_API + "/current", HttpMethod.GET, new HttpEntity<>(headers), LoginResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        LoginResponseDto responseDto = response.getBody();
+        assertNotNull(responseDto);
+        assertEquals(tokenString, responseDto.getToken());
+        assertEquals(user.getUsername(), responseDto.getAuth().getUsername());
+    }
+
+    @Test
+    public void shouldReturnEmptyAuthIfBadToken() {
+
+        UserContext user = new UserContext(UUID.randomUUID().toString(), new String[0]);
+        user.setUsername(UUID.randomUUID().toString());
+        String tokenString = UUID.randomUUID().toString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + tokenString);
+
+        ResponseEntity<LoginResponseDto> response = restTemplate
+                .exchange(AuthContants.BASE_UM_API + "/current", HttpMethod.GET, new HttpEntity<>(headers), LoginResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        LoginResponseDto responseDto = response.getBody();
+        assertNotNull(responseDto);
+        assertEquals("", responseDto.getToken());
+        assertEquals("", responseDto.getAuth().getUsername());
+    }
+
+    @Test
+    public void shouldReturnEmptyAuthIfExpiredToken() {
+
+        UserContext user = new UserContext(UUID.randomUUID().toString(), new String[0]);
+        user.setUsername(UUID.randomUUID().toString());
+        String tokenString = jwt.generate("", user, new Date(System.currentTimeMillis()-1000), new Date(System.currentTimeMillis()-1000));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + tokenString);
+
+        ResponseEntity<LoginResponseDto> response = restTemplate
+                .exchange(AuthContants.BASE_UM_API + "/current", HttpMethod.GET, new HttpEntity<>(headers), LoginResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        LoginResponseDto responseDto = response.getBody();
+        assertNotNull(responseDto);
+        assertEquals("", responseDto.getToken());
+        assertEquals("", responseDto.getAuth().getUsername());
+    }
+
 }
 
