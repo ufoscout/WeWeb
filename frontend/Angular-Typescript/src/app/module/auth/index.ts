@@ -24,4 +24,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     },
   ]
 })
-export class AuthModule { }
+export class AuthModule {
+  constructor(private authService: AuthService) { }
+}

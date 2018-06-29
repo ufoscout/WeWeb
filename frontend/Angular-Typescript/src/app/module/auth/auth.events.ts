@@ -19,6 +19,10 @@ export class SetToken {
     constructor(public readonly payload: string) { }
 }
 
+export class RefreshToken {
+    static type = '[Auth] RefreshToken';
+}
+
 export class GetAuthData {
     static type = '[Auth] Get Auth data';
 }

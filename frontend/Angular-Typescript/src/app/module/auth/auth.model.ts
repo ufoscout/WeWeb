@@ -3,3 +3,8 @@ export class AuthModel {
     username: string;
     roles: string[];
 }
+
+export class TokenModel {
+    value = '';
+    issuedAt = 0;
+}

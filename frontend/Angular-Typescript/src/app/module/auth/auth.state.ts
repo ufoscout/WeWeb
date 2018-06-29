@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { catchError, map } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthModel } from './auth.model';
+import { AuthModel, TokenModel } from './auth.model';
 import * as str from '../shared/utils/string.utils';
 
 export class AuthStateModel {
@@ -13,6 +13,7 @@ export class AuthStateModel {
     roles: [],
     username: ''
   };
+  token = new TokenModel();
   valid = false;
 }
 
@@ -61,6 +62,13 @@ export class AuthState implements NgxsOnInit {
   @Action(events.SetToken)
   setToken({ getState, setState }: StateContext<AuthStateModel>, { payload }: events.SetToken) {
     this.authService.setToken(payload);
+    setState({
+      ...getState(),
+      token: {
+        issuedAt: new Date().getMilliseconds(),
+        value: payload
+      }
+    });
   }
 
   @Action(events.Login)

@@ -141,6 +141,21 @@ describe('[Auth] Auth State', () => {
         store.dispatch(new SetToken(token));
 
         expect(authService.getToken()).toBe(token);
+        expect(authServiceSpy).toHaveBeenCalled();
     }));
 
+    it('Set token issuedAt timestamp', async(() => {
+
+        const before = new Date().getMilliseconds();
+        const token = 'token-' + new Date().getMilliseconds();
+
+        store.dispatch(new SetToken(token));
+        const after = new Date().getMilliseconds();
+
+        store.selectOnce(AuthState).subscribe((state: AuthStateModel) => {
+            expect(state.token.value).toBe(token);
+            expect(state.token.issuedAt).toBeGreaterThanOrEqual(before);
+            expect(state.token.issuedAt).toBeLessThanOrEqual(after);
+        });
+    }));
 });

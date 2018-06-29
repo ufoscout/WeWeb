@@ -11,3 +11,13 @@ export function exists(obj: any): boolean {
 export function getOrDefault<T>(value: T, defaultValue: T): T {
   return exists(value) ? value : defaultValue;
 }
+
+/**
+ * Returns a deep clone of the source object
+ */
+export function deepClone<T>(source: T): T {
+  if (source) {
+      return JSON.parse(JSON.stringify(source));
+  }
+  return source;
+}
