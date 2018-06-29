@@ -6,7 +6,7 @@ BUILD_TARGET_FILE=go
 
 declare -a steps=(
   "rm -rf ${BUILD_TARGET_PATH}"
-  "vgo test ./..."
+  "GOCACHE=off vgo test ./..."
   "CGO_ENABLED=0 vgo build -o ${BUILD_TARGET_PATH}/${BUILD_TARGET_FILE}"
   "cp -a ./config ${BUILD_TARGET_PATH}/config"
   "cp -a ../../frontend/Angular-Typescript/dist/Angular-Typescript ${BUILD_TARGET_PATH}/frontend"
