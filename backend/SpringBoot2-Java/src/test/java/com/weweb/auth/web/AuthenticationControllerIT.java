@@ -6,6 +6,7 @@ import com.weweb.auth.config.AuthConfig;
 import com.weweb.auth.config.AuthContants;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
+import com.weweb.auth.dto.TokenResponseDto;
 import com.weweb.auth.model.UserContext;
 import com.weweb.core.web.ErrorDetails;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 
@@ -216,6 +218,42 @@ public class AuthenticationControllerIT extends BaseIT {
         assertNotNull(responseDto);
         assertEquals("", responseDto.getToken());
         assertEquals("", responseDto.getAuth().getUsername());
+    }
+
+    @Test
+    public void shouldReturnNewToken() {
+
+        UserContext user = new UserContext("", new String[0]);
+        user.setUsername(UUID.randomUUID().toString());
+        String tokenString = jwt.generate("", user, new Date(System.currentTimeMillis()-1000), new Date(System.currentTimeMillis()+11000));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + tokenString);
+
+        ResponseEntity<TokenResponseDto> response = restTemplate
+                .exchange(AuthContants.BASE_UM_API + "/token/refresh", HttpMethod.GET, new HttpEntity<>(headers), TokenResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        TokenResponseDto responseDto = response.getBody();
+        assertNotNull(responseDto);
+        assertNotEquals(tokenString, responseDto.getToken());
+        assertEquals(user.getUsername(), jwt.parse(responseDto.getToken(), UserContext.class).getUsername());
+    }
+
+    @Test
+    public void shouldNotRefreshTokenIfExpired() {
+
+        UserContext user = new UserContext("", new String[0]);
+        user.setUsername(UUID.randomUUID().toString());
+        String tokenString = jwt.generate("", user, new Date(System.currentTimeMillis()-1000), new Date(System.currentTimeMillis()-11000));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthConfig.JWT_TOKEN_HEADER_KEY, AuthConfig.JWT_TOKEN_HEADER_SUFFIX + tokenString);
+
+        ResponseEntity<ErrorDetails> response = restTemplate
+                .exchange(AuthContants.BASE_UM_API + "/token/refresh", HttpMethod.GET, new HttpEntity<>(headers), ErrorDetails.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
 }

@@ -17,3 +17,7 @@ export interface LoginResponseDto {
     token: string;
     auth: AuthModel;
 }
+
+export interface TokenResponseDto {
+    token: string;
+}

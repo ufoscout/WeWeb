@@ -11,11 +11,11 @@ import com.weweb.um.config.UmContants
 import com.weweb.um.dto.CreateUserDto
 import com.weweb.um.dto.LoginDto
 import com.weweb.um.dto.LoginResponseDto
+import com.weweb.um.dto.TokenResponseDto
 import com.weweb.um.service.UserService
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.kodein.di.generic.instance
 import java.util.*
@@ -178,4 +178,43 @@ class UmControllerVerticleIT : BaseIT() {
         assertEquals("", responseDto!!.auth.username)
     }
 
+    @Test
+    fun shouldReturnNewToken() = runBlocking<Unit> {
+
+        val user = User(10, UUID.randomUUID().toString(), 0)
+        val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() + 15000))
+        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+
+        val response = client.restGet<TokenResponseDto>(
+                port(),
+                "localhost",
+                UmContants.BASE_UM_API + "/token/refresh",
+                headers)
+
+        assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
+        val responseDto = response.body
+        assertNotNull(responseDto)
+        assertFalse(responseDto!!.token.isEmpty())
+        assertNotEquals(tokenString, responseDto!!.token)
+
+        assertEquals(user.username, jwt.parse<User>(responseDto!!.token).username)
+
+    }
+
+    @Test
+    fun shouldNotRefreshTokenIfExpired() = runBlocking<Unit> {
+
+        val user = User(10, UUID.randomUUID().toString(), 0)
+        val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
+        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+
+        val response = client.restGet<ErrorDetails>(
+                port(),
+                "localhost",
+                UmContants.BASE_UM_API + "/token/refresh",
+                headers)
+
+        assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
+
+    }
 }

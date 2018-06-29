@@ -1,9 +1,10 @@
 import { Store, NgxsModule } from '@ngxs/store';
-import { async, TestBed, } from '@angular/core/testing';
+import { async, TestBed, inject, } from '@angular/core/testing';
 import { SetAuthData, SetToken } from './auth.events';
 import { AuthModule } from '.';
 import { AuthService } from './auth.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('[Auth] AuthService', () => {
     let store: Store;
@@ -12,6 +13,7 @@ describe('[Auth] AuthService', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
+                HttpClientModule,
                 HttpClientTestingModule,
                 NgxsModule.forRoot(),
                 AuthModule,
@@ -21,18 +23,19 @@ describe('[Auth] AuthService', () => {
         authService = TestBed.get(AuthService);
     }));
 
-    it('it should not refresh the token if not expired', async(() => {
-        store.dispatch(new SetAuthData({
-            id: 0,
-            username: 'hello',
-            roles: []
-        }));
-        store.dispatch(new SetToken('12345'));
+    it('it should not refresh the token if not expired', async(
+        inject([HttpTestingController], (backend: HttpTestingController) => {
+            store.dispatch(new SetAuthData({
+                id: 0,
+                username: 'hello',
+                roles: []
+            }));
+            store.dispatch(new SetToken('12345'));
 
-        const storeSpy = spyOn(store, 'dispatch').and.callThrough();
-        expect(authService.checkIfTokenToBeRefreshed(1000000)).toBeFalsy();
-        expect(storeSpy).not.toHaveBeenCalled();
-    }));
+            const storeSpy = spyOn(store, 'dispatch').and.callThrough();
+            expect(authService.checkIfTokenToBeRefreshed(1000000)).toBeFalsy();
+            expect(storeSpy).not.toHaveBeenCalled();
+        })));
 
     it('it should refresh the token if expired', async(() => {
         store.dispatch(new SetAuthData({

@@ -1,11 +1,11 @@
 import { Store, NgxsModule } from '@ngxs/store';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { AuthState, AuthStateModel } from './auth.state';
-import { SetAuthData, Logout, Login, SetToken } from './auth.events';
+import { SetAuthData, Logout, Login, SetToken, RefreshToken } from './auth.events';
 import { AuthModule } from '.';
 import { AuthModel } from './auth.model';
 import { AuthService } from './auth.service';
-import { LoginResponseDto } from '../um/generated/dto';
+import { LoginResponseDto, TokenResponseDto } from '../um/generated/dto';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -27,7 +27,7 @@ describe('[Auth] Auth State', () => {
     it('it should set the AuthModel', async(() => {
         const dto: AuthModel = {
             id: 1,
-            username: 'user-' + new Date().getMilliseconds(),
+            username: 'user-' + new Date().getTime(),
             roles: []
         };
 
@@ -41,7 +41,7 @@ describe('[Auth] Auth State', () => {
 
         const dto: AuthModel = {
             id: 1,
-            username: 'user-' + new Date().getMilliseconds(),
+            username: 'user-' + new Date().getTime(),
             roles: []
         };
         store.dispatch(new SetAuthData(dto));
@@ -68,10 +68,10 @@ describe('[Auth] Auth State', () => {
         const response: LoginResponseDto = {
             auth: {
                 id: 12,
-                username: 'user-' + new Date().getMilliseconds(),
+                username: 'user-' + new Date().getTime(),
                 roles: []
             },
-            token: 'token-' + new Date().getMilliseconds()
+            token: 'token-' + new Date().getTime()
         };
 
         const authService: AuthService = TestBed.get(AuthService);
@@ -101,10 +101,10 @@ describe('[Auth] Auth State', () => {
         const response: LoginResponseDto = {
             auth: {
                 id: 12,
-                username: 'user-' + new Date().getMilliseconds(),
+                username: 'user-' + new Date().getTime(),
                 roles: []
             },
-            token: 'token-' + new Date().getMilliseconds()
+            token: 'token-' + new Date().getTime()
         };
 
         store.dispatch(new SetAuthData(response.auth));
@@ -114,12 +114,10 @@ describe('[Auth] Auth State', () => {
         const authState: AuthState = TestBed.get(AuthState);
         const authStateSpy = spyOn(authState, 'resetSession').and.callThrough();
 
-        const dto = new Login({
+        store.dispatch(new Login({
             username: response.auth.username,
             password: ''
-        });
-
-        store.dispatch(dto);
+        }));
 
         store.selectOnce(AuthState).subscribe((state: AuthStateModel) => {
             expect(state.valid).toBeTruthy();
@@ -133,7 +131,7 @@ describe('[Auth] Auth State', () => {
 
     it('Set token should call the AuthService', async(() => {
 
-        const token =  'token-' + new Date().getMilliseconds();
+        const token =  'token-' + new Date().getTime();
 
         const authService: AuthService = TestBed.get(AuthService);
         const authServiceSpy = spyOn(authService, 'setToken').and.callThrough();
@@ -146,11 +144,11 @@ describe('[Auth] Auth State', () => {
 
     it('Set token issuedAt timestamp', async(() => {
 
-        const before = new Date().getMilliseconds();
-        const token = 'token-' + new Date().getMilliseconds();
+        const before = new Date().getTime();
+        const token = 'token-' + new Date().getTime();
 
         store.dispatch(new SetToken(token));
-        const after = new Date().getMilliseconds();
+        const after = new Date().getTime();
 
         store.selectOnce(AuthState).subscribe((state: AuthStateModel) => {
             expect(state.token.value).toBe(token);
@@ -158,4 +156,24 @@ describe('[Auth] Auth State', () => {
             expect(state.token.issuedAt).toBeLessThanOrEqual(after);
         });
     }));
+
+    it('Should call RefreshToken', async(() => {
+
+        const response: TokenResponseDto = {
+            token: 'token-' + new Date().getTime()
+        };
+
+        const authService: AuthService = TestBed.get(AuthService);
+        const authServiceSpy = spyOn(authService, 'refreshToken').and.returnValue(of(response));
+
+        store.dispatch(new RefreshToken());
+
+        store.selectOnce(AuthState).subscribe((state: AuthStateModel) => {
+            expect(state.token.value).toBe(response.token);
+        });
+
+        expect(authService.getToken()).toBe(response.token);
+        expect(authServiceSpy).toHaveBeenCalled();
+    }));
+
 });

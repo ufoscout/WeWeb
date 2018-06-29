@@ -6,6 +6,7 @@ import com.weweb.auth.config.AuthContants;
 import com.weweb.auth.dto.CreateUserDto;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
+import com.weweb.auth.dto.TokenResponseDto;
 import com.weweb.auth.model.UserContext;
 import com.weweb.auth.service.User;
 import com.weweb.auth.service.UserService;
@@ -53,5 +54,10 @@ public class AuthenticationController {
         } catch (RuntimeException e) {
             return new LoginResponseDto("", new UserContext());
         }
+    }
+
+    @GetMapping("/token/refresh")
+    public TokenResponseDto refreshToken(UserContext userContext) {
+        return new TokenResponseDto(jwtService.generate(userContext.getUsername(), userContext));
     }
 }

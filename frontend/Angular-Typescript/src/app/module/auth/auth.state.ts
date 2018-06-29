@@ -2,10 +2,14 @@ import { State, Action, StateContext, NgxsOnInit, getActionTypeFromInstance } fr
 import * as events from './auth.events';
 import { AuthService } from '../auth/auth.service';
 import { catchError, map } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { throwError, timer, interval } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthModel, TokenModel } from './auth.model';
 import * as str from '../shared/utils/string.utils';
+import * as t from '../shared/utils/test.utils';
+
+const ONE_MINUTE_MILLISECONDS = 1 * 60 * 1000;
+const TEN_MINUTES_MILLISECONDS = 10 * 60 * 1000;
 
 export class AuthStateModel {
   authModel: AuthModel = {
@@ -28,6 +32,13 @@ export class AuthState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<AuthStateModel>) {
     ctx.dispatch(new events.GetAuthData());
+
+    if (!t.inTests()) {
+      interval(ONE_MINUTE_MILLISECONDS)
+        .subscribe((val) => {
+          this.authService.checkIfTokenToBeRefreshed(TEN_MINUTES_MILLISECONDS);
+        });
+    }
   }
 
   @Action(events.GetAuthData)
@@ -65,7 +76,7 @@ export class AuthState implements NgxsOnInit {
     setState({
       ...getState(),
       token: {
-        issuedAt: new Date().getMilliseconds(),
+        issuedAt: new Date().getTime(),
         value: payload
       }
     });
@@ -101,4 +112,15 @@ export class AuthState implements NgxsOnInit {
     setState(new AuthStateModel());
   }
 
+  @Action(events.RefreshToken)
+  refreshToken(ctx: StateContext<AuthStateModel>) {
+    return this.authService.refreshToken().pipe(
+      map(response => {
+        ctx.dispatch(new events.SetToken(response.token));
+      }),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
 }

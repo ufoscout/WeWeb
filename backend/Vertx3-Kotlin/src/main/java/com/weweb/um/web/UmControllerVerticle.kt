@@ -7,6 +7,7 @@ import com.weweb.um.config.UmContants
 import com.weweb.um.dto.CreateUserDto
 import com.weweb.um.dto.LoginDto
 import com.weweb.um.dto.LoginResponseDto
+import com.weweb.um.dto.TokenResponseDto
 import com.weweb.um.service.UserService
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 
@@ -38,6 +39,11 @@ class UmControllerVerticle (val routerService: RouterService,
             } catch (e: RuntimeException) {
                 LoginResponseDto("", User(id=-1L, username = "", roles = 0))
             }
+        }
+
+        router.restGet(UmContants.BASE_UM_API + "/token/refresh") { rc ->
+            val token = auth.from(rc).isAuthenticated.auth
+            TokenResponseDto(auth.generateToken(token))
         }
 
     }
