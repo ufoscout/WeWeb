@@ -1,8 +1,8 @@
-import { State, Action, StateContext, NgxsOnInit, getActionTypeFromInstance } from '@ngxs/store';
+import { State, Action, StateContext, NgxsOnInit } from '@ngxs/store';
 import * as events from './auth.events';
 import { AuthService } from '../auth/auth.service';
 import { catchError, map } from 'rxjs/operators';
-import { throwError, timer, interval } from 'rxjs';
+import { throwError, interval } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthModel, TokenModel } from './auth.model';
 import * as str from '../shared/utils/string.utils';
@@ -19,6 +19,7 @@ export class AuthStateModel {
   };
   token = new TokenModel();
   valid = false;
+  forceReLogin = false;
 }
 
 @State<AuthStateModel>({
@@ -66,7 +67,8 @@ export class AuthState implements NgxsOnInit {
     setState({
       ...state,
       authModel: payload,
-      valid: !str.isBlank(payload.username)
+      valid: !str.isBlank(payload.username),
+      forceReLogin: false
     });
   }
 
@@ -101,13 +103,21 @@ export class AuthState implements NgxsOnInit {
     );
   }
 
+  @Action(events.SessionExpired)
+  sessionExpired({ getState, setState }: StateContext<AuthStateModel>) {
+    setState({
+      ...getState(),
+      forceReLogin: true
+    });
+  }
+
   @Action(events.Logout)
   logout(ctx: StateContext<AuthStateModel>) {
     ctx.dispatch([new events.ResetState()]);
   }
 
   @Action(events.ResetState)
-  resetSession({ getState, setState }: StateContext<AuthStateModel>) {
+  resetSession({ setState }: StateContext<AuthStateModel>) {
     this.authService.removeToken();
     setState(new AuthStateModel());
   }

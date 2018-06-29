@@ -1,9 +1,9 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, timer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoginResponseDto, LoginDto, TokenResponseDto } from '../um/generated/dto';
-import { Select, Store } from '@ngxs/store';
-import { AuthState, AuthStateModel } from './auth.state';
+import { Store } from '@ngxs/store';
+import { AuthStateModel } from './auth.state';
 import * as str from '../shared/utils/string.utils';
 import { RefreshToken } from './auth.events';
 
