@@ -1,8 +1,9 @@
 package com.weweb.um.service
 
+import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.validation.ValidatorService
 import com.ufoscout.vertk.kodein.auth.BadCredentialsException
-import com.ufoscout.vertk.kodein.auth.User
+import com.weweb.auth.service.Roles
 import com.weweb.um.dto.CreateUserDto
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -10,17 +11,17 @@ import java.util.concurrent.ConcurrentHashMap
 class InMemoryUserService(private val crypt: PasswordEncoder,
                           private val validatorService: ValidatorService ) : UserService {
 
-    private val users = ConcurrentHashMap<String, User>()
+    private val users = ConcurrentHashMap<String, Auth>()
     private val passwords = ConcurrentHashMap<String, String>()
 
     init {
-        users["user"] = User(0L, "user", 2L)
+        users["user"] = Auth(0L, "user", arrayOf(Roles.USER))
         passwords["user"] = crypt.encode("user")
-        users["admin"] = User(1L,"admin", 1L)
+        users["admin"] = Auth(1L,"admin", arrayOf(Roles.ADMIN))
         passwords["admin"] = crypt.encode("admin")
     }
 
-    override fun login(username: String, password: String): User {
+    override fun login(username: String, password: String): Auth {
         val user = users[username]
 
         if (user == null || !crypt.matches(password, passwords[username]!!)) {
@@ -29,7 +30,7 @@ class InMemoryUserService(private val crypt: PasswordEncoder,
         return user
     }
 
-    override fun createUser(dto: CreateUserDto): User {
+    override fun createUser(dto: CreateUserDto): Auth {
         println("Create user ${dto.email}. Is present? ${users.containsKey(dto.email)}")
         validatorService.validator<CreateUserDto>()
                 .add("username", "notUnique", {!users.containsKey(dto.email)})
@@ -37,7 +38,7 @@ class InMemoryUserService(private val crypt: PasswordEncoder,
                 .build()
                 .validateThrowException(dto)
 
-        val newUser = User(id = Random().nextInt(100000000).toLong(), username =  dto.email, roles = 2L)
+        val newUser = Auth(Random().nextInt(100000000).toLong(), dto.email, arrayOf(Roles.USER))
         users[newUser.username] = newUser
         passwords[newUser.username] = crypt.encode(dto.password)
         return newUser

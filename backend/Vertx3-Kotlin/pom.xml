@@ -22,7 +22,7 @@
     <junit.version>5.2.0</junit.version>
     <logback.version>1.2.3</logback.version>
     <properlty.version>1.6.1</properlty.version>
-    <vertk.version>2.3.1-SNAPSHOT</vertk.version>
+    <vertk.version>2.4.0</vertk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>

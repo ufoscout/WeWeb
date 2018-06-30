@@ -1,7 +1,7 @@
 package com.weweb.um.web
 
-import com.ufoscout.vertk.kodein.auth.User
-import com.ufoscout.vertk.kodein.auth.UserAuthService
+import com.ufoscout.coreutils.auth.Auth
+import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.web.RouterService
 import com.weweb.um.config.UmContants
 import com.weweb.um.dto.CreateUserDto
@@ -13,7 +13,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 
 class UmControllerVerticle (val routerService: RouterService,
                             val userService: UserService,
-                            val auth: UserAuthService): CoroutineVerticle() {
+                            val auth: AuthContextService): CoroutineVerticle() {
 
     override suspend fun start() {
 
@@ -37,7 +37,7 @@ class UmControllerVerticle (val routerService: RouterService,
                 val token = auth.tokenFrom(rc) ?: ""
                 LoginResponseDto(token, auth.from(rc).auth)
             } catch (e: RuntimeException) {
-                LoginResponseDto("", User(id=-1L, username = "", roles = 0))
+                LoginResponseDto("", Auth())
             }
         }
 

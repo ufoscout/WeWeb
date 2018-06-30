@@ -22,7 +22,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <coreutils.version>1.4.1</coreutils.version>
+    <coreutils.version>1.6.1</coreutils.version>
   </properties>
 
   <dependencies>
@@ -42,6 +42,11 @@
     <dependency>
       <groupId>com.ufoscout.coreutils</groupId>
       <artifactId>jwt</artifactId>
+      <version>${coreutils.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ufoscout.coreutils</groupId>
+      <artifactId>auth</artifactId>
       <version>${coreutils.version}</version>
     </dependency>
     <dependency>

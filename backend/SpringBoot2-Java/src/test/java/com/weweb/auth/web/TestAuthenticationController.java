@@ -1,11 +1,13 @@
 package com.weweb.auth.web;
 
+import com.ufoscout.coreutils.auth.Auth;
 import com.ufoscout.coreutils.jwt.JwtService;
 import com.weweb.auth.config.AuthContants;
-import com.weweb.auth.model.UserContext;
 import com.weweb.auth.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(AuthContants.BASE_UM_API)
@@ -20,19 +22,19 @@ public class TestAuthenticationController {
     }
 
     @GetMapping("/test/public")
-    public UserContext testPublic(UserContext userContext) {
+    public Auth testPublic(Auth userContext) {
         return userContext;
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/test/authenticated")
-    public UserContext testAuthenticated(UserContext userContext) {
+    public Auth testAuthenticated(Auth userContext) {
         return userContext;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/test/protected")
-    public UserContext testProtected(UserContext userContext) {
+    public Auth testProtected(Auth userContext) {
         return userContext;
     }
 

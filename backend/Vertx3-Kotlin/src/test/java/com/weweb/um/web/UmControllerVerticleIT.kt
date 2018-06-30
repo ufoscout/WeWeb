@@ -1,9 +1,9 @@
 package com.weweb.um.web
 
+import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.ufoscout.vertk.kodein.auth.AuthContants
-import com.ufoscout.vertk.kodein.auth.User
-import com.ufoscout.vertk.kodein.auth.UserAuthService
+import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.web.ErrorDetails
 import com.weweb.BaseIT
 import com.weweb.auth.service.Roles
@@ -24,7 +24,7 @@ class UmControllerVerticleIT : BaseIT() {
 
     private val client = vertk().createHttpClient()
     private val jwt: JwtService = kodein().instance()
-    private val authService: UserAuthService = kodein().instance()
+    private val authService: AuthContextService = kodein().instance()
     private val userService: UserService = kodein().instance()
 
     @Test
@@ -42,10 +42,10 @@ class UmControllerVerticleIT : BaseIT() {
         val responseDto = response.body
         assertNotNull(responseDto)
         assertNotNull(responseDto!!.token)
-        val user = jwt.parse(responseDto.token, User::class)
+        val user = jwt.parse(responseDto.token, Auth::class)
         assertEquals("admin", user.username)
-        assertEquals(1, authService.decode(user.roles).size)
-        assertEquals(Roles.ADMIN, authService.decode(user.roles)[0].name)
+        assertEquals(1, user.roles.size)
+        assertEquals(Roles.ADMIN, user.roles[0])
     }
 
     @Test
@@ -123,7 +123,7 @@ class UmControllerVerticleIT : BaseIT() {
     @Test
     fun shouldReturnCurrentAuthLinkedWithTheToken() = runBlocking<Unit> {
 
-        val user = User(10, UUID.randomUUID().toString(), 0)
+        val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = authService.generateToken(user)
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
@@ -161,7 +161,7 @@ class UmControllerVerticleIT : BaseIT() {
     @Test
     fun shouldReturnEmptyAuthIfExpiredToken() = runBlocking<Unit> {
 
-        val user = User(10, UUID.randomUUID().toString(), 0)
+        val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
@@ -181,7 +181,7 @@ class UmControllerVerticleIT : BaseIT() {
     @Test
     fun shouldReturnNewToken() = runBlocking<Unit> {
 
-        val user = User(10, UUID.randomUUID().toString(), 0)
+        val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() + 15000))
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
@@ -197,14 +197,14 @@ class UmControllerVerticleIT : BaseIT() {
         assertFalse(responseDto!!.token.isEmpty())
         assertNotEquals(tokenString, responseDto!!.token)
 
-        assertEquals(user.username, jwt.parse<User>(responseDto!!.token).username)
+        assertEquals(user.username, jwt.parse<Auth>(responseDto!!.token).username)
 
     }
 
     @Test
     fun shouldNotRefreshTokenIfExpired() = runBlocking<Unit> {
 
-        val user = User(10, UUID.randomUUID().toString(), 0)
+        val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 

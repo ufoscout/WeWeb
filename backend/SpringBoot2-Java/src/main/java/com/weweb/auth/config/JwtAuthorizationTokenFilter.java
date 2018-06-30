@@ -1,9 +1,9 @@
 package com.weweb.auth.config;
 
+import com.ufoscout.coreutils.auth.Auth;
 import com.ufoscout.coreutils.jwt.JwtService;
 import com.ufoscout.coreutils.jwt.TokenExpiredException;
 import com.weweb.auth.model.UserAuthentication;
-import com.weweb.auth.model.UserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,12 +36,12 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
         final String requestHeader = request.getHeader(this.tokenHeader);
 
-        UserContext userContext = null;
+        Auth userContext = null;
         if (requestHeader != null && requestHeader.startsWith(AuthConfig.JWT_TOKEN_HEADER_SUFFIX)) {
             String authToken = requestHeader.substring(AuthConfig.JWT_TOKEN_HEADER_SUFFIX.length());
             log.debug("Found jwt [{}]", authToken);
             try {
-                userContext = jwtTokenUtil.parse(authToken, UserContext.class);
+                userContext = jwtTokenUtil.parse(authToken, Auth.class);
                 request.setAttribute(userContextAttributeKey, userContext);
             } catch (TokenExpiredException e) {
                 log.debug("Token [{}] is expired", authToken);

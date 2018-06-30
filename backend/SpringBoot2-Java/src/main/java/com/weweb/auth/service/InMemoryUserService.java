@@ -21,8 +21,8 @@ public class InMemoryUserService implements UserService {
                                ValidatorService validatorService) {
         this.crypt = crypt;
         this.validatorService = validatorService;
-        users.put("user", new User("user", crypt.encode("user"), Arrays.asList("USER")));
-        users.put("admin", new User("admin", crypt.encode("admin"), Arrays.asList("USER", "ADMIN")));
+        users.put("user", new User(0L, "user", crypt.encode("user"), Arrays.asList("USER")));
+        users.put("admin", new User(1L,"admin", crypt.encode("admin"), Arrays.asList("USER", "ADMIN")));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class InMemoryUserService implements UserService {
                 .build()
                 .validateThrowException(dto);
 
-        User user = new User(dto.getEmail(), crypt.encode(dto.getPassword()), Arrays.asList("USER"));
+        User user = new User( users.size()+1L, dto.getEmail(), crypt.encode(dto.getPassword()), Arrays.asList("USER"));
         users.put(user.getUsername(), user);
     }
 

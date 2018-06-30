@@ -1,6 +1,6 @@
 package com.weweb.auth.config;
 
-import com.weweb.auth.model.UserContext;
+import com.ufoscout.coreutils.auth.Auth;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * A Spring resolver that permits injection of {@link UserContext} beans into web controllers. The {@link UserContext}
+ * A Spring resolver that permits injection of {@link Auth} beans into web controllers. The {@link Auth}
  * is retrieved from request attributes and it is set by the {@link JwtAuthorizationTokenFilter}.
  *
  * @author Francesco Cina'
@@ -18,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class UserContextResolver implements HandlerMethodArgumentResolver {
 
     private final String userContextAttributeKey;
-    private final UserContext emptyUserContext = new UserContext("", new String[0]);
+    private final Auth emptyUserContext = new Auth();
 
     UserContextResolver(String userContextAttributeKey) {
         this.userContextAttributeKey = userContextAttributeKey;
@@ -26,7 +26,7 @@ public class UserContextResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().equals(UserContext.class);
+        return methodParameter.getParameterType().equals(Auth.class);
     }
 
     @Override

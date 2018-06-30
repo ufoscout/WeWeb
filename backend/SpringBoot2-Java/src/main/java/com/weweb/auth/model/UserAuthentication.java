@@ -3,6 +3,8 @@ package com.weweb.auth.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.ufoscout.coreutils.auth.Auth;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,10 +22,10 @@ public class UserAuthentication implements Authentication {
     }
 
 
-    private final UserContext userContext;
+    private final Auth userContext;
     private final List<GrantedAuthority> authorities;
 
-    public UserAuthentication(UserContext userContext) {
+    public UserAuthentication(Auth userContext) {
         this.userContext = userContext;
         authorities = mapAuthorities(userContext.getRoles());
     }
@@ -44,7 +46,7 @@ public class UserAuthentication implements Authentication {
     }
 
     @Override
-    public UserContext getDetails() {
+    public Auth getDetails() {
         return userContext;
     }
 

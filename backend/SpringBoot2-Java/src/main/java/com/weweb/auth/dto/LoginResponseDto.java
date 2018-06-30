@@ -1,6 +1,6 @@
 package com.weweb.auth.dto;
 
-import com.weweb.auth.model.UserContext;
+import com.ufoscout.coreutils.auth.Auth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class LoginResponseDto {
 
     private String token;
-    private UserContext auth;
+    private Auth auth;
 
 }
