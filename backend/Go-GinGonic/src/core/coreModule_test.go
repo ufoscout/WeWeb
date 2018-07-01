@@ -8,8 +8,7 @@ import (
 		"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
 		"net/http"
 					"strconv"
-	"github.com/gin-gonic/gin"
-)
+			)
 
 func Test_ServerShouldStart(t *testing.T) {
 
@@ -17,8 +16,8 @@ func Test_ServerShouldStart(t *testing.T) {
 
 	router := coreModule.Services.Router
 	path := "/coreModule/test1/call-" + strconv.Itoa(int(time.Now().Unix()))
-	router.GET(path, func(c *gin.Context) {
-		c.String(http.StatusOK, "")
+	router.Get(path, func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(""))
 	})
 
 	coreModule.Start()
@@ -40,8 +39,8 @@ func Test_ShouldReplyToHttpCall(t *testing.T) {
 
 	router := testUtil.StaticAppContext().Services.Router
 	path := "/coreModule/test2/call-" + strconv.Itoa(int(time.Now().Unix()))
-	router.GET(path, func(c *gin.Context) {
-		c.String(http.StatusOK, "")
+	router.Get(path, func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(""))
 	})
 
 	response := testUtil.PerformRequest("GET", path, nil)

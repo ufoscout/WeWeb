@@ -2,9 +2,6 @@ package core
 
 import (
 	"fmt"
-
-	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/gin"
 	"context"
 	"log"
 	"net/http"
@@ -13,11 +10,12 @@ import (
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/json"
 	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/jwt"
+	"github.com/go-chi/chi"
 )
 
 type Service struct {
 	Config  *config.Config
-	Router  *gin.Engine
+	Router  *chi.Mux
 	Json    *json.JsonService
 	Jwt     *jwt.JwtService
 }
@@ -39,7 +37,7 @@ func New(config *config.Config) *Module {
 
 	module.Services = Service{
 		Config: config,
-		Router: gin.Default(),
+		Router: chi.NewRouter(),
 		Json: jsonService,
 		Jwt: jwtService,
 	}
@@ -54,11 +52,13 @@ func (core *Module) Init() error {
 func (core *Module) Start() error {
 
 	if core.Services.Config.Frontend.Enabled {
+		/*
 		fmt.Printf("Loading static resources from %s\n", core.Services.Config.Frontend.ResourcesPath)
 		core.Services.Router.Use(static.Serve("/", static.LocalFile(core.Services.Config.Frontend.ResourcesPath, true)))
 		core.Services.Router.NoRoute(func(context *gin.Context){
 			context.File(core.Services.Config.Frontend.ResourcesPath + "/index.html")
 		})
+		*/
 	}
 
 	return nil
