@@ -1,29 +1,55 @@
 package core_test
 
 import (
-	"path"
-	"testing"
+		"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core"
+		"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
+		"net/http"
+					"strconv"
+	"github.com/gin-gonic/gin"
 )
 
-func Test(t *testing.T) {
+func Test_ServerShouldStart(t *testing.T) {
 
-	config := config.Load(path.Join(testUtil.MainFolderPath(), config.CONFIG_FILE_NAME))
-	config.Server.Port = "0"
+	coreModule := testUtil.StaticAppContext()
 
-	coreModule := core.New(&config)
+	router := coreModule.Services.Router
+	path := "/coreModule/test1/call-" + strconv.Itoa(int(time.Now().Unix()))
+	router.GET(path, func(c *gin.Context) {
+		c.String(http.StatusOK, "")
+	})
+
 	coreModule.Start()
 	go coreModule.StartServer()
+	defer coreModule.StopServer()
 
-	time.Sleep(300 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 
 	assert.True(t, coreModule.ServerPort() > 0)
 
-	coreModule.Stop()
+	resp, err := http.Get("http://127.0.0.1:" + strconv.Itoa(coreModule.ServerPort()) + path)
+	defer resp.Body.Close()
+	assert.Nil(t, err)
+	assert.NotNil(t, resp)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+}
 
+func Test_ShouldReplyToHttpCall(t *testing.T) {
+
+	router := testUtil.StaticAppContext().Services.Router
+	path := "/coreModule/test2/call-" + strconv.Itoa(int(time.Now().Unix()))
+	router.GET(path, func(c *gin.Context) {
+		c.String(http.StatusOK, "")
+	})
+
+	response := testUtil.PerformRequest("GET", path, nil)
+	assert.Equal(t, http.StatusOK, response.Code)
+
+	response = testUtil.PerformRequest("GET", path, nil)
+	assert.Equal(t, http.StatusOK, response.Code)
+
+	response = testUtil.PerformRequest("GET", path, nil)
+	assert.Equal(t, http.StatusOK, response.Code)
 }

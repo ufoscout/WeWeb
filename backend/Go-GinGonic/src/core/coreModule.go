@@ -87,7 +87,7 @@ func (core *Module) ServerPort() int {
 	return core.port
 }
 
-func (core *Module) Stop() {
+func (core *Module) StopServer() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := core.httpServer.Shutdown(ctx); err != nil {
