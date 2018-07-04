@@ -4,7 +4,7 @@ import com.ufoscout.coreutils.auth.Auth;
 import com.ufoscout.coreutils.jwt.JwtService;
 import com.weweb.auth.config.AuthConfig;
 import com.weweb.auth.config.AuthContants;
-import com.weweb.auth.dto.CreateUserDto;
+import com.weweb.auth.dto.CreateLoginDto;
 import com.weweb.auth.dto.LoginDto;
 import com.weweb.auth.dto.LoginResponseDto;
 import com.weweb.auth.dto.TokenResponseDto;
@@ -37,7 +37,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/create")
-    public String createUser(@RequestBody CreateUserDto dto) {
+    public String createUser(@RequestBody CreateLoginDto dto) {
         userService.createUser(dto);
         return "";
     }

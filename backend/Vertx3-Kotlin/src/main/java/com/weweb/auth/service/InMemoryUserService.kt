@@ -1,10 +1,9 @@
-package com.weweb.um.service
+package com.weweb.auth.service
 
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.validation.ValidatorService
 import com.ufoscout.vertk.kodein.auth.BadCredentialsException
-import com.weweb.auth.service.Roles
-import com.weweb.um.dto.CreateUserDto
+import com.weweb.auth.dto.CreateLoginDto
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -30,9 +29,9 @@ class InMemoryUserService(private val crypt: PasswordEncoder,
         return user
     }
 
-    override fun createUser(dto: CreateUserDto): Auth {
+    override fun createUser(dto: CreateLoginDto): Auth {
         println("Create user ${dto.email}. Is present? ${users.containsKey(dto.email)}")
-        validatorService.validator<CreateUserDto>()
+        validatorService.validator<CreateLoginDto>()
                 .add("username", "notUnique", {!users.containsKey(dto.email)})
                 .add("confirmPassword", "notSame", {it.password.equals(it.passwordConfirm)})
                 .build()

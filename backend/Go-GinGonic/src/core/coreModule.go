@@ -52,8 +52,11 @@ func (core *Module) Init() error {
 func (core *Module) Start() error {
 
 	if core.Services.Config.Frontend.Enabled {
-		/*
 		fmt.Printf("Loading static resources from %s\n", core.Services.Config.Frontend.ResourcesPath)
+
+		//core.Services.Router.FileServer("/static", http.Dir("frontend"))
+
+		/*
 		core.Services.Router.Use(static.Serve("/", static.LocalFile(core.Services.Config.Frontend.ResourcesPath, true)))
 		core.Services.Router.NoRoute(func(context *gin.Context){
 			context.File(core.Services.Config.Frontend.ResourcesPath + "/index.html")

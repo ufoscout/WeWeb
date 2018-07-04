@@ -2,7 +2,7 @@ import { AuthModel } from '../../auth/auth.model';
 
 /* tslint:disable */
 
-export interface CreateUserDto {
+export interface CreateLoginDto {
     email: string;
     password: string;
     passwordConfirm: string;

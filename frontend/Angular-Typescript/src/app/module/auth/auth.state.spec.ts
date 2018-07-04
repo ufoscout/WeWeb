@@ -1,11 +1,11 @@
 import { Store, NgxsModule } from '@ngxs/store';
 import { async, TestBed } from '@angular/core/testing';
 import { AuthState, AuthStateModel } from './auth.state';
-import { SetAuthData, Logout, Login, SetToken, RefreshToken } from './auth.events';
+import { SetAuthData, Logout, Login, SetToken, RefreshToken, CreateLogin } from './auth.events';
 import { AuthModule } from '.';
 import { AuthModel } from './auth.model';
 import { AuthService } from './auth.service';
-import { LoginResponseDto, TokenResponseDto } from '../um/generated/dto';
+import { LoginResponseDto, TokenResponseDto, CreateLoginDto } from '../um/generated/dto';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -175,5 +175,15 @@ describe('[Auth] Auth State', () => {
         expect(authService.getToken()).toBe(response.token);
         expect(authServiceSpy).toHaveBeenCalled();
     }));
+
+    it('it should call the createLogin service method', () => {
+        const authService: AuthService = TestBed.get(AuthService);
+        const createUserSpy = spyOn(authService, 'createLogin').and.callThrough();
+
+        const dto: CreateLoginDto = { email: '', password: '', passwordConfirm: '' };
+        store.dispatch( new CreateLogin(dto) );
+
+        expect(createUserSpy).toHaveBeenCalledWith(dto);
+    });
 
 });

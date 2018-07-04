@@ -1,4 +1,4 @@
-package com.weweb.um.dto
+package com.weweb.auth.dto
 
 data class LoginDto (
         val username: String,

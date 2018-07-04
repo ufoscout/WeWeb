@@ -1,10 +1,16 @@
-import { LoginDto } from '../um/generated/dto';
+import { LoginDto, CreateLoginDto } from '../um/generated/dto';
 import { AuthModel } from './auth.model';
 
 export class Login {
     static type = '[Auth] Login';
     constructor(public readonly payload: LoginDto) { }
 }
+
+export class CreateLogin {
+    static type = '[Auth] CreateLogin';
+    constructor(public readonly payload: CreateLoginDto) { }
+}
+
 
 export class ResetState {
     static type = '[Auth] ResetSession';

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Logout } from '../../auth/auth.events';
+import { Logout } from '../../auth.events';
 
 @Component({
   selector: 'app-login-modal',

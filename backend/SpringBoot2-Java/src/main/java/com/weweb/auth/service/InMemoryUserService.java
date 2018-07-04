@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.ufoscout.coreutils.validation.ValidatorService;
-import com.weweb.auth.dto.CreateUserDto;
+import com.weweb.auth.dto.CreateLoginDto;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,9 +38,9 @@ public class InMemoryUserService implements UserService {
     }
 
     @Override
-    public void createUser(CreateUserDto dto) {
+    public void createUser(CreateLoginDto dto) {
 
-        validatorService.<CreateUserDto>validator()
+        validatorService.<CreateLoginDto>validator()
                 .add("username", "notUnique", (bean) -> !users.containsKey(bean.getEmail()))
                 .add("confirmPassword", "notSame", (bean) -> bean.getPassword().equals(bean.getPasswordConfirm()))
                 .build()

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginResponseDto, LoginDto, TokenResponseDto } from '../um/generated/dto';
+import { LoginResponseDto, LoginDto, TokenResponseDto, CreateLoginDto } from '../um/generated/dto';
 import { Store } from '@ngxs/store';
 import { AuthStateModel } from './auth.state';
 import * as str from '../shared/utils/string.utils';
@@ -29,15 +29,20 @@ export class AuthService {
     }
 
     login(loginDto: LoginDto): Observable<LoginResponseDto> {
-        return this.http.post<LoginResponseDto>('/api/um/login', loginDto);
+        return this.http.post<LoginResponseDto>('/api/auth/login', loginDto);
     }
 
+    createLogin(dto: CreateLoginDto): Observable<String> {
+        return this.http.post<String>('/api/auth/create', dto);
+    }
+
+
     getAuthData(): Observable<LoginResponseDto> {
-        return this.http.get<LoginResponseDto>('/api/um/current');
+        return this.http.get<LoginResponseDto>('/api/auth/current');
     }
 
     refreshToken(): Observable<TokenResponseDto> {
-        return this.http.get<TokenResponseDto>('/api/um/token/refresh');
+        return this.http.get<TokenResponseDto>('/api/auth/token/refresh');
     }
 
     getToken(): string {

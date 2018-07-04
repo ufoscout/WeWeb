@@ -9,10 +9,9 @@ import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.VertkKodeinModule
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.web.RouterModule
-import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
-import com.weweb.um.UmModule
+import com.weweb.auth.AuthModule
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.core.logging.SLF4JLogDelegateFactory
@@ -62,9 +61,8 @@ object AppMain {
 
         return VertkKodein.start(
                 vertk,
-                AuthModule(),
                 CoreModule(coreConfig),
-                UmModule(deploymentOptions),
+                AuthModule(deploymentOptions),
                 JsonModule(),
                 com.ufoscout.vertk.kodein.auth.AuthModule(coreConfig.jwt),
                 RouterModule(coreConfig.routerConfig),

@@ -1,6 +1,6 @@
-package com.weweb.um.dto
+package com.weweb.auth.dto
 
-data class CreateUserDto(
+data class CreateLoginDto(
         val email: String,
         val password: String,
         val passwordConfirm: String

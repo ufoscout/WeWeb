@@ -1,4 +1,4 @@
-package com.weweb.um.service
+package com.weweb.auth.service
 
 import com.ufoscout.coreutils.validation.SimpleValidatorService
 import com.ufoscout.vertk.kodein.auth.BadCredentialsException

@@ -1,18 +1,17 @@
-package com.weweb.um.web
+package com.weweb.auth.web
 
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
-import com.ufoscout.vertk.kodein.auth.AuthContants
 import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.web.ErrorDetails
 import com.weweb.BaseIT
+import com.weweb.auth.config.AuthContants
 import com.weweb.auth.service.Roles
-import com.weweb.um.config.UmContants
-import com.weweb.um.dto.CreateUserDto
-import com.weweb.um.dto.LoginDto
-import com.weweb.um.dto.LoginResponseDto
-import com.weweb.um.dto.TokenResponseDto
-import com.weweb.um.service.UserService
+import com.weweb.auth.dto.CreateLoginDto
+import com.weweb.auth.dto.LoginDto
+import com.weweb.auth.dto.LoginResponseDto
+import com.weweb.auth.dto.TokenResponseDto
+import com.weweb.auth.service.UserService
 import io.netty.handler.codec.http.HttpResponseStatus
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -20,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.kodein.di.generic.instance
 import java.util.*
 
-class UmControllerVerticleIT : BaseIT() {
+class AuthControllerVerticleIT : BaseIT() {
 
     private val client = vertk().createHttpClient()
     private val jwt: JwtService = kodein().instance()
@@ -35,7 +34,7 @@ class UmControllerVerticleIT : BaseIT() {
         val response = client.restPost<LoginResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/login",
+                AuthContants.BASE_AUTH_API + "/login",
                 loginDto)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -56,7 +55,7 @@ class UmControllerVerticleIT : BaseIT() {
         val response = client.restPost<ErrorDetails>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/login",
+                AuthContants.BASE_AUTH_API + "/login",
                 loginDto)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
@@ -72,15 +71,15 @@ class UmControllerVerticleIT : BaseIT() {
         val responseCreate = client.restPost<String>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/create",
-                CreateUserDto(username, password, password))
+                AuthContants.BASE_AUTH_API + "/create",
+                CreateLoginDto(username, password, password))
         assertEquals(HttpResponseStatus.OK.code(), responseCreate.statusCode)
 
 
         val responseLogin = client.restPost<LoginResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/login",
+                AuthContants.BASE_AUTH_API + "/login",
                 LoginDto(username, password))
         assertEquals(HttpResponseStatus.OK.code(), responseLogin.statusCode)
 
@@ -95,8 +94,8 @@ class UmControllerVerticleIT : BaseIT() {
         val responseCreate = client.restPost<ErrorDetails>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/create",
-                CreateUserDto(username, password, "anotherPassword"))
+                AuthContants.BASE_AUTH_API + "/create",
+                CreateLoginDto(username, password, "anotherPassword"))
         assertEquals(422, responseCreate.statusCode)
         assertNotNull( responseCreate.body!!.details.get("confirmPassword") )
 
@@ -108,13 +107,13 @@ class UmControllerVerticleIT : BaseIT() {
         val username = UUID.randomUUID().toString()
         val password = UUID.randomUUID().toString()
 
-        userService.createUser(CreateUserDto(username, password, password))
+        userService.createUser(CreateLoginDto(username, password, password))
 
         val responseCreate = client.restPost<ErrorDetails>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/create",
-                CreateUserDto(username, password, password))
+                AuthContants.BASE_AUTH_API + "/create",
+                CreateLoginDto(username, password, password))
         assertEquals(422, responseCreate.statusCode)
         assertNotNull( responseCreate.body!!.details.get("username") )
 
@@ -125,12 +124,13 @@ class UmControllerVerticleIT : BaseIT() {
 
         val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = authService.generateToken(user)
-        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+        val headers = Pair(com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER,
+                "${com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
         val response = client.restGet<LoginResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/current",
+                AuthContants.BASE_AUTH_API + "/current",
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -143,12 +143,13 @@ class UmControllerVerticleIT : BaseIT() {
     @Test
     fun shouldReturnEmptyAuthIfBadToken() = runBlocking<Unit> {
 
-        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}${UUID.randomUUID().toString()}")
+        val headers = Pair(com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER,
+                "${com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER_SUFFIX}${UUID.randomUUID().toString()}")
 
         val response = client.restGet<LoginResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/current",
+                AuthContants.BASE_AUTH_API + "/current",
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -163,12 +164,13 @@ class UmControllerVerticleIT : BaseIT() {
 
         val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
-        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+        val headers = Pair(com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER,
+                "${com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
         val response = client.restGet<LoginResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/current",
+                AuthContants.BASE_AUTH_API + "/current",
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -183,12 +185,13 @@ class UmControllerVerticleIT : BaseIT() {
 
         val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() + 15000))
-        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+        val headers = Pair(com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER,
+                "${com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
         val response = client.restGet<TokenResponseDto>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/token/refresh",
+                AuthContants.BASE_AUTH_API + "/token/refresh",
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -206,12 +209,13 @@ class UmControllerVerticleIT : BaseIT() {
 
         val user = Auth(10, UUID.randomUUID().toString())
         val tokenString = jwt.generate("", user, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
-        val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
+        val headers = Pair(com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER,
+                "${com.ufoscout.vertk.kodein.auth.AuthContants.JWT_TOKEN_HEADER_SUFFIX}$tokenString")
 
         val response = client.restGet<ErrorDetails>(
                 port(),
                 "localhost",
-                UmContants.BASE_UM_API + "/token/refresh",
+                AuthContants.BASE_AUTH_API + "/token/refresh",
                 headers)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)

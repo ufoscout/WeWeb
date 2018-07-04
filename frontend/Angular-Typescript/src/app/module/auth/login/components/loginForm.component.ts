@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Login } from '../../auth/auth.events';
-import { LoginDto } from '../../um/generated/dto';
+import { Login } from '../../auth.events';
+import { LoginDto } from '../../../um/generated/dto';
 import { Router } from '@angular/router';
 
 @Component({

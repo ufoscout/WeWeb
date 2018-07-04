@@ -1,4 +1,4 @@
-package com.weweb.um.dto
+package com.weweb.auth.dto
 
 import com.ufoscout.coreutils.auth.Auth
 

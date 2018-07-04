@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './pages/login.component';
 import { LoginRoutingModule } from './login.routing';
-import { AuthModule } from '../auth';
-import { SharedModule } from '../shared';
+import { AuthModule } from '../';
+import { SharedModule } from '../../shared';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoginService } from './login.service';
@@ -38,6 +38,6 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     TranslateModule,
   ]
 })
-export class LoginModule {
+export class AuthLoginModule {
   constructor(loginService: LoginService) {}
 }

@@ -5,10 +5,10 @@ import { NgxsModule } from '@ngxs/store';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { HomeModule } from './module/home';
-import { LoginModule } from './module/login';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { UmModule } from './module/um';
+import { AuthLoginModule } from './module/auth/login';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { UmModule } from './module/um';
     }),
     AppRoutingModule,
     HomeModule,
-    LoginModule,
+    AuthLoginModule,
     UmModule,
     // NgxsLoggerPluginModule must be loaded at the end
     NgxsLoggerPluginModule.forRoot(),

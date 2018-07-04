@@ -103,6 +103,11 @@ export class AuthState implements NgxsOnInit {
     );
   }
 
+  @Action(events.CreateLogin)
+  createLogin(ctx: StateContext<AuthStateModel>, {payload}: events.CreateLogin) {
+    return this.authService.createLogin(payload);
+  }
+
   @Action(events.SessionExpired)
   sessionExpired({ getState, setState }: StateContext<AuthStateModel>) {
     setState({

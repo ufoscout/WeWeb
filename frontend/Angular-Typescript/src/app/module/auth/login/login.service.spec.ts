@@ -1,9 +1,9 @@
 import { Store, NgxsModule } from '@ngxs/store';
 import { async, TestBed } from '@angular/core/testing';
 import { LoginService } from './login.service';
-import { LoginModule } from '.';
+import { AuthLoginModule } from '.';
 import { NgbModule, NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SessionExpired, SetAuthData } from '../auth/auth.events';
+import { SessionExpired, SetAuthData } from '../auth.events';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ describe('[Common] LoginService', () => {
                 RouterTestingModule,
                 NgxsModule.forRoot(),
                 TranslateModule.forRoot(),
-                LoginModule,
+                AuthLoginModule,
                 NgbModule.forRoot(),
             ],
             providers: [

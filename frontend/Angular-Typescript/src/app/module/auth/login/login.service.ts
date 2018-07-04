@@ -2,7 +2,7 @@ import { Actions, Select } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginModalComponent } from './pages/loginModal.component';
-import { AuthState, AuthStateModel } from '../auth/auth.state';
+import { AuthState, AuthStateModel } from '../auth.state';
 import { Observable } from 'rxjs';
 
 @Injectable()

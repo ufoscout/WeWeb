@@ -1,25 +1,25 @@
-package com.weweb.um.web
+package com.weweb.auth.web
 
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.web.RouterService
-import com.weweb.um.config.UmContants
-import com.weweb.um.dto.CreateUserDto
-import com.weweb.um.dto.LoginDto
-import com.weweb.um.dto.LoginResponseDto
-import com.weweb.um.dto.TokenResponseDto
-import com.weweb.um.service.UserService
+import com.weweb.auth.config.AuthContants
+import com.weweb.auth.dto.CreateLoginDto
+import com.weweb.auth.dto.LoginDto
+import com.weweb.auth.dto.LoginResponseDto
+import com.weweb.auth.dto.TokenResponseDto
+import com.weweb.auth.service.UserService
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 
-class UmControllerVerticle (val routerService: RouterService,
-                            val userService: UserService,
-                            val auth: AuthContextService): CoroutineVerticle() {
+class AuthControllerVerticle (val routerService: RouterService,
+                              val userService: UserService,
+                              val auth: AuthContextService): CoroutineVerticle() {
 
     override suspend fun start() {
 
         val router = routerService.router()
 
-        router.restPost<LoginDto>(UmContants.BASE_UM_API + "/login") { rc, loginDto ->
+        router.restPost<LoginDto>(AuthContants.BASE_AUTH_API + "/login") { rc, loginDto ->
             // println("Called Login ${loginDto.username} ${loginDto.password}")
             val login = userService.login(loginDto.username, loginDto.password)
             val token = auth.generateToken(login)
@@ -27,12 +27,12 @@ class UmControllerVerticle (val routerService: RouterService,
             LoginResponseDto(token, login)
         }
 
-        router.restPost<CreateUserDto>(UmContants.BASE_UM_API + "/create") { rc, dto ->
+        router.restPost<CreateLoginDto>(AuthContants.BASE_AUTH_API + "/create") { rc, dto ->
             val login = userService.createUser(dto)
             ""
         }
 
-        router.restGet(UmContants.BASE_UM_API + "/current") { rc ->
+        router.restGet(AuthContants.BASE_AUTH_API + "/current") { rc ->
             try {
                 val token = auth.tokenFrom(rc) ?: ""
                 LoginResponseDto(token, auth.from(rc).auth)
@@ -41,7 +41,7 @@ class UmControllerVerticle (val routerService: RouterService,
             }
         }
 
-        router.restGet(UmContants.BASE_UM_API + "/token/refresh") { rc ->
+        router.restGet(AuthContants.BASE_AUTH_API + "/token/refresh") { rc ->
             val token = auth.from(rc).isAuthenticated.auth
             TokenResponseDto(auth.generateToken(token))
         }
