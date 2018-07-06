@@ -13,9 +13,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AuthModule } from '../auth';
 import { LanguageService } from './language.service';
 import { FieldErrorsComponent } from './errors/field-errors.component';
+import { environment } from '../../../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, '/assets/i18n/', `.json?_=${environment.ts}`);
 }
 
 @NgModule({

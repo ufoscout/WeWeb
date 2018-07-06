@@ -9,6 +9,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { UmModule } from './module/um';
 import { AuthLoginModule } from './module/auth/login';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -31,4 +32,11 @@ import { AuthLoginModule } from './module/auth/login';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    console.log(`-------------`);
+    console.log(`Application started. Environment:`);
+    console.log(environment);
+    console.log(`-------------`);
+  }
+}

@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "build": "ng build --prod",
+    "build": "ng build --prod && node ./replace.build.js",
     "test": "ng test --sourceMap=false",
     "test-single-run": "ng test --watch=false",
     "lint": "ng lint",
@@ -28,7 +28,6 @@
     "@ngxs/logger-plugin": "^3.1.4",
     "@ngxs/storage-plugin": "^3.1.4",
     "@ngxs/store": "^3.1.4",
-    "@types/lodash": "^4.14.106",
     "bootstrap": "^4.1.0",
     "core-js": "^2.5.4",
     "ngx-spinner": "^6.0.0",
@@ -52,6 +51,7 @@
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.3.0",
+    "replace-in-file": "^3.4.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "is-docker": "^1.1.0"
