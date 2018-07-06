@@ -1,4 +1,4 @@
-#!/usr/bin/dumb-init /bin/sh
+#!/bin/sh
 
 envsubst '\$BACKEND_URL' <${ASSETS}/nginx.conf.template > /etc/nginx/nginx.conf
 

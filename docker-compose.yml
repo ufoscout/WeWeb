@@ -45,6 +45,7 @@ services:
       dockerfile: Dockerfile_nginx
     ports:
       - "8092:80"
+    # init: true
     depends_on:
       - be_springboot
     environment:

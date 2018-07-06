@@ -11,18 +11,12 @@ ENV ASSETS=/docker
 VOLUME "/usr/local/share/ca-certificates"
 
 
-# Install dumb-init, remove temp files
+# Update and upgrade
 # ------------------------------------
-RUN apk add --update dumb-init \
-  && rm -rf /var/cache/apk/* \
-  && rm -rf /var/log/nginx/* \
-  && rm -rf /var/www/html/*
-
 RUN apk update -f \
   && apk upgrade -f \
   && apk --no-cache add ca-certificates \
   && update-ca-certificates \
-  && apk add --update dumb-init \
   && rm -rf /var/cache/apk/* \
   && rm -rf /var/log/nginx/* \
   && rm -rf /usr/share/nginx/html/* \
@@ -39,11 +33,6 @@ ADD ./docker_nginx $ASSETS
 # Expose nginx port
 # -----------------
 EXPOSE 80
-
-
-# Use Dumb-Init to launch the image and manage the OS signals (SIGINT, SIGTERM, SIGKILL...)
-# -----------------------------------------------------------------------------------------
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 
 # By default, execute run.sh script
