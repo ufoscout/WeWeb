@@ -3,6 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import * as obj from '../shared/utils/object.utils';
 import * as brw from '../shared/utils/browser.utils';
 
+import localeIt from '@angular/common/locales/en';
+import localeEn from '@angular/common/locales/it';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeEn);
+registerLocaleData(localeIt);
+
 const LANG_KEY = 'LANG';
 export const defaultLanguage = 'en';
 export const supportedLanguages = ['en', 'it'];

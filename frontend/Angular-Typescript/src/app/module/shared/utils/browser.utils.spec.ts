@@ -53,4 +53,12 @@ describe('[Shared] Browser utils', () => {
         expect(broswer.getPreferredSupportedLang(['jp', 'de'], 'en')).toBe('en');
     });
 
+    it('should match full and short languagem codes', () => {
+        setLangs(['it-IT', 'en-US', 'en-GB']);
+        expect(broswer.getPreferredSupportedLang(['it', 'en'], 'en')).toBe('it');
+        expect(broswer.getPreferredSupportedLang(['fr', 'en'], 'en')).toBe('en');
+        expect(broswer.getPreferredSupportedLang(['en'], 'en')).toBe('en');
+        expect(broswer.getPreferredSupportedLang(['en', 'it'], 'en')).toBe('it');
+    });
+
 });

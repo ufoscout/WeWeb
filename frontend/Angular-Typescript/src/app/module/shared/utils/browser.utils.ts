@@ -30,6 +30,14 @@ export function getPreferredSupportedLang(supportedLangs: string[], defaultLang:
     if (supportedLangs.includes(lang)) {
       return lang;
     }
+    const iso639_1 = toIso639_1(lang);
+    if (supportedLangs.includes(iso639_1)) {
+      return iso639_1;
+    }
   }
   return defaultLang;
+}
+
+function toIso639_1(lang: string): string {
+  return lang.split('-')[0];
 }
