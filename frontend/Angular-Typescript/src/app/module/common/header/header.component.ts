@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
-  setLanguage(language: String): void {
+  setLanguage(language: string): void {
     this.store.dispatch([
       new SetLanguage({ language: language }),
     ]);

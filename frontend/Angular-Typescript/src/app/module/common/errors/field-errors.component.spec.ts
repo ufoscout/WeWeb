@@ -1,8 +1,12 @@
-import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, async, inject, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { CommonModule } from '../';
-import { NgxsModule } from '@ngxs/store';
+import { NgxsModule, Store } from '@ngxs/store';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { FieldErrorsComponent } from './field-errors.component';
 
 @Component({
     selector: `app-tester-component`,
@@ -26,11 +30,13 @@ describe('FieldErrorsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                NgbModule.forRoot(),
-                NgxsModule.forRoot([]),
-                CommonModule,
+                TranslateModule.forRoot(),
+            ],
+            providers: [
+                FieldErrorsComponent,
             ],
             declarations: [
+                FieldErrorsComponent,
                 TesterComponent,
             ]
         }).compileComponents().then(() => {
@@ -75,53 +81,4 @@ describe('FieldErrorsComponent', () => {
         expect(children.item(1).textContent).toContain('key.key-two');
     }));
 
-
-    /*
-    it('should list all languages', fakeAsync(() => {
-        fixture.detectChanges();
-        const state = store.selectSnapshot<CommonStateModel>(s => s.common);
-        const languages: HTMLCollection = fixture.debugElement.nativeElement.querySelector('#dropdownLanguages').children;
-
-        expect(languages.length).toBe(state.allLanguages.length);
-        for (let i = 0; i < state.allLanguages.length; i++) {
-            // console.log(languages.item(i));
-            expect(languages.item(i).textContent.trim()).toBe(state.allLanguages[i]);
-        }
-
-    }));
-
-    it('should change the selected language', fakeAsync(() => {
-        fixture.detectChanges();
-        spyOn(component, 'setLanguage').and.callThrough();
-
-        let state = store.selectSnapshot<CommonStateModel>(s => s.common);
-
-        // Select a language different than the current one
-        const previouslySelectedLanguage = state.language;
-        let notDefaultLanguageIndex = 0;
-        for (let i = 0; i < state.allLanguages.length; i++) {
-            if (previouslySelectedLanguage !== state.allLanguages[i]) {
-                notDefaultLanguageIndex = i;
-            }
-        }
-
-        // click on the dropdown entry for the new language
-        const languages: HTMLCollection = fixture.debugElement.nativeElement.querySelector('#dropdownLanguages').children;
-        (<any>languages.item(notDefaultLanguageIndex)).click();
-
-        tick();
-        fixture.detectChanges();
-
-        expect(component.setLanguage).toHaveBeenCalled();
-
-        // Check the store is updated
-        state = store.selectSnapshot<CommonStateModel>(s => s.common);
-        expect(state.language).toBe(state.allLanguages[notDefaultLanguageIndex]);
-
-        // Check the new language is correctly displayed
-        const selectedLanguage = fixture.debugElement.nativeElement.querySelector('#dropdownLanguage');
-        expect(selectedLanguage.textContent.trim()).not.toBe(previouslySelectedLanguage);
-        expect(selectedLanguage.textContent.trim()).toBe(state.allLanguages[notDefaultLanguageIndex]);
-    }));
-*/
 });
