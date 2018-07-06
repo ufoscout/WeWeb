@@ -1,0 +1,51 @@
+FROM nginx:1-alpine
+
+
+# Environment variables required for this build
+# ---------------------------------------------
+ENV ASSETS=/docker
+
+
+# Mount root SSL certificates
+# ---------------------------
+VOLUME "/usr/local/share/ca-certificates"
+
+
+# Install dumb-init, remove temp files
+# ------------------------------------
+RUN apk add --update dumb-init \
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /var/log/nginx/* \
+  && rm -rf /var/www/html/*
+
+RUN apk update -f \
+  && apk upgrade -f \
+  && apk --no-cache add ca-certificates \
+  && update-ca-certificates \
+  && apk add --update dumb-init \
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /var/log/nginx/* \
+  && rm -rf /usr/share/nginx/html/* \
+  && rm -f /etc/nginx/nginx.conf
+
+
+# Deploying frontend
+# ------------------
+ADD ./dist/Angular-Typescript /usr/share/nginx/html/
+ADD ./docker_nginx/mime.types /etc/nginx/mime.types
+ADD ./docker_nginx $ASSETS
+
+
+# Expose nginx port
+# -----------------
+EXPOSE 80
+
+
+# Use Dumb-Init to launch the image and manage the OS signals (SIGINT, SIGTERM, SIGKILL...)
+# -----------------------------------------------------------------------------------------
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+
+# By default, execute run.sh script
+# ---------------------------------
+CMD ["/docker/run.sh"]

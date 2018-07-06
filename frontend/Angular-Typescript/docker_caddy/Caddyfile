@@ -1,11 +1,11 @@
-0.0.0.0
+0.0.0.0:80
 
 log stdout
 errors stdout
 gzip
 root /dist
 
-proxy /api backend:8080
+proxy /api {$BACKEND_URL}
 
 cache
 
