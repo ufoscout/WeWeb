@@ -50,6 +50,8 @@ services:
       - be_springboot
     environment:
       BACKEND_URL: http://be_springboot:8080
+      #NGINX_WORKER_PROCESSES:auto
+      #NGINX_WORKER_CONNECTIONS:16384
 
   be_springboot:
     image: "weweb/be/springboot"

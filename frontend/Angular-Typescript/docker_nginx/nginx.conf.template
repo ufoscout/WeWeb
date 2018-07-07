@@ -1,16 +1,20 @@
 daemon off;
 
-error_log stderr info;
+error_log stderr $NGINX_LOGGER_LEVEL;
 
-worker_processes auto;
+worker_processes $NGINX_WORKER_PROCESSES;
 
 events {
-  worker_connections 8192;
+  worker_connections $NGINX_WORKER_CONNECTIONS;
 }
+
+#
+# Tips to increase performance: https://www.nginx.com/blog/10-tips-for-10x-application-performance/
+#
 
 http {
 
-  access_log /dev/stdout;
+  access_log /dev/stdout combined buffer=4k flush=4s;
 
   include mime.types;
   default_type application/octet-stream;
@@ -97,6 +101,7 @@ http {
       proxy_set_header Connection 'upgrade';
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
+      proxy_buffers 8 16k
     }
 
   }
