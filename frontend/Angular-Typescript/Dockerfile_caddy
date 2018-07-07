@@ -1,7 +1,0 @@
-# Build application image
-FROM abiosoft/caddy
-
-EXPOSE 80
-
-COPY ./dist/Angular-Typescript /dist
-COPY ./docker_caddy/Caddyfile /etc/Caddyfile

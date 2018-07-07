@@ -20,15 +20,15 @@ services:
 
   fe_vertx_angular:
     image: "weweb/fe/angular"
-    build:
-      context: ./frontend/Angular-Typescript/
-      dockerfile: Dockerfile_caddy
+    build: ./frontend/Angular-Typescript
     ports:
       - "8091:80"
     depends_on:
       - be_vertx
     environment:
       BACKEND_URL: http://be_vertx:8080
+      NGINX_WORKER_PROCESSES: 1
+      #NGINX_WORKER_CONNECTIONS: 16384
       
   be_vertx:
     image: "weweb/be/vertx"
@@ -40,9 +40,6 @@ services:
 
   fe_springboot_angular:
     image: "weweb/fe/angular"
-    build:
-      context: ./frontend/Angular-Typescript/
-      dockerfile: Dockerfile_nginx
     ports:
       - "8092:80"
     # init: true
@@ -50,8 +47,8 @@ services:
       - be_springboot
     environment:
       BACKEND_URL: http://be_springboot:8080
-      #NGINX_WORKER_PROCESSES:auto
-      #NGINX_WORKER_CONNECTIONS:16384
+      NGINX_WORKER_PROCESSES: 1
+      #NGINX_WORKER_CONNECTIONS: 16384
 
   be_springboot:
     image: "weweb/be/springboot"
