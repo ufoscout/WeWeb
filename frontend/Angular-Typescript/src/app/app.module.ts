@@ -10,6 +10,7 @@ import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
 import { UmModule } from './module/um';
 import { AuthLoginModule } from './module/auth/login';
 import { environment } from '../environments/environment';
+import { PageNotFoundModule } from './module/pageNotFound';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,8 @@ import { environment } from '../environments/environment';
     HomeModule,
     AuthLoginModule,
     UmModule,
+    // This module should be the last with routing imported.
+    PageNotFoundModule,
     // NgxsLoggerPluginModule must be loaded at the end
     NgxsLoggerPluginModule.forRoot(),
   ],
