@@ -2,7 +2,7 @@ FROM openjdk:8-jre-alpine
 
 RUN apk add --update bash && rm -rf /var/cache/apk/*
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.3.0/wait /wait
 RUN chmod +x /wait
 
 ENV JAR_PATH ./target

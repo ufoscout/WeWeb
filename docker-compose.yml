@@ -3,26 +3,38 @@ version: "3"
 services:
 
 ## -------------------
-## Go - Gin Gonic
+## Go - Chi
 ## -------------------
 
-  be_gin:
-    image: "weweb/be/gin"
-    build: ./backend/Go-GinGonic
+  go_chi:
+    image: "weweb/be/go_chi"
+    build: ./backend/Go-Chi
     ports:
       - 8090:8080
     environment:
       SERVER_RESOURCES_STATIC_PATH: ./frontend
 
+      
 ## -------------------
-## Vertx3 - Angular 
+## Rust - Actix
+## -------------------
+
+  rust_actix:
+    image: "weweb/be/rust_actix"
+    build: ./backend/Rust-Actix
+    ports:
+      - 8091:8080
+
+
+## -------------------
+## Kotlin - Vertx3 - Angular 
 ## -------------------
 
   fe_vertx_angular:
     image: "weweb/fe/angular"
     build: ./frontend/Angular-Typescript
     ports:
-      - "8091:80"
+      - "8092:80"
     depends_on:
       - be_vertx
     environment:
@@ -31,17 +43,18 @@ services:
       #NGINX_WORKER_CONNECTIONS: 16384
       
   be_vertx:
-    image: "weweb/be/vertx"
+    image: "weweb/be/kolin_vertx"
     build: ./backend/Vertx3-Kotlin
 
+    
 ## ----------------------
-## SpringBoot2 - Angular
+## Java - SpringBoot2 - Angular
 ## ----------------------
 
   fe_springboot_angular:
     image: "weweb/fe/angular"
     ports:
-      - "8092:80"
+      - "8093:80"
     # init: true
     depends_on:
       - be_springboot
@@ -51,5 +64,5 @@ services:
       #NGINX_WORKER_CONNECTIONS: 16384
 
   be_springboot:
-    image: "weweb/be/springboot"
+    image: "weweb/be/java_springboot"
     build: ./backend/SpringBoot2-Java

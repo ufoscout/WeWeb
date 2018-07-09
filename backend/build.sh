@@ -8,6 +8,7 @@ echo $LINE_SEPARATOR
 
 declare -a projects=(
     "Go-Chi" 
+    "Rust-Actix"
     "SpringBoot2-Java" 
     "Vertx3-Kotlin"
 )

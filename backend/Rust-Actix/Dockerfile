@@ -5,15 +5,12 @@ RUN apk add --update --no-cache bash && rm -rf /var/cache/apk/*
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.3.0/wait /wait
 RUN chmod +x /wait
 
-ENV TARGET_PATH ./target
-ENV FILE_NAME go
-
+ENV FILE_NAME rust_actix
 ENV WRK_DIR /opt/build
 
-COPY $TARGET_PATH $WRK_DIR
+COPY ./target/build $WRK_DIR
 
 EXPOSE 8080
-ENV GIN_MODE release
 
 WORKDIR $WRK_DIR
 
