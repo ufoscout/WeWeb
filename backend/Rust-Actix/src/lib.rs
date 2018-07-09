@@ -21,3 +21,21 @@ pub fn start() {
 
     module::start(&[core_module]);
 }
+
+#[cfg(test)]
+#[macro_use]
+extern crate lazy_static;
+
+#[cfg(test)]
+mod test {
+    use std::sync::Mutex;
+    use std::env;
+
+    lazy_static! {
+        static ref STATIC_CONTEXT: Mutex<Vec<String>> = Mutex::new(getVec());
+}
+
+    fn getVec() -> Vec<String> {
+        vec![]
+    }
+}

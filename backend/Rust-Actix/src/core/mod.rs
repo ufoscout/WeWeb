@@ -4,7 +4,7 @@ use super::module;
 
 pub fn new(config: config::CoreConfig) -> CoreModule {
     CoreModule{
-        config: config
+        config
     }
 }
 

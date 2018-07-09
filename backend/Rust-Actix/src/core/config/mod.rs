@@ -30,3 +30,15 @@ pub fn new(conf: rs_config::Config) -> CoreConfig {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+
+    #[test]
+    fn should_init_all_then_start_all() {
+
+        super::super::super::start()
+
+    }
+
+}
