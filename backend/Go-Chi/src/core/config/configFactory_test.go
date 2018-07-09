@@ -6,8 +6,8 @@ import (
 	"path"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/testUtil"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
 )
 
 func Test_load_Unit(t *testing.T) {

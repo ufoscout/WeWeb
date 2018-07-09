@@ -1,7 +1,7 @@
 package auth
 
 import (
-									"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
+									"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
 )
 
 type Service struct {

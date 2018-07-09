@@ -2,7 +2,7 @@ package jwt_test
 
 import (
 	"testing"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/testUtil"
 	"github.com/stretchr/testify/assert"
 	"fmt"
 	"time"

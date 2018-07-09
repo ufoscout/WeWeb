@@ -1,10 +1,10 @@
 package starter
 
 import (
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/module"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/auth"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/module"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/auth"
 )
 
 func StartApp(configPath string, modules ...module.Module) *core.Module {

@@ -2,7 +2,7 @@ package service
 
 import (
 	"testing"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/auth/model"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/auth/model"
 	"github.com/stretchr/testify/assert"
 )
 

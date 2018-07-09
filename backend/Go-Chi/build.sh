@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_NAME=Go-GinGonic
+PROJECT_NAME=Go-Chi
 BUILD_TARGET_PATH=./target
 BUILD_TARGET_FILE=go
 

@@ -4,8 +4,8 @@ import (
 	"time"
 	"github.com/dgrijalva/jwt-go"
 	"errors"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/json"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/json"
 	"fmt"
 )
 

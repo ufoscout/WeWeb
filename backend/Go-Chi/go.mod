@@ -1,4 +1,4 @@
-module github.com/ufoscout/WeWeb/backend/Go-GinGonic
+module github.com/ufoscout/WeWeb/backend/Go-Chi
 
 require (
 	github.com/davecgh/go-spew v1.1.0

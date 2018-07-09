@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 	"net"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/json"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/jwt"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/json"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/jwt"
 	"github.com/go-chi/chi"
 )
 

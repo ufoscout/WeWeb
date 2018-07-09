@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-		"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
+		"github.com/ufoscout/WeWeb/backend/Go-Chi/src/testUtil"
 		"net/http"
 					"strconv"
 			)

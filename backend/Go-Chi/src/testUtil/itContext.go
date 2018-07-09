@@ -1,11 +1,11 @@
 package testUtil
 
 import (
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core"
 	"os"
 	"path"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/core/config"
-		"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/starter"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/core/config"
+		"github.com/ufoscout/WeWeb/backend/Go-Chi/src/starter"
 	"net/http"
 	"net/http/httptest"
 	"io"

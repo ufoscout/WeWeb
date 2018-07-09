@@ -3,7 +3,7 @@ package json_test
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"github.com/ufoscout/WeWeb/backend/Go-GinGonic/src/testUtil"
+	"github.com/ufoscout/WeWeb/backend/Go-Chi/src/testUtil"
 )
 
 func Test_shouldMarshalToJson(t *testing.T) {
