@@ -3,23 +3,28 @@ extern crate config;
 mod core;
 mod module;
 
-pub fn start() {
+pub struct App {
+    core: core::CoreModule
+}
+
+pub fn start() -> App {
 
     let mut settings = config::Config::default();
     settings
-        // Add in `./Settings.toml`
         .merge(config::File::with_name("./config/Config")).unwrap()
-        // Add in settings from the environment (with a prefix of APP)
-        // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
         .merge(config::Environment::with_prefix("APP")).unwrap();
 
 
     let conf = core::config::new(settings);
     println!("{:?}", conf);
-    let core_module = core::new(conf);
-    println!("{:?}", core_module.config);
 
-    module::start(&[core_module]);
+    let app = App {
+        core: core::new(conf)
+    };
+
+    module::start(&[&app.core]);
+
+    return app;
 }
 
 #[cfg(test)]
@@ -27,15 +32,15 @@ pub fn start() {
 extern crate lazy_static;
 
 #[cfg(test)]
-mod test {
-    use std::sync::Mutex;
+pub mod test {
     use std::env;
 
     lazy_static! {
-        static ref STATIC_CONTEXT: Mutex<Vec<String>> = Mutex::new(getVec());
-}
+        pub static ref IT_CONTEXT: super::App = start_it_context();
+    }
 
-    fn getVec() -> Vec<String> {
-        vec![]
+    fn start_it_context() -> super::App {
+        env::set_var("APP_SERVER.PORT", "0");
+        return super::start();
     }
 }

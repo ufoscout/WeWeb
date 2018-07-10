@@ -3,7 +3,7 @@ pub trait Module {
     fn start(&self);
 }
 
-pub fn start(modules: &[impl Module]) {
+pub fn start(modules: &[&impl Module]) {
     for module in modules {
         module.init();
     }
@@ -23,13 +23,11 @@ mod test {
 
     #[test]
     fn should_init_all_then_start_all() {
-        let mut modules: Vec<SimpleMod> = vec![];
+
         let mod1 = SimpleMod { name: "one".to_string() };
         let mod2 = SimpleMod { name: "two".to_string() };
-        modules.push(mod1);
-        modules.push(mod2);
 
-        super::start(&modules);
+        super::start(&[&mod1, &mod2]);
 
         assert_eq!(4, MODULE_TEST_ARRAY_VALUES.lock().unwrap().len());
         assert_eq!(&"one-init".to_string(), MODULE_TEST_ARRAY_VALUES.lock().unwrap().get(0).unwrap());

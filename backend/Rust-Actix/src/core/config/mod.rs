@@ -34,11 +34,13 @@ pub fn new(conf: rs_config::Config) -> CoreConfig {
 #[cfg(test)]
 mod test {
 
+    use super::super::super::test::IT_CONTEXT;
+
     #[test]
     fn should_init_all_then_start_all() {
 
-        super::super::super::start()
-
+        let app = &IT_CONTEXT;
+        assert_eq!(0, app.core.config.server.port)
     }
 
 }
