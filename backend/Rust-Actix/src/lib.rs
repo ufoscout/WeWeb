@@ -12,7 +12,7 @@ pub fn start() -> App {
     let mut settings = config::Config::default();
     settings
         .merge(config::File::with_name("./config/Config")).unwrap()
-        .merge(config::Environment::with_prefix("APP")).unwrap();
+        .merge(config::Environment::new().separator("__")).unwrap();
 
 
     let conf = core::config::new(settings);
@@ -40,7 +40,7 @@ pub mod test {
     }
 
     fn start_it_context() -> super::App {
-        env::set_var("APP_SERVER.PORT", "0");
+        env::set_var("SERVER__PORT", "0");
         return super::start();
     }
 }
