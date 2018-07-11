@@ -1,5 +1,8 @@
 extern crate config;
 
+#[macro_use]
+extern crate serde_derive;
+
 mod core;
 mod module;
 

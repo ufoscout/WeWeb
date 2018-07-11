@@ -37,7 +37,7 @@ mod test {
     use test_root::IT_CONTEXT;
 
     #[test]
-    fn should_init_all_then_start_all() {
+    fn should_read_config_and_use_env_vars() {
 
         let app = &IT_CONTEXT;
         assert_eq!(0, app.core.config.server.port)

@@ -12,7 +12,7 @@ pub fn new(config: config::CoreConfig) -> CoreModule {
 
 pub struct CoreModule {
     pub config: config::CoreConfig,
-    pub json: Box<dyn json::JsonService + Sync>
+    pub json: json::JsonService
 }
 
 impl module::Module for CoreModule {
