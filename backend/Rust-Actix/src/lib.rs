@@ -32,7 +32,8 @@ pub fn start() -> App {
 extern crate lazy_static;
 
 #[cfg(test)]
-pub mod test {
+pub mod test_root {
+
     use std::env;
 
     lazy_static! {

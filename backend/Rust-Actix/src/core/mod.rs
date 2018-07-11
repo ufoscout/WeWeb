@@ -1,15 +1,18 @@
 
 pub mod config;
+pub mod json;
 use super::module;
 
 pub fn new(config: config::CoreConfig) -> CoreModule {
     CoreModule{
-        config
+        config,
+        json: json::new()
     }
 }
 
 pub struct CoreModule {
-    pub config: config::CoreConfig
+    pub config: config::CoreConfig,
+    pub json: Box<dyn json::JsonService + Sync>
 }
 
 impl module::Module for CoreModule {

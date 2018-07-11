@@ -34,7 +34,7 @@ pub fn new(conf: rs_config::Config) -> CoreConfig {
 #[cfg(test)]
 mod test {
 
-    use super::super::super::test::IT_CONTEXT;
+    use test_root::IT_CONTEXT;
 
     #[test]
     fn should_init_all_then_start_all() {
