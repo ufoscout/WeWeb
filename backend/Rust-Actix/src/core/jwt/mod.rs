@@ -55,9 +55,24 @@ pub struct Token<T> {
     //jti: String,
 }
 
+#[derive(Fail, Debug)]
+#[fail(display = "JwtError: [{}]", message)]
+pub struct JwtError {
+    message: String,
+    kind: JwtErrorKind
+}
+
+#[derive(Debug)]
+pub enum JwtErrorKind {
+    InvalidTokenError,
+    ExpiredTokenError,
+    GenerateTokenError,
+}
+
+
 impl JwtService {
 
-    pub fn generate_from_payload<T: serde::ser::Serialize>(&self, payload: &T) -> Result<String, failure::Error> {
+    pub fn generate_from_payload<T: serde::ser::Serialize>(&self, payload: &T) -> Result<String, JwtError> {
         let issued_at = time::get_time().sec;
         let token = Token{
             payload,
@@ -68,18 +83,21 @@ impl JwtService {
         self.generate_from_token(&token)
     }
 
-    pub fn generate_from_token<T: serde::ser::Serialize>(&self, token: &Token<T>) -> Result<String, failure::Error> {
+    pub fn generate_from_token<T: serde::ser::Serialize>(&self, token: &Token<T>) -> Result<String, JwtError> {
         let result = jsonwebtoken::encode(&self.header_default, &token, &self.secret.as_ref());
         match result {
             Ok(t) => Ok(t),
             Err(e) => {
                 //let err = e.to_string();
-                Err(format_err!("{}", e))
+                Err(JwtError{
+                    message: e.to_string(),
+                    kind: JwtErrorKind::GenerateTokenError
+                })
             }
         }
     }
 
-    pub fn parse_payload<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<T, failure::Error> {
+    pub fn parse_payload<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<T, JwtError> {
         let result = self.parse_token(jwt_string);
         match result {
             Ok(t) => Ok(t.payload),
@@ -89,14 +107,21 @@ impl JwtService {
         }
     }
 
-    pub fn parse_token<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<Token<T>, failure::Error> {
+    pub fn parse_token<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<Token<T>, JwtError> {
         let result: Result<jsonwebtoken::TokenData<Token<T>>, jsonwebtoken::errors::Error> =
             jsonwebtoken::decode(jwt_string, &self.secret.as_ref(), &self.validation_default);
         match result {
             Ok(t) => Ok(t.claims),
-            Err(e) => {
-                //let err = e.to_string();
-                Err(format_err!("{}", e))
+            Err(e) => match *e.kind() {
+                jsonwebtoken::errors::ErrorKind::ExpiredSignature =>
+                    Err(JwtError{
+                        message: e.to_string(),
+                        kind: JwtErrorKind::ExpiredTokenError
+                    }),
+                _ => Err(JwtError{
+                    message: e.to_string(),
+                    kind: JwtErrorKind::InvalidTokenError
+                })
             }
         }
     }
@@ -207,11 +232,19 @@ mod test {
         let mut jwt_string = jwt.generate_from_payload(&payload).unwrap();
         jwt_string.push_str("1");
 
-        let result : Result<super::Token<MyTestClaym>, failure::Error> = jwt.parse_token(&jwt_string);
+        let result : Result<super::Token<MyTestClaym>, super::JwtError> = jwt.parse_token(&jwt_string);
+        let mut is_invalid = false;
         match result {
             Ok(r) => println!("Ok: {:?}", r),
-            Err(e) => println!("Error: {:?}", e)
+            Err(e) => match e.kind {
+                super::JwtErrorKind::InvalidTokenError => {
+                    println!("Invalid: {:?}", e);
+                    is_invalid = true;
+                },
+                _ => println!("Other kind of error: {:?}", e)
+            }
         };
+        assert!(is_invalid)
     }
 
     #[test]
@@ -231,11 +264,20 @@ mod test {
 
         let jwt_string = jwt.generate_from_token(&token).unwrap();
 
-        let result : Result<MyTestClaym, failure::Error> = jwt.parse_payload(&jwt_string);
+        let result : Result<MyTestClaym, super::JwtError> = jwt.parse_payload(&jwt_string);
+        let mut is_expired = false;
         match result {
           Ok(r) => println!("Ok: {:?}", r),
-          Err(e) => println!("Error: {:?}", e)
+          Err(e) => match e.kind {
+              super::JwtErrorKind::ExpiredTokenError => {
+                  println!("Expired: {:?}", e);
+                  is_expired = true;
+              },
+              _ => println!("Other kind of error: {:?}", e)
+          }
         };
+        assert!(is_expired)
+
     }
 
     #[derive(Debug, Serialize, Deserialize)]
