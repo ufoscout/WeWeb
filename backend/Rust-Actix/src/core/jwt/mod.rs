@@ -39,8 +39,9 @@ pub struct JwtService {
     validation_default: jsonwebtoken::Validation
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Token<T: serde::ser::Serialize> {
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Token<T> {
 
     payload: T,
 
@@ -56,20 +57,43 @@ pub struct Token<T: serde::ser::Serialize> {
 
 impl JwtService {
 
-    pub fn generate_from_clayms<T: serde::ser::Serialize>(&self, clayms: &T) -> Result<String, failure::Error> {
+    pub fn generate_from_payload<T: serde::ser::Serialize>(&self, payload: &T) -> Result<String, failure::Error> {
+        let issued_at = time::get_time().sec;
         let token = Token{
-            payload: clayms,
+            payload,
             sub: "".to_string(),
-            exp: time::get_time().sec + self.token_validity_seconds,
-            iat: time::get_time().sec,
+            exp: issued_at + self.token_validity_seconds,
+            iat: issued_at,
         };
         self.generate_from_token(&token)
     }
 
-    pub fn generate_from_token<T: serde::ser::Serialize>(&self, clayms: &Token<T>) -> Result<String, failure::Error> {
-        let result = jsonwebtoken::encode(&self.header_default, &clayms, &self.secret.as_ref());
+    pub fn generate_from_token<T: serde::ser::Serialize>(&self, token: &Token<T>) -> Result<String, failure::Error> {
+        let result = jsonwebtoken::encode(&self.header_default, &token, &self.secret.as_ref());
         match result {
             Ok(t) => Ok(t),
+            Err(e) => {
+                //let err = e.to_string();
+                Err(format_err!("{}", e))
+            }
+        }
+    }
+
+    pub fn parse_payload<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<T, failure::Error> {
+        let result = self.parse_token(jwt_string);
+        match result {
+            Ok(t) => Ok(t.payload),
+            Err(e) => {
+                Err(e)
+            }
+        }
+    }
+
+    pub fn parse_token<T: serde::de::DeserializeOwned>(&self, jwt_string: &str) -> Result<Token<T>, failure::Error> {
+        let result: Result<jsonwebtoken::TokenData<Token<T>>, jsonwebtoken::errors::Error> =
+            jsonwebtoken::decode(jwt_string, &self.secret.as_ref(), &self.validation_default);
+        match result {
+            Ok(t) => Ok(t.claims),
             Err(e) => {
                 //let err = e.to_string();
                 Err(format_err!("{}", e))
@@ -83,6 +107,7 @@ impl JwtService {
 mod test {
 
     extern crate time;
+    extern crate failure;
 
     use test_root::IT_CONTEXT;
 
@@ -91,13 +116,13 @@ mod test {
 
         let jwt = &IT_CONTEXT.core.jwt;
 
-        let claym = MyTestClaym {
-            id: 123,
+        let payload = MyTestClaym {
+            id: time::get_time().sec,
             name: "Red".to_string()
         };
 
         let token = super::Token {
-            payload: claym,
+            payload,
             sub: "".to_string(),
             exp: time::get_time().sec + 3600,
             iat: time::get_time().sec,
@@ -109,21 +134,111 @@ mod test {
     }
 
     #[test]
-    fn should_create_jwt_string_from_clayms() {
+    fn should_create_jwt_string_from_payload() {
 
         let jwt = &IT_CONTEXT.core.jwt;
 
-        let claym = MyTestClaym {
-            id: 123,
+        let payload = MyTestClaym {
+            id: time::get_time().sec,
             name: "Red".to_string()
         };
 
-        let jwt_string = jwt.generate_from_clayms(&claym).unwrap();
+        let jwt_string = jwt.generate_from_payload(&payload).unwrap();
         println!("Jwt string: [{}]", jwt_string);
 
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[test]
+    fn should_parse_the_token() {
+
+        let jwt = &IT_CONTEXT.core.jwt;
+
+        let payload = MyTestClaym {
+            id: time::get_time().sec,
+            name: "Red".to_string()
+        };
+
+        let jwt_string = jwt.generate_from_payload(&payload).unwrap();
+        let parsed : MyTestClaym = jwt.parse_payload(&jwt_string).unwrap();
+
+        assert_eq!(payload.id, parsed.id);
+        assert_eq!(payload.name, parsed.name);
+
+    }
+
+    #[test]
+    fn should_parse_the_expiration_date() {
+
+        let jwt = &IT_CONTEXT.core.jwt;
+
+        let payload = MyTestClaym {
+            id: time::get_time().sec,
+            name: "Red".to_string()
+        };
+
+        let time_before = time::get_time().sec;
+        let jwt_string = jwt.generate_from_payload(&payload).unwrap();
+        let time_after = time::get_time().sec;
+
+        let token : super::Token<MyTestClaym> = jwt.parse_token(&jwt_string).unwrap();
+
+        assert_eq!(payload.id, token.payload.id);
+        assert_eq!(&payload.name, &token.payload.name);
+
+        let issued_at = token.iat;
+        let expiration = token.exp;
+        let timeout = (IT_CONTEXT.core.config.jwt.token_validity_minutes as i64) * 60;
+
+        assert!(issued_at >= time_before);
+        assert!(issued_at <= time_after);
+        assert_eq!(issued_at + timeout, expiration);
+    }
+
+    #[test]
+    fn should_fail_parsing_tampered_token() {
+
+        let jwt = &IT_CONTEXT.core.jwt;
+
+        let payload = MyTestClaym {
+            id: time::get_time().sec,
+            name: "Red".to_string()
+        };
+
+        let mut jwt_string = jwt.generate_from_payload(&payload).unwrap();
+        jwt_string.push_str("1");
+
+        let result : Result<super::Token<MyTestClaym>, failure::Error> = jwt.parse_token(&jwt_string);
+        match result {
+            Ok(r) => println!("Ok: {:?}", r),
+            Err(e) => println!("Error: {:?}", e)
+        };
+    }
+
+    #[test]
+    fn should_fail_parsing_expired_token() {
+
+        let jwt = &IT_CONTEXT.core.jwt;
+
+        let token = super::Token {
+            payload: MyTestClaym {
+                id: time::get_time().sec,
+                name: "Red".to_string()
+                },
+            sub: "".to_string(),
+            exp: time::get_time().sec - 10,
+            iat: time::get_time().sec - 100,
+        };
+
+        let jwt_string = jwt.generate_from_token(&token).unwrap();
+
+        let result : Result<MyTestClaym, failure::Error> = jwt.parse_payload(&jwt_string);
+        match result {
+          Ok(r) => println!("Ok: {:?}", r),
+          Err(e) => println!("Error: {:?}", e)
+        };
+    }
+
+    #[derive(Debug, Serialize, Deserialize)]
     struct MyTestClaym {
         id: i64,
         name: String
