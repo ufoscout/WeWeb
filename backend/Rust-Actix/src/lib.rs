@@ -2,6 +2,7 @@ extern crate config;
 
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate log;
+extern crate failure;
 extern crate fern;
 extern crate chrono;
 
@@ -14,7 +15,7 @@ pub struct App {
     core: core::CoreModule
 }
 
-pub fn start() -> App {
+pub fn start() -> Result<App, failure::Error> {
 
     println!("Startup - Start application setup... ");
 
@@ -41,7 +42,7 @@ pub fn start() -> App {
 
     module::start(&[&app.core]);
 
-    return app;
+    return Ok(app);
 }
 
 fn setup_logger(logger_config: &core::config::LoggerConfig) -> Result<(), fern::InitError> {
@@ -86,6 +87,6 @@ pub mod test_root {
 
     fn start_it_context() -> super::App {
         env::set_var("SERVER__PORT", "0");
-        return super::start();
+        return super::start().unwrap();
     }
 }

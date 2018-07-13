@@ -1,12 +1,16 @@
+
 pub trait Module {
     fn init(&self);
     fn start(&self);
 }
 
 pub fn start(modules: &[&impl Module]) {
+    info!("Begin modules 'init' phase");
     for module in modules {
+        // typeid(&module);
         module.init();
     }
+    info!("Begin modules 'start' phase");
     for module in modules {
         module.start();
     }

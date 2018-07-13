@@ -18,11 +18,11 @@ pub struct CoreModule {
 impl module::Module for CoreModule {
 
     fn init(&self) {
-        println!("Core init");
+        info!("Core init");
     }
 
     fn start(&self) {
-        println!("Core start")
+        info!("Core start")
     }
 
 }
