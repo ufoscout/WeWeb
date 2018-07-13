@@ -2,7 +2,8 @@ extern crate config;
 
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate log;
-extern crate failure;
+#[macro_use] extern crate failure;
+#[macro_use] extern crate failure_derive;
 extern crate fern;
 extern crate chrono;
 
@@ -59,11 +60,11 @@ fn setup_logger(logger_config: &core::config::LoggerConfig) -> Result<(), fern::
         .level(log::LevelFilter::from_str(&logger_config.root_level).unwrap())
         .level_for("rust_actix", log::LevelFilter::from_str(&logger_config.level).unwrap());
 
-    if logger_config.output_system_enable {
+    if logger_config.output_system_enabled {
         log_dispatcher = log_dispatcher.chain(std::io::stdout());
     }
 
-    if logger_config.output_file_enable {
+    if logger_config.output_file_enabled {
         log_dispatcher = log_dispatcher.chain(fern::log_file(&logger_config.output_file_name)?);
     }
 

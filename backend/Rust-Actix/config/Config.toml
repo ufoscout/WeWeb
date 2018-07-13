@@ -1,8 +1,8 @@
 [logger]
 root_level = "warn"
 level = "info"
-output_system_enable = true
-output_file_enable = false
+output_system_enabled = true
+output_file_enabled = false
 output_file_name = "./target/output.log"
 
 [server]

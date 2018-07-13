@@ -11,8 +11,8 @@ pub struct CoreConfig {
 pub struct LoggerConfig {
     pub root_level: String,
     pub level: String,
-    pub output_system_enable: bool,
-    pub output_file_enable: bool,
+    pub output_system_enabled: bool,
+    pub output_file_enabled: bool,
     pub output_file_name: String
 }
 
@@ -33,8 +33,8 @@ pub fn new(conf: rs_config::Config) -> CoreConfig {
         logger: LoggerConfig {
             root_level: conf.get_str("logger.root_level").unwrap(),
             level: conf.get_str("logger.level").unwrap(),
-            output_system_enable: conf.get_bool("logger.output_system_enable").unwrap(),
-            output_file_enable: conf.get_bool("logger.output_file_enable").unwrap(),
+            output_system_enabled: conf.get_bool("logger.output_system_enabled").unwrap(),
+            output_file_enabled: conf.get_bool("logger.output_file_enabled").unwrap(),
             output_file_name: conf.get_str("logger.output_file_name").unwrap()
         },
         jwt: JwtConfig{
