@@ -7,17 +7,18 @@ extern crate config;
 extern crate fern;
 extern crate chrono;
 
+mod auth;
 mod core;
 mod module;
 
 use std::str::FromStr;
 
 pub struct App {
+    auth: auth::AuthModule,
     core: core::CoreModule
 }
 
 pub fn start() -> Result<App, failure::Error> {
-
     println!("Startup - Start application setup... ");
 
     let mut settings = config::Config::default();
@@ -37,13 +38,18 @@ pub fn start() -> Result<App, failure::Error> {
     println!("Starting application with configuration:\n{:#?}", conf);
     info!("Starting application with configuration:\n{:#?}", conf);
 
-    let app = App {
-        core: core::new(conf)
-    };
+    let core = core::new(conf);
+    let auth = auth::new();
 
-    module::start(&[&app.core]);
+    {
+        let modules: Vec<&dyn module::Module> = vec![&core, &auth];
+        module::start(&modules);
+    }
 
-    return Ok(app);
+    return Ok(App {
+        auth,
+        core
+    });
 }
 
 fn setup_logger(logger_config: &core::config::LoggerConfig) -> Result<(), fern::InitError> {

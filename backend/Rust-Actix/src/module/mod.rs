@@ -4,7 +4,7 @@ pub trait Module {
     fn start(&self);
 }
 
-pub fn start(modules: &[&impl Module]) {
+pub fn start(modules: &Vec<&dyn Module>) {
     info!("Begin modules 'init' phase");
     for module in modules {
         // typeid(&module);
@@ -31,7 +31,9 @@ mod test {
         let mod1 = SimpleMod { name: "one".to_string() };
         let mod2 = SimpleMod { name: "two".to_string() };
 
-        super::start(&[&mod1, &mod2]);
+        let modules: Vec<&dyn super::Module> = vec![&mod1, &mod2];
+
+        super::start(&modules);
 
         assert_eq!(4, MODULE_TEST_ARRAY_VALUES.lock().unwrap().len());
         assert_eq!(&"one-init".to_string(), MODULE_TEST_ARRAY_VALUES.lock().unwrap().get(0).unwrap());
