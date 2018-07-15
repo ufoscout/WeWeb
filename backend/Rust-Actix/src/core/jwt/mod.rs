@@ -55,18 +55,15 @@ pub struct Token<T> {
     //jti: String,
 }
 
-#[derive(Fail, Debug)]
-#[fail(display = "JwtError: [{}]", message)]
-pub struct JwtError {
-    message: String,
-    kind: JwtErrorKind
-}
 
-#[derive(Debug)]
-pub enum JwtErrorKind {
-    InvalidTokenError,
-    ExpiredTokenError,
-    GenerateTokenError,
+#[derive(Fail, Debug)]
+pub enum JwtError {
+    #[fail(display = "InvalidTokenError: [{}]", message)]
+    InvalidTokenError{message: String},
+    #[fail(display = "ExpiredTokenError: [{}]", message)]
+    ExpiredTokenError{message: String},
+    #[fail(display = "GenerateTokenError: [{}]", message)]
+    GenerateTokenError{message: String},
 }
 
 
@@ -89,9 +86,8 @@ impl JwtService {
             Ok(t) => Ok(t),
             Err(e) => {
                 //let err = e.to_string();
-                Err(JwtError{
-                    message: e.to_string(),
-                    kind: JwtErrorKind::GenerateTokenError
+                Err(JwtError::GenerateTokenError{
+                    message: e.to_string()
                 })
             }
         }
@@ -114,13 +110,11 @@ impl JwtService {
             Ok(t) => Ok(t.claims),
             Err(e) => match *e.kind() {
                 jsonwebtoken::errors::ErrorKind::ExpiredSignature =>
-                    Err(JwtError{
-                        message: e.to_string(),
-                        kind: JwtErrorKind::ExpiredTokenError
+                    Err(JwtError::ExpiredTokenError{
+                        message: e.to_string()
                     }),
-                _ => Err(JwtError{
-                    message: e.to_string(),
-                    kind: JwtErrorKind::InvalidTokenError
+                _ => Err(JwtError::InvalidTokenError{
+                    message: e.to_string()
                 })
             }
         }
@@ -236,9 +230,9 @@ mod test {
         let mut is_invalid = false;
         match result {
             Ok(r) => println!("Ok: {:?}", r),
-            Err(e) => match e.kind {
-                super::JwtErrorKind::InvalidTokenError => {
-                    println!("Invalid: {:?}", e);
+            Err(e) => match e {
+                super::JwtError::InvalidTokenError{message: mes} => {
+                    println!("Error message: {:?}", &mes);
                     is_invalid = true;
                 },
                 _ => println!("Other kind of error: {:?}", e)
@@ -268,9 +262,9 @@ mod test {
         let mut is_expired = false;
         match result {
           Ok(r) => println!("Ok: {:?}", r),
-          Err(e) => match e.kind {
-              super::JwtErrorKind::ExpiredTokenError => {
-                  println!("Expired: {:?}", e);
+          Err(e) => match e {
+              super::JwtError::ExpiredTokenError{message: mes} => {
+                  println!("Expired: {:?}", &mes);
                   is_expired = true;
               },
               _ => println!("Other kind of error: {:?}", e)
