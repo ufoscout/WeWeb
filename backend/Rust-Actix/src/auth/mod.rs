@@ -1,6 +1,9 @@
 
 use super::module;
 
+mod model;
+mod service;
+
 pub fn new() -> AuthModule {
     AuthModule{}
 }

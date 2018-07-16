@@ -20,7 +20,6 @@ declare -a steps=(
   "rm -rf ${BUILD_COPY_TO}"
   "cargo test"
   "${BUILD_MUSL_STATIC_CMD_WITH_DOCKER}"
-  "strip ${BUILD_TARGET_PATH}/${BUILD_TARGET_OS}/release/${PROJECT_NAME}"
   "mkdir ${BUILD_COPY_TO}"
   "cp -r ${BUILD_TARGET_PATH}/${BUILD_TARGET_OS}/release/${PROJECT_NAME} ${BUILD_COPY_TO}"
   "cp -r ./config ${BUILD_COPY_TO}"
