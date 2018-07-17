@@ -8,11 +8,6 @@ ENV NGINX_WORKER_PROCESSES=auto
 ENV NGINX_WORKER_CONNECTIONS=16384
 ENV NGINX_LOGGER_LEVEL=info
 
-# Mount root SSL certificates
-# ---------------------------
-VOLUME "/usr/local/share/ca-certificates"
-
-
 # Update and upgrade
 # ------------------------------------
 RUN apk update -f \
