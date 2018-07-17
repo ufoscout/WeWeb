@@ -11,13 +11,27 @@ pub enum AuthError {
     NoRequiredPermission { permission: String },
 }
 
-pub struct AuthContext {
-    auth: model::Auth
+pub struct AuthService {
+    roles_provider: Box<RolesProvider>
 }
 
-impl AuthContext {
+impl AuthService {
+    pub fn auth(&self, auth: model::Auth) -> AuthContext {
+        AuthContext {
+            auth,
+            roles_provider: &self.roles_provider
+        }
+    }
+}
+
+pub struct AuthContext<'a> {
+    auth: model::Auth,
+    roles_provider: &'a Box<RolesProvider>
+}
+
+impl<'a> AuthContext<'a> {
     pub fn is_authenticated(&self) -> Result<&AuthContext, AuthError> {
-        if (self.auth.username.is_empty()) {
+        if self.auth.username.is_empty() {
             return Err(AuthError::UnAuthenticatedError {});
         };
         Ok(&self)
@@ -25,7 +39,7 @@ impl AuthContext {
 
     pub fn has_role(&self, role: &str) -> Result<&AuthContext, AuthError> {
         self.is_authenticated()?;
-        if (!self.has_role_bool(&role)) {
+        if !self.has_role_bool(&role) {
             return Err(AuthError::NoRequiredRole { role: role.to_string() });
         };
         Ok(&self)
@@ -34,7 +48,7 @@ impl AuthContext {
     pub fn has_any_role(&self, roles: &[&str]) -> Result<&AuthContext, AuthError> {
         self.is_authenticated()?;
         for role in roles {
-            if (self.has_role_bool(*role)) {
+            if self.has_role_bool(*role) {
                 return Ok(&self);
             };
         };
@@ -44,13 +58,12 @@ impl AuthContext {
     pub fn has_all_roles(&self, roles: &[&str]) -> Result<&AuthContext, AuthError> {
         self.is_authenticated()?;
         for role in roles {
-            if (!self.has_role_bool(*role)) {
+            if !self.has_role_bool(*role) {
                 return Err(AuthError::NoRequiredRole { role: role.to_string() });
             };
         };
         return Ok(&self);
     }
-
 
     fn has_role_bool(&self, role: &str) -> bool {
         self.auth.roles.contains(&role.to_string())
@@ -69,7 +82,7 @@ struct InMemoryRolesProvider {
 }
 
 impl InMemoryRolesProvider {
-    pub fn new(all_roles: Vec<model::Role>) -> impl RolesProvider {
+    pub fn new(all_roles: Vec<model::Role>) -> InMemoryRolesProvider {
         let mut provider = InMemoryRolesProvider {
             all_roles,
             roles_by_name: HashMap::new(),
@@ -173,115 +186,135 @@ mod test_role_provider {
 #[cfg(test)]
 mod test_auth_context {
     use auth::model::Auth;
-    use super::AuthContext;
 
     #[test]
     fn should_be_authenticated() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec![],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.is_authenticated().is_ok());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.is_authenticated().is_ok());
     }
 
     #[test]
     fn should_be_not_authenticated() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "".to_string(),
             roles: vec![],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.is_authenticated().is_err());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.is_authenticated().is_err());
     }
 
     #[test]
     fn should_be_not_authenticated_even_if_has_role() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "".to_string(),
             roles: vec!["ADMIN".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_role("ADMIN").is_err());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_role("ADMIN").is_err());
     }
 
     #[test]
     fn should_have_role() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_role("ADMIN").is_ok());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_role("ADMIN").is_ok());
     }
 
     #[test]
     fn should_have_role_2() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string(), "USER".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_role("USER").is_ok());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_role("USER").is_ok());
     }
 
     #[test]
     fn should_not_have_role() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_role("USER").is_err());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_role("USER").is_err());
     }
 
     #[test]
     fn should_have_any_role() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string(), "USER".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_any_role(&["USER", "FRIEND"]).is_ok());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_any_role(&["USER", "FRIEND"]).is_ok());
     }
 
     #[test]
     fn should_not_have_any_role() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string(), "OWNER".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_any_role(&["USER", "FRIEND"]).is_err());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_any_role(&["USER", "FRIEND"]).is_err());
     }
 
     #[test]
     fn should_have_all_roles() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string(), "USER".to_string(), "FRIEND".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_all_roles(&["USER", "FRIEND"]).is_ok());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_all_roles(&["USER", "FRIEND"]).is_ok());
     }
 
     #[test]
     fn should_not_have_all_roles() {
+        let provider = Box::new(super::InMemoryRolesProvider::new(vec![]));
+        let auth_service = super::AuthService{ roles_provider: provider};
         let user = Auth {
             id: 0,
             username: "name".to_string(),
             roles: vec!["ADMIN".to_string(), "USER".to_string()],
         };
-        let authContext = super::AuthContext { auth: user };
-        assert!(authContext.has_all_roles(&["USER", "FRIEND"]).is_err());
+        let auth_context = auth_service.auth( user );
+        assert!(auth_context.has_all_roles(&["USER", "FRIEND"]).is_err());
     }
+
 }
