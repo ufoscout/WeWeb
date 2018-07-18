@@ -22,15 +22,15 @@ func Load(configFile string) Config {
 
 	var config = Config{
 		Server: ServerConfig{
-			Port: up.GetString("server.port")},
+			Port: up.GetString("core.server.port")},
 		Frontend: FrontendConfig{
-			Enabled: up.GetBool("server.resources.static.enabled"),
-			ResourcesPath: up.GetString("server.resources.static.path"),
+			Enabled: up.GetBool("core.server.resources.static.enabled"),
+			ResourcesPath: up.GetString("core.server.resources.static.path"),
 		},
 		Jwt: JwtConfig{
-			Secret: up.GetString("jwt.secret"),
-			SignatureAlgorithm: up.GetString("jwt.signatureAlgorithm"),
-			TokenValidityMinutes: up.GetInt("jwt.tokenValidityMinutes"),
+			Secret: up.GetString("core.jwt.secret"),
+			SignatureAlgorithm: up.GetString("core.jwt.signatureAlgorithm"),
+			TokenValidityMinutes: up.GetInt("core.jwt.tokenValidityMinutes"),
 		},
 	}
 
