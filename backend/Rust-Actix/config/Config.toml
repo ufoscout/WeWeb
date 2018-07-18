@@ -1,14 +1,14 @@
-[logger]
+[core.logger]
 root_level = "warn"
 level = "info"
 output_system_enabled = true
 output_file_enabled = false
 output_file_name = "./target/output.log"
 
-[server]
+[core.server]
 port = 8080
 
-[jwt]
+[core.jwt]
 secret = "mySecret"
 signatureAlgorithm = "HS512"
 tokenValidityMinutes = 20

@@ -31,19 +31,19 @@ pub struct ServerConfig {
 pub fn new(conf: rs_config::Config) -> CoreConfig {
     CoreConfig {
         logger: LoggerConfig {
-            root_level: conf.get_str("logger.root_level").unwrap(),
-            level: conf.get_str("logger.level").unwrap(),
-            output_system_enabled: conf.get_bool("logger.output_system_enabled").unwrap(),
-            output_file_enabled: conf.get_bool("logger.output_file_enabled").unwrap(),
-            output_file_name: conf.get_str("logger.output_file_name").unwrap()
+            root_level: conf.get_str("core.logger.root_level").unwrap(),
+            level: conf.get_str("core.logger.level").unwrap(),
+            output_system_enabled: conf.get_bool("core.logger.output_system_enabled").unwrap(),
+            output_file_enabled: conf.get_bool("core.logger.output_file_enabled").unwrap(),
+            output_file_name: conf.get_str("core.logger.output_file_name").unwrap()
         },
         jwt: JwtConfig{
-            secret: conf.get_str("jwt.secret").unwrap(),
-            signature_algorithm: conf.get_str("jwt.signatureAlgorithm").unwrap(),
-            token_validity_minutes: conf.get_int("jwt.tokenValidityMinutes").unwrap() as u32
+            secret: conf.get_str("core.jwt.secret").unwrap(),
+            signature_algorithm: conf.get_str("core.jwt.signatureAlgorithm").unwrap(),
+            token_validity_minutes: conf.get_int("core.jwt.tokenValidityMinutes").unwrap() as u32
         },
         server: ServerConfig{
-            port: conf.get_int("server.port").unwrap() as u32
+            port: conf.get_int("core.server.port").unwrap() as u32
         }
     }
 }

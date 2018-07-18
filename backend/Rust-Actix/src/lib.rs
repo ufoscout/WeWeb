@@ -93,7 +93,7 @@ pub mod test_root {
     }
 
     fn start_it_context() -> super::App {
-        env::set_var("SERVER__PORT", "0");
+        env::set_var("CORE__SERVER__PORT", "0");
         return super::start().unwrap();
     }
 }
