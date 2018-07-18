@@ -7,8 +7,8 @@ import { LanguageService } from './language.service';
 
 class MockTranslateService {
 
-    defaultLang: String;
-    lang: String;
+    defaultLang?: String;
+    lang?: String;
 
     setDefaultLang(language: String) {
         this.defaultLang = language;

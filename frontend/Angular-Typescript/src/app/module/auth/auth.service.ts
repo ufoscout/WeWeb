@@ -46,7 +46,7 @@ export class AuthService {
     }
 
     getToken(): string {
-        return localStorage.getItem(TOKEN_KEY);
+        return str.getOrEmpty(localStorage.getItem(TOKEN_KEY));
     }
 
     setToken(token: string): void {

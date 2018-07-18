@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
 
-  @Select(CommonState) commonState$: Observable<CommonStateModel>;
-  @Select(AuthState) authState$: Observable<AuthStateModel>;
+  @Select(CommonState) commonState$!: Observable<CommonStateModel>;
+  @Select(AuthState) authState$!: Observable<AuthStateModel>;
   navbarCollapsed = true;
 
   constructor(private store: Store, private router: Router) {

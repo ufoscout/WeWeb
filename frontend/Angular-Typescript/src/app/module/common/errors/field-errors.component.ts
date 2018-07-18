@@ -11,8 +11,8 @@ import * as str from '../../shared/utils/string.utils';
 })
 export class FieldErrorsComponent implements OnInit {
 
-  @Input() errors: String[];
-  @Input() translateKey: String;
+  @Input() errors!: String[];
+  @Input() translateKey!: String;
   _str = str;
 
   constructor() {}

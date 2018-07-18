@@ -18,8 +18,8 @@ import { FieldErrorsComponent } from './field-errors.component';
 })
 class TesterComponent {
 
-    errors: String[];
-    key: String;
+    errors?: String[];
+    key?: String;
 
 }
 

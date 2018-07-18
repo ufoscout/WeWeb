@@ -13,7 +13,7 @@ describe('[Shared] Browser utils', () => {
     });
 
     function setLangs(langs: ReadonlyArray<string>) {
-        window.navigator['__defineGetter__']('languages', function () {
+        (window.navigator as any)['__defineGetter__']('languages', function () {
             return langs;
         });
     }

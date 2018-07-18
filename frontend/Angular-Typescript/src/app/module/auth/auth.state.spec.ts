@@ -80,7 +80,7 @@ describe('[Auth] Auth State', () => {
         const authStateSpy = spyOn(authState, 'resetSession').and.callThrough();
 
         const dto = new Login({
-            username: response.auth.username,
+            username: response.auth.username as string,
             password: ''
         });
 
@@ -115,7 +115,7 @@ describe('[Auth] Auth State', () => {
         const authStateSpy = spyOn(authState, 'resetSession').and.callThrough();
 
         store.dispatch(new Login({
-            username: response.auth.username,
+            username: response.auth.username as string,
             password: ''
         }));
 

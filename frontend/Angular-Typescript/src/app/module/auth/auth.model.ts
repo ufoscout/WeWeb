@@ -1,7 +1,7 @@
 export class AuthModel {
-    id: number;
-    username: string;
-    roles: string[];
+    id?: number;
+    username?: string;
+    roles?: string[];
     properties?: { [index: string]: any };
 }
 

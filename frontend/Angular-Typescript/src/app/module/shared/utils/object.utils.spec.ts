@@ -39,7 +39,7 @@ describe('[Shared] Object utils', () => {
 
     it('should return value if is not undefined and not null', () => {
         expect(
-            obj.getOrDefault('value', 'default')
+            obj.getOrDefault<string>('value', 'default')
         )
             .toBe('value');
     });

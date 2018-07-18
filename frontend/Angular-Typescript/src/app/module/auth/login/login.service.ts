@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class LoginService {
 
-  @Select(AuthState) authState$: Observable<AuthStateModel>;
+  @Select(AuthState) authState$!: Observable<AuthStateModel>;
   previousForceReLogin = false;
 
   constructor(private modalService: NgbModal) {

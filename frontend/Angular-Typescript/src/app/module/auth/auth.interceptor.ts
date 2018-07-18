@@ -36,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 // }
                 return event;
             }),
-            catchError((err: any, caught) => {
+            catchError((err: any, caught: Observable<HttpEvent<any>>) => {
                 // console.log(err)
                 if (err instanceof HttpErrorResponse) {
                     // console.log('is error')
@@ -51,8 +51,8 @@ export class AuthInterceptor implements HttpInterceptor {
                                 break;
                         }
                     }
-                    return throwError(err);
                 }
+                return throwError(err);
             })
         );
     }

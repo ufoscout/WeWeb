@@ -48,7 +48,7 @@ describe('HeaderComponent', () => {
         expect(languages.length).toBe(state.allLanguages.length);
         for (let i = 0; i < state.allLanguages.length; i++) {
             // console.log(languages.item(i));
-            expect(languages.item(i).textContent.trim()).toBe(state.allLanguages[i]);
+            expect((languages.item(i).textContent as string).trim()).toBe(state.allLanguages[i]);
         }
 
     }));

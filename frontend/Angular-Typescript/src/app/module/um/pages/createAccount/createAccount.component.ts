@@ -11,7 +11,7 @@ import { CreateLogin } from '../../../auth/auth.events';
 })
 export class CreateAccountComponent {
 
-  submitError: ServerError;
+  submitError?: ServerError;
   model: CreateLoginDto = {
     email: '',
     password: '',

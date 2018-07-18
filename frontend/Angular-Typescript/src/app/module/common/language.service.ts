@@ -26,7 +26,7 @@ export class LanguageService {
         if (!obj.exists(lang)) {
             lang = brw.getPreferredSupportedLang(supportedLanguages, defaultLanguage);
         }
-        return lang;
+        return lang as string;
     }
 
     setLang(lang: string): void {

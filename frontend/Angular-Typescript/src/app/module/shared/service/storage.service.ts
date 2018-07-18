@@ -9,7 +9,7 @@ export class StorageService {
         if (!obj.exists(value)) {
             return defaultValue;
         }
-        return JSON.parse(value);
+        return JSON.parse((value as string));
     }
 
     store<T>(key: string, value: T): void {
