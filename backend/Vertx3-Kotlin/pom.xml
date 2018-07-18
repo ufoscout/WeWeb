@@ -21,8 +21,8 @@
     <jbcrypt.version>0.4</jbcrypt.version>
     <junit.version>5.2.0</junit.version>
     <logback.version>1.2.3</logback.version>
-    <properlty.version>1.6.1</properlty.version>
-    <vertk.version>2.4.0</vertk.version>
+    <properlty.version>1.7.0</properlty.version>
+    <vertk.version>3.1.0</vertk.version>
 
     <!-- plugins -->
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
@@ -43,6 +43,11 @@
     <dependency>
       <groupId>com.ufoscout.vertk</groupId>
       <artifactId>vertk-kodein-web</artifactId>
+      <version>${vertk.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-web-client</artifactId>
       <version>${vertk.version}</version>
     </dependency>
     <dependency>

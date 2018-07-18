@@ -4,15 +4,15 @@ import com.ufoscout.properlty.Properlty
 import com.ufoscout.properlty.reader.EnvironmentVariablesReader
 import com.ufoscout.properlty.reader.SystemPropertiesReader
 import com.ufoscout.properlty.reader.decorator.ToLowerCaseAndDotKeyReader
-import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.VertkKodeinModule
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.web.RouterModule
+import com.weweb.auth.AuthModule
 import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
-import com.weweb.auth.AuthModule
 import io.vertx.core.DeploymentOptions
+import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.core.logging.SLF4JLogDelegateFactory
 import kotlinx.coroutines.experimental.runBlocking
@@ -44,7 +44,7 @@ object AppMain {
 
         log.info("Starting kotlin main")
 
-        val vertk = Vertk.vertk()
+        val vertx = Vertx.vertx()
 
         val properlty = Properlty.builder()
                 .add("classpath:conf/config.properties")
@@ -60,12 +60,12 @@ object AppMain {
         deploymentOptions.setInstances(Runtime.getRuntime().availableProcessors())
 
         return VertkKodein.start(
-                vertk,
+                vertx,
                 CoreModule(coreConfig),
                 AuthModule(deploymentOptions),
                 JsonModule(),
                 com.ufoscout.vertk.kodein.auth.AuthModule(coreConfig.jwt),
-                RouterModule(coreConfig.routerConfig),
+                RouterModule(coreConfig.router),
                 *modules
         )
 

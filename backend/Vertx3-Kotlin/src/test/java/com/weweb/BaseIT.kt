@@ -1,7 +1,7 @@
 package com.weweb
 
-import com.ufoscout.vertk.Vertk
 import com.weweb.core.config.CoreConfig
+import io.vertx.core.Vertx
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -16,7 +16,7 @@ abstract class BaseIT : BaseTest() {
     companion object {
 
         private var init = false
-        private var vertk: Vertk? = null
+        private var vertx: Vertx? = null
         private var port: Int? = 8080
         private var kodein: DKodein? = null
 
@@ -31,8 +31,8 @@ abstract class BaseIT : BaseTest() {
                         TestKodeinModule()
                 ).direct
                 var conf: CoreConfig = dk.instance();
-                port = conf.routerConfig.port
-                vertk = dk.instance()
+                port = conf.router.port
+                vertx = dk.instance()
                 kodein = dk
                 init = true
             }
@@ -59,7 +59,7 @@ abstract class BaseIT : BaseTest() {
 
     protected fun port(): Int = port!!
 
-    protected fun vertk(): Vertk = vertk!!
+    protected fun vertk() = vertx!!
 
     protected fun kodein(): DKodein = kodein!!
 

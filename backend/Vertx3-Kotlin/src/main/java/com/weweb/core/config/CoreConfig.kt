@@ -19,17 +19,28 @@ import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.properlty.Properlty
 import com.ufoscout.vertk.kodein.web.RouterConfig
 
-data class CoreConfig(val routerConfig: RouterConfig,
-                      val jwt: JwtConfig ) {
+
+data class HttpClientConfig (val maxPoolSize: Int,
+                             val connectTimeoutSeconds: Int,
+                             val idleTimeoutSeconds: Int)
+
+data class CoreConfig(val router: RouterConfig,
+                      val jwt: JwtConfig,
+                      val httpClient: HttpClientConfig) {
 
     companion object {
         fun build(prop: Properlty) : CoreConfig {
             return CoreConfig(
-                    RouterConfig(prop.getInt("server.port")!!),
-                    JwtConfig(
-                            prop.get("jwt.secret")!!,
-                            prop.get("jwt.signatureAlgorithm")!!,
-                            prop.getLong("jwt.tokenValidityMinutes")!!
+                    router = RouterConfig(prop.getInt("core.server.port")!!),
+                    jwt = JwtConfig(
+                            prop.get("core.jwt.secret")!!,
+                            prop.get("core.jwt.signatureAlgorithm")!!,
+                            prop.getLong("core.jwt.tokenValidityMinutes")!!
+                    ),
+                    httpClient = HttpClientConfig(
+                            maxPoolSize = prop.getInt("core.httpClient.maxPoolSize")!!,
+                            connectTimeoutSeconds = prop.getInt("core.httpClient.connectTimeoutSeconds")!!,
+                            idleTimeoutSeconds = prop.getInt("core.httpClient.idleTimeoutSeconds")!!
                     )
             )
         }

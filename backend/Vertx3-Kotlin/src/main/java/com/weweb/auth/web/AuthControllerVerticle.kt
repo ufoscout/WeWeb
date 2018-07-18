@@ -3,6 +3,8 @@ package com.weweb.auth.web
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.web.RouterService
+import com.ufoscout.vertk.web.awaitRestGet
+import com.ufoscout.vertk.web.awaitRestPost
 import com.weweb.auth.config.AuthContants
 import com.weweb.auth.dto.CreateLoginDto
 import com.weweb.auth.dto.LoginDto
@@ -19,7 +21,7 @@ class AuthControllerVerticle (val routerService: RouterService,
 
         val router = routerService.router()
 
-        router.restPost<LoginDto>(AuthContants.BASE_AUTH_API + "/login") { rc, loginDto ->
+        router.awaitRestPost<LoginDto>(AuthContants.BASE_AUTH_API + "/login") { rc, loginDto ->
             // println("Called Login ${loginDto.username} ${loginDto.password}")
             val login = userService.login(loginDto.username, loginDto.password)
             val token = auth.generateToken(login)
@@ -27,12 +29,12 @@ class AuthControllerVerticle (val routerService: RouterService,
             LoginResponseDto(token, login)
         }
 
-        router.restPost<CreateLoginDto>(AuthContants.BASE_AUTH_API + "/create") { rc, dto ->
+        router.awaitRestPost<CreateLoginDto>(AuthContants.BASE_AUTH_API + "/create") { rc, dto ->
             val login = userService.createUser(dto)
             ""
         }
 
-        router.restGet(AuthContants.BASE_AUTH_API + "/current") { rc ->
+        router.awaitRestGet(AuthContants.BASE_AUTH_API + "/current") { rc ->
             try {
                 val token = auth.tokenFrom(rc) ?: ""
                 LoginResponseDto(token, auth.from(rc).auth)
@@ -41,7 +43,7 @@ class AuthControllerVerticle (val routerService: RouterService,
             }
         }
 
-        router.restGet(AuthContants.BASE_AUTH_API + "/token/refresh") { rc ->
+        router.awaitRestGet(AuthContants.BASE_AUTH_API + "/token/refresh") { rc ->
             val token = auth.from(rc).isAuthenticated.auth
             TokenResponseDto(auth.generateToken(token))
         }
