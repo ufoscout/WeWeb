@@ -7,15 +7,15 @@ extern crate config;
 extern crate fern;
 extern crate chrono;
 
-mod auth;
-mod core;
-mod module;
+pub mod auth;
+pub mod core;
+pub mod module;
 
 use std::str::FromStr;
 
 pub struct App {
-    auth: auth::AuthModule,
-    core: core::CoreModule
+    pub auth: auth::AuthModule,
+    pub core: core::CoreModule
 }
 
 pub fn start() -> Result<App, failure::Error> {

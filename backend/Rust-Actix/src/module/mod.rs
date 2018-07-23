@@ -1,5 +1,5 @@
 
-pub trait Module {
+pub trait Module: Sync + Send {
     fn init(&self);
     fn start(&self);
 }
@@ -7,7 +7,6 @@ pub trait Module {
 pub fn start(modules: &Vec<&dyn Module>) {
     info!("Begin modules 'init' phase");
     for module in modules {
-        // typeid(&module);
         module.init();
     }
     info!("Begin modules 'start' phase");
