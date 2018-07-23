@@ -87,6 +87,10 @@ extern crate lazy_static;
 pub mod test_root {
 
     use std::env;
+    extern crate actix_web;
+
+    use self::actix_web::{test};
+    use core;
 
     lazy_static! {
         pub static ref IT_CONTEXT: super::App = start_it_context();
@@ -95,5 +99,16 @@ pub mod test_root {
     fn start_it_context() -> super::App {
         env::set_var("CORE__SERVER__PORT", "0");
         return super::start().unwrap();
+    }
+
+    pub fn new_test_server(server: &core::server::Server) -> test::TestServer {
+        let clone = server.routers.clone();
+        test::TestServer::with_factory(move || {
+            let mut apps = vec![];
+            for router in clone.lock().unwrap().iter() {
+                apps.push(router.configure());
+            }
+            apps
+        })
     }
 }

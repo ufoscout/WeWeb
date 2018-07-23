@@ -10,7 +10,7 @@ pub trait Router: Send + Sync {
 
 pub struct Server {
     pub port: u32,
-    routers: Arc<Mutex<Vec<Box<Router>>>>,
+    pub routers: Arc<Mutex<Vec<Box<Router>>>>,
 }
 
 impl Server {
@@ -52,20 +52,10 @@ mod server_test {
 
     extern crate actix_web;
 
-    use self::actix_web::{http, test};
+    use self::actix_web::{http};
     use super::{Server, Router};
     use core;
-
-    pub fn new_test_server(server: &Server) -> test::TestServer {
-        let clone = server.routers.clone();
-        test::TestServer::with_factory(move || {
-            let mut apps = vec![];
-            for router in clone.lock().unwrap().iter() {
-                apps.push(router.configure());
-            }
-            apps
-        })
-    }
+    use test_root;
 
     #[test]
     fn should_start_the_test_server_registering_all_modules() {
@@ -75,7 +65,7 @@ mod server_test {
         server.register(Box::new(TestRouter{name: "one"}));
         server.register(Box::new(TestRouter{name: "two"}));
 
-        let mut test_server = new_test_server(&server);
+        let mut test_server = test_root::new_test_server(&server);
 
         let request_one = test_server.client(http::Method::GET, "/one/hello").finish().unwrap();
         let response_one = test_server.execute(request_one.send()).unwrap();
