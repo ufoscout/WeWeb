@@ -4,9 +4,9 @@ extern crate time;
 extern crate failure;
 extern crate jsonwebtoken;
 
-use core;
+pub mod config;
 
-pub fn new(jwt_config: &core::config::JwtConfig ) -> JwtService {
+pub fn new(jwt_config: &config::JwtConfig ) -> JwtService {
     let alg= alg_from_str(&jwt_config.signature_algorithm);
 
     JwtService{

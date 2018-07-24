@@ -1,21 +1,20 @@
-
 pub mod config;
-pub mod json;
-pub mod jwt;
-pub mod server;
 
+use super::json;
+use super::jwt;
 use super::module;
 
 pub fn new(config: config::CoreConfig) -> CoreModule {
 
+    println!("Creating CoreModule with configuration:\n{:#?}", config);
+    info!("Creating CoreModule with configuration:\n{:#?}", config);
+
     let jwt = jwt::new(&config.jwt);
-    let server = server::Server::new(&config.server);
 
     CoreModule{
         config,
         json: json::new(),
-        jwt,
-        server
+        jwt
     }
 }
 
@@ -23,7 +22,6 @@ pub struct CoreModule {
     pub config: config::CoreConfig,
     pub json: json::JsonService,
     pub jwt: jwt::JwtService,
-    pub server: server::Server
 }
 
 impl module::Module for CoreModule {
@@ -36,11 +34,4 @@ impl module::Module for CoreModule {
         info!("Core start")
     }
 
-}
-
-impl CoreModule {
-    pub fn start_server(&self) {
-        info!("CoreModule: Start server");
-        self.server.start()
-    }
 }

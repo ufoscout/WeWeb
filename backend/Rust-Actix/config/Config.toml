@@ -6,7 +6,7 @@ output_file_enabled = false
 output_file_name = "./target/output.log"
 
 [core.server]
-port = 0
+port = 8080
 
 [core.jwt]
 secret = "mySecret"

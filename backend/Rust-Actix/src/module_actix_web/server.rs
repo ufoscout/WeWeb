@@ -1,7 +1,7 @@
 extern crate actix;
 extern crate actix_web;
 
-use core;
+use super::config;
 use std::sync::{Arc, Mutex};
 
 pub trait Router: Send + Sync {
@@ -14,7 +14,7 @@ pub struct Server {
 }
 
 impl Server {
-    pub fn new(config: &core::config::ServerConfig) -> Server {
+    pub fn new(config: &config::ServerConfig) -> Server {
         Server {
             port: config.port,
             routers: Arc::new(Mutex::new(vec![])),
@@ -54,12 +54,11 @@ mod server_test {
 
     use self::actix_web::{http};
     use super::{Server, Router};
-    use core;
     use test_root;
 
     #[test]
     fn should_start_the_test_server_registering_all_modules() {
-        let config = core::config::ServerConfig { port: 0 };
+        let config = super::config::ServerConfig { port: 0 };
         let server = Server::new(&config);
 
         server.register(Box::new(TestRouter{name: "one"}));

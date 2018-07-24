@@ -8,14 +8,16 @@ extern crate fern;
 extern crate chrono;
 
 pub mod auth;
-pub mod core;
+pub mod json;
+pub mod jwt;
+pub mod logger;
 pub mod module;
-
-use std::str::FromStr;
+pub mod module_core;
+pub mod module_actix_web;
 
 pub struct App {
-    pub auth: auth::AuthModule,
-    pub core: core::CoreModule
+    pub actix_web: module_actix_web::ActixWebModule,
+    pub core: module_core::CoreModule
 }
 
 pub fn start() -> Result<App, failure::Error> {
@@ -29,54 +31,23 @@ pub fn start() -> Result<App, failure::Error> {
 
     println!("Startup - Load configuration... ");
 
-    let conf = core::config::new(settings);
+    let conf = module_core::config::new(settings.clone());
 
     println!("Startup - Setup logger... ");
 
-    setup_logger(&conf.logger).unwrap();
+    logger::setup_logger(&conf.logger).unwrap();
 
-    println!("Starting application with configuration:\n{:#?}", conf);
-    info!("Starting application with configuration:\n{:#?}", conf);
-
-    let core = core::new(conf);
-    let auth = auth::new();
-
+    let core = module_core::new(conf);
+    let actix_web = module_actix_web::new(module_actix_web::config::new(settings.clone()));
     {
-        let modules: Vec<&dyn module::Module> = vec![&core, &auth];
+        let modules: Vec<&dyn module::Module> = vec![&core, &actix_web];
         module::start(&modules);
     }
 
     return Ok(App {
-        auth,
+        actix_web,
         core
     });
-}
-
-fn setup_logger(logger_config: &core::config::LoggerConfig) -> Result<(), fern::InitError> {
-    let mut log_dispatcher = fern::Dispatch::new()
-        .format(|out, message, record| {
-            out.finish(format_args!(
-                "{}[{}][{}] {}",
-                chrono::Local::now().format("[%Y-%m-%d][%H:%M:%S]"),
-                record.target(),
-                record.level(),
-                message
-            ))
-        })
-        .level(log::LevelFilter::from_str(&logger_config.root_level).unwrap())
-        .level_for("rust_actix", log::LevelFilter::from_str(&logger_config.level).unwrap());
-
-    if logger_config.output_system_enabled {
-        log_dispatcher = log_dispatcher.chain(std::io::stdout());
-    }
-
-    if logger_config.output_file_enabled {
-        log_dispatcher = log_dispatcher.chain(fern::log_file(&logger_config.output_file_name)?);
-    }
-
-    log_dispatcher.apply()?;
-
-    Ok(())
 }
 
 #[cfg(test)]
@@ -90,7 +61,7 @@ pub mod test_root {
     extern crate actix_web;
 
     use self::actix_web::{test};
-    use core;
+    use module_actix_web::server::Server;
 
     lazy_static! {
         pub static ref IT_CONTEXT: super::App = start_it_context();
@@ -101,7 +72,7 @@ pub mod test_root {
         return super::start().unwrap();
     }
 
-    pub fn new_test_server(server: &core::server::Server) -> test::TestServer {
+    pub fn new_test_server(server: &Server) -> test::TestServer {
         let clone = server.routers.clone();
         test::TestServer::with_factory(move || {
             let mut apps = vec![];
