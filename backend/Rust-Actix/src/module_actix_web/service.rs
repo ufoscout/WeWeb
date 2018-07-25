@@ -15,6 +15,30 @@ pub fn new(auth_service: Arc<auth::AuthService>, jwt_service: Arc<jwt::JwtServic
     }
 }
 
+impl actix_web::error::ResponseError for auth::AuthError {
+    fn error_response(&self) -> actix_web::HttpResponse {
+       match *self {
+          auth::AuthError::UnAuthenticatedError{} => actix_web::HttpResponse::new(
+              actix_web::http::StatusCode::UNAUTHORIZED),
+          auth::AuthError::NoRequiredPermission{permission: _} => actix_web::HttpResponse::new(
+              actix_web::http::StatusCode::FORBIDDEN),
+          auth::AuthError::NoRequiredRole{role: _} => actix_web::HttpResponse::new(
+              actix_web::http::StatusCode::FORBIDDEN),
+       }
+    }
+}
+
+impl actix_web::error::ResponseError for jwt::JwtError {
+    fn error_response(&self) -> actix_web::HttpResponse {
+        match *self {
+            jwt::JwtError::ExpiredTokenError{message: _} => actix_web::HttpResponse::new(
+                actix_web::http::StatusCode::UNAUTHORIZED),
+            jwt::JwtError::InvalidTokenError{message: _} => actix_web::HttpResponse::new(
+                actix_web::http::StatusCode::UNAUTHORIZED)
+        }
+    }
+}
+
 pub struct AuthContextService {
     jwt_service: Arc<jwt::JwtService>,
     auth_service: Arc<auth::AuthService>
@@ -39,21 +63,21 @@ impl AuthContextService {
         }
     }
 
-    pub fn from(&self, req: &actix_web::HttpRequest) -> auth::AuthContext {
+    pub fn from(&self, req: &actix_web::HttpRequest) -> Result<auth::AuthContext, failure::Error> {
         let token = self.token_from(req);
-        self.from_token(&token)
-    }
-
-    pub fn from_token(&self, token_string: &str) -> auth::AuthContext {
-        let auth = match self.jwt_service.parse_payload(token_string) {
-            Ok(a) => a,
-            Err(_) => auth::model::Auth {
+        if token.is_empty() {
+            return Ok(self.from_auth(auth::model::Auth {
                 id: -1,
                 username: "".to_string(),
                 roles: vec![]
-            }
-        };
-        self.from_auth(auth)
+            }))
+        }
+        self.from_token(&token)
+    }
+
+    pub fn from_token(&self, token_string: &str) -> Result<auth::AuthContext, failure::Error> {
+        let auth = self.jwt_service.parse_payload(token_string)?;
+        Ok(self.from_auth(auth))
     }
 
     pub fn from_auth(&self, user_auth: auth::model::Auth) -> auth::AuthContext {
@@ -66,6 +90,7 @@ impl AuthContextService {
 mod test {
 
     extern crate actix_web;
+    extern crate failure;
     extern crate serde_json;
 
     use ::auth as auth_s;
@@ -78,12 +103,8 @@ mod test {
 
     #[test]
     fn should_correctly_parse_the_auth_token() {
-        let config = super::super::config::ServerConfig { port: 0, shutdown_timeout: 60 };
-        let server = Server::new(&config);
 
-        server.register(Box::new(TestRouter{}));
-
-        let mut test_server = test_root::new_test_server(&server);
+        let mut test_server = new_test_server();
 
         let token = "random_token_value";
 
@@ -107,12 +128,10 @@ mod test {
 
     #[test]
     fn should_get_the_auth_from_headers() {
-        let config = super::super::config::ServerConfig { port: 0, shutdown_timeout: 60 };
-        let server = Server::new(&config);
-        server.register(Box::new(TestRouter{}));
-        let mut test_server = test_root::new_test_server(&server);
 
+        let mut test_server = new_test_server();
         let service = new_service();
+
         let auth = auth_s::model::Auth {
                 id: 123456,
                 username: "username_test".to_string(),
@@ -140,6 +159,13 @@ mod test {
         assert_eq!(auth.roles.len(), body.roles.len());
     }
 
+    fn new_test_server() -> actix_web::test::TestServer {
+        let config = super::super::config::ServerConfig { port: 0, shutdown_timeout: 60 };
+        let server = Server::new(&config);
+        server.register(Box::new(TestRouter{}));
+        test_root::new_test_server(&server)
+    }
+
     fn new_service() -> super::AuthContextService {
         let roles_provider = auth_s::InMemoryRolesProvider::new(vec![]);
         let auth_service = auth_s::new(Box::new(roles_provider));
@@ -165,11 +191,11 @@ mod test {
                         actix_web::HttpResponse::Ok().json(MyObj{value: token})
                     }))
                 .resource("/auth",move |r|
-                    r.f(move |req| {
+                    r.f(move |req| -> Result<actix_web::Json<auth_s::model::Auth>, failure::Error> {
                         let service = new_service();
-                        let auth = service.from(req).auth;
+                        let auth = service.from(req)?.auth;
                         println!("Found auth [{:?}]", auth);
-                        actix_web::HttpResponse::Ok().json(auth)
+                        Ok(actix_web::Json(auth))
                     }))
         }
     }
