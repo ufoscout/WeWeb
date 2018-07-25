@@ -1,17 +1,13 @@
 extern crate config;
+extern crate coreutils_auth as auth;
+extern crate coreutils_logger as logger;
+extern crate coreutils_module as module;
 
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate log;
 #[macro_use] extern crate failure;
 #[macro_use] extern crate failure_derive;
-extern crate fern;
-extern crate chrono;
 
-pub mod auth;
-pub mod json;
-pub mod jwt;
-pub mod logger;
-pub mod module;
 pub mod module_core;
 pub mod module_actix_web;
 

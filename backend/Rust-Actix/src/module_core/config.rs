@@ -1,7 +1,6 @@
 extern crate config as rs_config;
-
-use ::jwt;
-use ::logger;
+extern crate coreutils_jwt as jwt;
+extern crate coreutils_logger as logger;
 
 #[derive(Debug)]
 pub struct CoreConfig {

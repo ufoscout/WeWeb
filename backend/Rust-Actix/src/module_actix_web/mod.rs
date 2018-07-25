@@ -1,11 +1,13 @@
+extern crate coreutils_auth as auth_mod;
+extern crate coreutils_module as module;
+
 pub mod config;
 pub mod server;
 pub mod service;
+
 mod error;
 
 use std::sync::Arc;
-use ::module;
-use ::auth as auth_mod;
 use ::module_core;
 
 pub fn new(config: config::ServerConfig, core: &module_core::CoreModule, role_provider: Box<auth_mod::RolesProvider>) -> ActixWebModule {

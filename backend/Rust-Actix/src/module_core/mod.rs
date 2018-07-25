@@ -1,9 +1,10 @@
+extern crate coreutils_json as json;
+extern crate coreutils_jwt as jwt;
+extern crate coreutils_module as module;
+
 pub mod config;
 
 use std::sync::Arc;
-use super::json;
-use super::jwt;
-use super::module;
 
 pub fn new(config: config::CoreConfig) -> CoreModule {
 

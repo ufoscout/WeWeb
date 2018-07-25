@@ -1,9 +1,9 @@
 extern crate actix_web;
 extern crate failure;
+extern crate coreutils_auth as auth;
+extern crate coreutils_jwt as jwt;
 
 use std::sync::Arc;
-use ::auth;
-use ::jwt;
 
 static JWT_TOKEN_HEADER: &str = "Authorization";
 static JWT_TOKEN_HEADER_SUFFIX: &str = "Bearer ";
@@ -68,9 +68,9 @@ mod test {
     extern crate actix_web;
     extern crate failure;
     extern crate serde_json;
+    extern crate coreutils_auth as auth_s;
+    extern crate coreutils_jwt as jwt;
 
-    use ::auth as auth_s;
-    use ::jwt;
     use self::actix_web::{http, HttpMessage};
     use super::super::server::{Server, Router};
     use test_root;
