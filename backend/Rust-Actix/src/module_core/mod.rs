@@ -1,5 +1,6 @@
 pub mod config;
 
+use std::sync::Arc;
 use super::json;
 use super::jwt;
 use super::module;
@@ -12,16 +13,16 @@ pub fn new(config: config::CoreConfig) -> CoreModule {
     let jwt = jwt::new(&config.jwt);
 
     CoreModule{
-        config,
-        json: json::new(),
-        jwt
+        config: Arc::new(config),
+        json: Arc::new(json::new()),
+        jwt: Arc::new(jwt)
     }
 }
 
 pub struct CoreModule {
-    pub config: config::CoreConfig,
-    pub json: json::JsonService,
-    pub jwt: jwt::JwtService,
+    pub config: Arc<config::CoreConfig>,
+    pub json: Arc<json::JsonService>,
+    pub jwt: Arc<jwt::JwtService>,
 }
 
 impl module::Module for CoreModule {

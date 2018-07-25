@@ -38,7 +38,7 @@ pub fn start() -> Result<App, failure::Error> {
     logger::setup_logger(&conf.logger).unwrap();
 
     let core = module_core::new(conf);
-    let actix_web = module_actix_web::new(module_actix_web::config::new(settings.clone()));
+    let actix_web = module_actix_web::new(module_actix_web::config::new(settings.clone()), &core, Box::new(auth::InMemoryRolesProvider::new(vec![])));
     {
         let modules: Vec<&dyn module::Module> = vec![&core, &actix_web];
         module::start(&modules);

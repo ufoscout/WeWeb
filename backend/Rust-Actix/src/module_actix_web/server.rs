@@ -58,7 +58,7 @@ mod server_test {
 
     #[test]
     fn should_start_the_test_server_registering_all_modules() {
-        let config = super::config::ServerConfig { port: 0 };
+        let config = super::config::ServerConfig { port: 0, shutdown_timeout: 60 };
         let server = Server::new(&config);
 
         server.register(Box::new(TestRouter{name: "one"}));
