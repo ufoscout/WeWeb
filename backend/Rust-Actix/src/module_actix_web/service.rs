@@ -15,30 +15,6 @@ pub fn new(auth_service: Arc<auth::AuthService>, jwt_service: Arc<jwt::JwtServic
     }
 }
 
-impl actix_web::error::ResponseError for auth::AuthError {
-    fn error_response(&self) -> actix_web::HttpResponse {
-       match *self {
-          auth::AuthError::UnAuthenticatedError{} => actix_web::HttpResponse::new(
-              actix_web::http::StatusCode::UNAUTHORIZED),
-          auth::AuthError::NoRequiredPermission{permission: _} => actix_web::HttpResponse::new(
-              actix_web::http::StatusCode::FORBIDDEN),
-          auth::AuthError::NoRequiredRole{role: _} => actix_web::HttpResponse::new(
-              actix_web::http::StatusCode::FORBIDDEN),
-       }
-    }
-}
-
-impl actix_web::error::ResponseError for jwt::JwtError {
-    fn error_response(&self) -> actix_web::HttpResponse {
-        match *self {
-            jwt::JwtError::ExpiredTokenError{message: _} => actix_web::HttpResponse::new(
-                actix_web::http::StatusCode::UNAUTHORIZED),
-            jwt::JwtError::InvalidTokenError{message: _} => actix_web::HttpResponse::new(
-                actix_web::http::StatusCode::UNAUTHORIZED)
-        }
-    }
-}
-
 pub struct AuthContextService {
     jwt_service: Arc<jwt::JwtService>,
     auth_service: Arc<auth::AuthService>

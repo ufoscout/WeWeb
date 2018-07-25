@@ -1,3 +1,4 @@
+#[macro_use] extern crate log;
 
 pub trait Module: Sync + Send {
     fn init(&self);

@@ -18,5 +18,11 @@ serde_derive = "1.0"
 serde_json = "1.0"
 time = "0.1"
 
+coreutils_auth = "0.1.0"
+coreutils_json = "0.1.0"
+coreutils_jwt = "0.1.0"
+coreutils_logger = "0.1.0"
+coreutils_module = "0.1.0"
+
 [dev-dependencies]
 lazy_static = "1.0"

@@ -1,6 +1,7 @@
 pub mod config;
 pub mod server;
 pub mod service;
+mod error;
 
 use std::sync::Arc;
 use ::module;
