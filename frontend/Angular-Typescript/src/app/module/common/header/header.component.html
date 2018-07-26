@@ -22,16 +22,16 @@
             </div>
           </li>
 
-          <li *ngIf="!(authState$ | async).valid" class="nav-item" [routerLinkActive]="['active']">
+          <li *ngIf="!auth.isAuthenticated()" class="nav-item" [routerLinkActive]="['active']">
             <a class="nav-link" [routerLink]="['/login']" (click)="navbarCollapsed = true">{{'header.login' | translate}}</a>
           </li>
-          <li *ngIf="!(authState$ | async).valid" class="nav-item" [routerLinkActive]="['active']">
+          <li *ngIf="!auth.isAuthenticated()" class="nav-item" [routerLinkActive]="['active']">
             <a class="nav-link" [routerLink]="['/um/createAccount']" (click)="navbarCollapsed = true">{{'header.sign_up' | translate}}</a>
           </li>
 
-          <li *ngIf="(authState$ | async).valid" ngbDropdown class="nav-item dropdown">
+          <li *ngIf="auth.isAuthenticated()" ngbDropdown class="nav-item dropdown">
               <div class="nav-link dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle id="dropdownAccount">
-                  {{(authState$ | async).authModel?.username}}
+                  {{auth.data().username}}
                 <span class="caret"></span>
               </div>
               <div ngbDropdownMenu aria-labelledby="dropdownAccount" id="dropdownAccountMenu">

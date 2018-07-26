@@ -23,6 +23,30 @@ describe('[Shared] Object utils', () => {
             .toBeTruthy();
     });
 
+    it('should not execute if null', () => {
+        let executed = false;
+
+        obj.ifExists(null, val => {
+            executed = true;
+        });
+
+        expect(executed).toBeFalsy();
+    });
+
+    it('should execute if not undefined and not null', () => {
+        let executed = false;
+        const expected = '1235';
+        let found = '';
+
+        obj.ifExists(expected, val => {
+            executed = true;
+            found = val;
+        });
+
+        expect(executed).toBeTruthy();
+        expect(found).toBe(expected);
+    });
+
     it('should return defaul if value is undefined', () => {
         expect(
             obj.getOrDefault(undefined, 'default')
@@ -42,6 +66,33 @@ describe('[Shared] Object utils', () => {
             obj.getOrDefault<string>('value', 'default')
         )
             .toBe('value');
+    });
+
+    it('should not execute and return the default if null', () => {
+        let executed = false;
+        const defaultVal = '1235';
+
+        const found = obj.ifExistsOrDefault(null, defaultVal, val => {
+            executed = true;
+            return val;
+        });
+
+        expect(executed).toBeFalsy();
+        expect(found).toBe(defaultVal);
+    });
+
+    it('should execute with value if not undefined', () => {
+        let executed = false;
+        const defaultVal = '5433';
+        const expected = '1235';
+
+        const found = obj.ifExistsOrDefault(expected, defaultVal, val => {
+            executed = true;
+            return val;
+        });
+
+        expect(executed).toBeTruthy();
+        expect(found).toBe(expected);
     });
 
     it('should deep clone an object', () => {

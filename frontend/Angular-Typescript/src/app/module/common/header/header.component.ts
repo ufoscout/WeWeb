@@ -3,9 +3,9 @@ import { Store, Select } from '@ngxs/store';
 import { SetLanguage } from '../common.events';
 import { CommonState, CommonStateModel } from '../common.state';
 import { Observable } from 'rxjs';
-import { AuthState, AuthStateModel } from '../../auth/auth.state';
-import { Logout, GetAuthData } from '../../auth/auth.events';
+import { Logout } from '../../auth/auth.events';
 import { Router } from '@angular/router';
+import { AuthContext } from '../../auth/auth.context';
 
 @Component({
   selector: 'app-common-header',
@@ -14,10 +14,9 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
 
   @Select(CommonState) commonState$!: Observable<CommonStateModel>;
-  @Select(AuthState) authState$!: Observable<AuthStateModel>;
   navbarCollapsed = true;
 
-  constructor(private store: Store, private router: Router) {
+  constructor(private store: Store, private router: Router, public auth: AuthContext) {
   }
 
   ngOnInit() {

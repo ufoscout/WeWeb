@@ -6,6 +6,7 @@ import { AuthState } from './auth.state';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { AuthContext } from './auth.context';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   ],
   providers: [
     AuthService,
+    AuthContext,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
