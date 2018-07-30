@@ -1,10 +1,5 @@
-import { TestBed, async, inject, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
-import { CommonModule } from '../';
-import { NgxsModule, Store } from '@ngxs/store';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { FieldErrorsComponent } from './field-errors.component';
 

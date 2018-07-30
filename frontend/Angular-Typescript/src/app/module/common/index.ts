@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule as NgCommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap/collapse/collapse.module';
@@ -14,6 +15,11 @@ import { AuthModule } from '../auth';
 import { LanguageService } from './language.service';
 import { FieldErrorsComponent } from './errors/field-errors.component';
 import { environment } from '../../../environments/environment';
+import { ToastrModule } from 'ngx-toastr';
+import { MessageService } from './message.service';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmComponent } from './confirm/confirm.component';
+import { ConfirmationService } from './confirmation.service';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', `.json?_=${environment.ts}`);
@@ -23,15 +29,22 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   declarations: [
     HeaderComponent,
     FieldErrorsComponent,
+    ConfirmComponent,
+  ],
+  entryComponents: [
+    ConfirmComponent,
   ],
   imports: [
     AuthModule,
     NgCommonModule,
+    BrowserAnimationsModule,
     NgxsModule.forFeature([CommonState]),
     NgbCollapseModule,
     NgbDropdownModule,
+    NgbModalModule,
     RouterModule,
     NgxSpinnerModule,
+    ToastrModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -41,7 +54,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     })
   ],
   providers: [
+    ConfirmationService,
     LanguageService,
+    MessageService,
   ],
   exports: [
     TranslateModule,

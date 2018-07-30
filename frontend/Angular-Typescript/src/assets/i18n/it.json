@@ -1,5 +1,9 @@
 {
     "global": {
+        "action": {
+            "confirm": "Conferma",
+            "cancel": "Annulla"
+        }
     },
     "header": {
         "main_title": "Angular!",

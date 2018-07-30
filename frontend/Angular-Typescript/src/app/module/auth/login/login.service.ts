@@ -1,4 +1,4 @@
-import { Actions, Select } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginModalComponent } from './pages/loginModal.component';
