@@ -13,6 +13,7 @@ import com.weweb.core.CoreModule
 import com.weweb.core.config.CoreConfig
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
+import io.vertx.core.http.HttpServerOptions
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.core.logging.SLF4JLogDelegateFactory
 import kotlinx.coroutines.experimental.runBlocking
@@ -47,11 +48,11 @@ object AppMain {
         val vertx = Vertx.vertx()
 
         val properlty = Properlty.builder()
+                .caseSensitive(false)
                 .add("classpath:conf/config.properties")
                 .add(resourcePath = "classpath:conf/test-config.properties", ignoreNotFound = true)
                 .add(SystemPropertiesReader())
-                .add(EnvironmentVariablesReader())
-                .add(ToLowerCaseAndDotKeyReader(EnvironmentVariablesReader()))
+                .add(EnvironmentVariablesReader().replace("_", "."))
                 .build()
 
         val coreConfig = CoreConfig.build(properlty)
@@ -65,7 +66,7 @@ object AppMain {
                 AuthModule(deploymentOptions),
                 JsonModule(),
                 com.ufoscout.vertk.kodein.auth.AuthModule(coreConfig.jwt),
-                RouterModule(coreConfig.router),
+                RouterModule(coreConfig.router, HttpServerOptions()),
                 *modules
         )
 
