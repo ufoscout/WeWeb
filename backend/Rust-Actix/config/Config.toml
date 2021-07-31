@@ -1,9 +1,5 @@
 [core.logger]
-root_level = "info"
-level = "info"
-output_system_enabled = true
-output_file_enabled = false
-output_file_name = "./target/output.log"
+env_filter = "info"
 
 [core.server]
 port = 8080
