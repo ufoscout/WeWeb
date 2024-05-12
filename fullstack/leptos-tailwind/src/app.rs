@@ -1,5 +1,5 @@
-use crate::{error_template::{AppError, ErrorTemplate}, server_fn::{get_cargo_toml, AddTodo}};
-use leptos::*;
+use crate::{error_template::{AppError, ErrorTemplate}, server_fn::{add_todo, get_cargo_toml, AddTodo}};
+use leptos::{html::title, *};
 use leptos_meta::*;
 use leptos_router::*;
 
@@ -7,11 +7,7 @@ use leptos_router::*;
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
-
-    let (value, set_value) = create_signal(0);
-
     view! {
-
 
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
@@ -32,23 +28,11 @@ pub fn App() -> impl IntoView {
   
             <Title text="Leptos + Tailwindcss"/>
             <main>
-                <div class="bg-gradient-to-tl from-blue-800 to-blue-500 text-white font-mono flex flex-col min-h-screen">
-                    <div class="flex flex-row-reverse flex-wrap m-auto">
-                        <button on:click=move |_| set_value.update(|value| *value += 1) class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-700 border-blue-800 text-white">
-                            "+"
-                        </button>
-                        <button class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-800 border-blue-900 text-white">
-                            {value}
-                        </button>
-                        <button on:click=move |_| set_value.update(|value| *value -= 1) class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-700 border-blue-800 text-white">
-                            "-"
-                        </button>
-                    </div>
-                </div>
                 <Routes>
                     <Route path="" view=HomePage/>
                     <Route path="cargo" view=CargoTomlPage/>
                     <Route path="todo" view=AddTodoPage/>
+                    <Route path="todo_type_safe" view=AddTodoTypeSafePage/>
                 </Routes>
             </main>
         </Router>
@@ -59,12 +43,23 @@ pub fn App() -> impl IntoView {
 #[component]
 fn HomePage() -> impl IntoView {
     // Creates a reactive value to update the button
-    let (count, set_count) = create_signal(0);
-    let on_click = move |_| set_count.update(|count| *count += 1);
+    let (value, set_value) = create_signal(0);
 
     view! {
         <h1>"Welcome to Leptos!"</h1>
-        <button on:click=on_click>"Click Me: " {count}</button>
+        <div class="bg-gradient-to-tl from-blue-800 to-blue-500 text-white font-mono flex flex-col min-h-screen">
+        <div class="flex flex-row-reverse flex-wrap m-auto">
+            <button on:click=move |_| set_value.update(|value| *value += 1) class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-700 border-blue-800 text-white">
+                "+"
+            </button>
+            <button class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-800 border-blue-900 text-white">
+                {value}
+            </button>
+            <button on:click=move |_| set_value.update(|value| *value -= 1) class="rounded px-3 py-2 m-1 border-b-4 border-l-2 shadow-lg bg-blue-700 border-blue-800 text-white">
+                "-"
+            </button>
+        </div>
+    </div>
     }
 }
 
@@ -107,5 +102,33 @@ fn AddTodoPage() -> impl IntoView {
             <input type="text" name="title" placeholder="Enter a title"/>
             <button type="submit">Update</button>
         </ActionForm>
+    }
+}
+
+#[component]
+fn AddTodoTypeSafePage() -> impl IntoView {
+    
+    let (title, set_title) = create_signal("".to_string());
+    
+    let on_click = move |_| {
+        spawn_local(async move {
+            let _result = add_todo(title()).await.unwrap();
+        });
+    };
+
+    view! {
+        <div>
+            <span>Add Todo:</span>
+            <input type="text"
+                on:input=move |ev| {
+                    set_title(event_target_value(&ev));
+                }
+                value=title
+            />
+            <button on:click=on_click>
+                "Add Todo"
+            </button>
+        </div>
+        
     }
 }
