@@ -1092,13 +1092,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "libc"
-version = "0.2.167"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09d6582e104315a817dff97f75133544b2e094ee22447d2acf4a74e189ba06fc"
-
-[[package]]
-name = "lightspeed"
+name = "leptos_tailwind"
 version = "0.1.0"
 dependencies = [
  "axum",
@@ -1115,6 +1109,12 @@ dependencies = [
  "tracing",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "libc"
+version = "0.2.167"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09d6582e104315a817dff97f75133544b2e094ee22447d2acf4a74e189ba06fc"
 
 [[package]]
 name = "linear-map"

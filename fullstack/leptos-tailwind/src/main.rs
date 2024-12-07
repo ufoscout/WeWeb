@@ -6,7 +6,7 @@ async fn main() {
     use leptos::logging::log;
     use leptos::prelude::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use lightspeed::app::*;
+    use leptos_tailwind::app::*;
 
     let conf = get_configuration(None).unwrap();
     let addr = conf.leptos_options.site_addr;

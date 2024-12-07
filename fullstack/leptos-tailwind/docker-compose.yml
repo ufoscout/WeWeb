@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  leptos_tailwind:
+    image: "leptos_tailwind:latest"
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '8080:8080'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

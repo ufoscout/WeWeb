@@ -7,15 +7,15 @@ clean:
 
 
 # Builds all artifacts.
-# Generates your server binary in target/server/release and your site package in target/site.
+# Generates your server binary in target/x86_64-unknown-linux-musl/release and your site package in target/site.
 # Copy these files to your remote server. The directory structure should be:
 # ```text
-# lightspeed
+# leptos_tailwind
 # site/
 # ```
 [group('build')]
 build:
-  cargo leptos build --release
+  LEPTOS_BIN_TARGET_TRIPLE=x86_64-unknown-linux-musl cargo leptos build --release
 
 
 # Watches for changes and rebuilds. This includes the tailwind CSS and the server binary.
