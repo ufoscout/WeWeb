@@ -17,9 +17,11 @@ tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
 tower = { version = "0.5", optional = true }
 tower-http = { version = "0.6", features = ["fs"], optional = true }
 wasm-bindgen = "=0.2.96"
+serde = { version = "1.0", features = ["derive"], optional = true }
 thiserror = "2"
+tower-sessions = { version = "0.13", optional = true }
 tracing = { version = "0.1", optional = true }
-http = "1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"], optional = true }
 
 [features]
 hydrate = ["leptos/hydrate"]
@@ -33,6 +35,9 @@ ssr = [
     "leptos_meta/ssr",
     "leptos_router/ssr",
     "dep:tracing",
+    "serde",
+    "tracing-subscriber",
+    "tower-sessions"
 ]
 
 # Defines a size-optimized profile for the WASM bundle in release mode

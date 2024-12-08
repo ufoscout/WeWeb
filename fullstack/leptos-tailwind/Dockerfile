@@ -20,4 +20,7 @@ WORKDIR $WRK_DIR
 
 RUN chmod +x ./$FILE_NAME
 
+# Set stop signal to ctrl+c
+STOPSIGNAL SIGINT
+
 CMD /wait && ./$FILE_NAME
