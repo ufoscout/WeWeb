@@ -1,21 +1,29 @@
-[package]
-name = "dioxus-tailwind"
-version = "0.1.0"
-authors = ["Francesco <ufoscout@gmail.com>"]
-edition = "2021"
+[workspace]
+resolver = "2"
+members = [
+    "ui",
+    "web",
+    "server",
+]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace.dependencies]
+dioxus = { version = "0.6.0" }
+dioxus-cli-config = { version = "0.6.0" }
+dioxus-fullstack = { version = "0.6.0"}
+dioxus-web = { version = "0.6.0" }
 
-[dependencies]
-serde = { version = "1.0.197", features = ["derive"] }
+# workspace
+ui = { path = "ui" }
+server = { path = "server" }
 
-dioxus = { version = "0.5", features = ["fullstack", "router"] }
+[profile]
 
-# Debug
-tracing = "0.1.40"
-dioxus-logger = "0.5.0"
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
 
-[features]
-default = []
-server = ["dioxus/axum"]
-web = ["dioxus/web"]
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

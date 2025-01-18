@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  dioxus_tailwind:
+    image: "dioxus_tailwind:latest"
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '8080:8080'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

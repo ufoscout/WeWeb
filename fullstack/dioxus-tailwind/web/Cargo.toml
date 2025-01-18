@@ -1,0 +1,28 @@
+[package]
+name = "web"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dioxus-cli-config = { workspace = true, optional = true }
+dioxus-fullstack = { workspace = true  }
+dioxus-web = { workspace = true, features = ["hydrate"], optional = true }
+dioxus = { workspace = true, features = ["router"] }
+ui = { workspace = true }
+
+axum = { version = "0.7", optional = true }
+tokio = { version = "1", features = ["full"], optional = true }
+
+[features]
+default = []
+web = [
+    "dioxus-web",
+    "dioxus/web",
+]
+server = [
+    "axum",
+    "dioxus/server",
+    "dioxus-cli-config",
+    "dioxus-fullstack/axum",
+    "tokio",
+]

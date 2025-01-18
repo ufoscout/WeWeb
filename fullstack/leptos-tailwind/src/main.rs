@@ -49,6 +49,7 @@ async fn main() {
 
     let app = app
         .route("/counter", axum::routing::get(session::counter))
+        .route("/clear_counter", axum::routing::get(session::clear_counter))
         .layer(session_layer);
 
     // run our app with hyper
@@ -87,6 +88,11 @@ async fn main() {
                 session.insert(COUNTER_KEY, counter.0 + 1).await.unwrap();
                 Ok(counter)
             }
+        }
+
+        pub async fn clear_counter(session: Session) -> impl IntoResponse {
+            session.delete().await.unwrap();
+            "Counter cleared"
         }
 
         pub async fn counter(counter: Counter) -> impl IntoResponse {

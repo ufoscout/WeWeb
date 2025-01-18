@@ -1,14 +1,22 @@
+# Development
 
+Your new jumpstart project includes basic organization with an organized `assets` folder and a `components` folder. 
+If you chose to develop with the router feature, you will also have a `views` folder.
+
+### Tailwind
 1. Install npm: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-2. Install the tailwind css cli: https://tailwindcss.com/docs/installation
-3. Run the following command in the root of the project to start the tailwind CSS compiler:
+2. Install the Tailwind CSS CLI: https://tailwindcss.com/docs/installation
+3. Run the following command in the root of the project to start the Tailwind CSS compiler:
 
 ```bash
-npx tailwindcss -i ./input.css -o ./assets/tailwind.css --watch
+npx tailwindcss -i ./input.css -o ./web/assets/main.css --watch
 ```
 
-Launch the Dioxus Fullstack app:
+### Serving Your App
+
+Run the following command in the root of your project to start developing with the default platform:
 
 ```bash
-dx serve --platform fullstack
+cd web
+dx serve
 ```
