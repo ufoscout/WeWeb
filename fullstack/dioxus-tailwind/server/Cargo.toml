@@ -1,7 +1,12 @@
 [package]
 name = "server"
-version = "0.1.0"
-edition = "2021"
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+keywords.workspace = true
+version.workspace = true
 
 [dependencies]
 dioxus = { workspace = true, features = ["fullstack"] }

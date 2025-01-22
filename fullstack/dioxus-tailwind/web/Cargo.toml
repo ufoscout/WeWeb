@@ -1,17 +1,28 @@
 [package]
 name = "web"
-version = "0.1.0"
-edition = "2021"
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+keywords.workspace = true
+version.workspace = true
 
 [dependencies]
-dioxus-cli-config = { workspace = true, optional = true }
 dioxus-fullstack = { workspace = true  }
-dioxus-web = { workspace = true, features = ["hydrate"], optional = true }
 dioxus = { workspace = true, features = ["router"] }
 ui = { workspace = true }
 
-axum = { version = "0.7", optional = true }
-tokio = { version = "1", features = ["full"], optional = true }
+# web
+dioxus-web = { workspace = true, features = ["hydrate"], optional = true }
+
+# server
+async-trait = { version = "0.1", optional = true }
+axum = { workspace = true, optional = true }
+dioxus-cli-config = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+tokio = { workspace = true, features = ["full"], optional = true }
+tower-sessions = { workspace = true, optional = true }
 
 [features]
 default = []
@@ -20,9 +31,11 @@ web = [
     "dioxus/web",
 ]
 server = [
+    "async-trait",
     "axum",
     "dioxus/server",
     "dioxus-cli-config",
     "dioxus-fullstack/axum",
     "tokio",
+    "tower-sessions",
 ]

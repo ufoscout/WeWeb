@@ -1,9 +1,11 @@
 use dioxus::prelude::*;
 
 use ui::Navbar;
-use views::{Blog, Home};
+use web::views::{Blog, Home};
 
-mod views;
+#[cfg(feature = "server")]
+mod server;
+mod web;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -23,31 +25,17 @@ const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 fn main() {
     // Set the logger ahead of time since we don't use `dioxus::launch` on the server
     dioxus::logger::initialize_default();
-
+    
     #[cfg(feature = "web")]
     // Hydrate the application on the client
     dioxus_web::launch::launch_cfg(App, dioxus_web::Config::new().hydrate(true));
-
+    
     #[cfg(feature = "server")]
     {
-        use axum::routing::*;
-
         tokio::runtime::Runtime::new()
             .unwrap()
             .block_on(async move {
-
-                // build our application with some routes
-                let app = Router::new()
-                    // Server side render the application, serve static assets, and register server functions
-                    .serve_dioxus_application(ServeConfig::new().unwrap(), App);
-
-                // serve the app using the address passed by the CLI
-                let addr = dioxus_cli_config::fullstack_address_or_localhost();
-                let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-
-                axum::serve(listener, app.into_make_service())
-                    .await
-                    .unwrap();
+                server::start_server(App).await;
             });
     }
 }
