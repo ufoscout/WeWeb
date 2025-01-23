@@ -5,6 +5,7 @@ use web::views::{Blog, Home};
 
 #[cfg(feature = "server")]
 mod server;
+mod server_fn;
 mod web;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -42,8 +43,8 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    // Build cool things ✌️
 
+    // Build cool things ✌️
     rsx! {
         // Global app resources
         document::Link { rel: "icon", href: FAVICON }

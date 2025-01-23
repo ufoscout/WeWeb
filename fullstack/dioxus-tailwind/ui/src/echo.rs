@@ -8,7 +8,7 @@ pub fn Echo() -> Element {
     rsx! {
         div {
             id: "echo",
-            h4 { "ServerFn Echo" }
+            label { "ServerFn Echo:" }
             input {
                 class: "input input-bordered w-full max-w-xs",
                 placeholder: "Type here to echo...",

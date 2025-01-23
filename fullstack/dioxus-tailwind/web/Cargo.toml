@@ -17,7 +17,6 @@ ui = { workspace = true }
 dioxus-web = { workspace = true, features = ["hydrate"], optional = true }
 
 # server
-async-trait = { version = "0.1", optional = true }
 axum = { workspace = true, optional = true }
 dioxus-cli-config = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }
@@ -31,11 +30,11 @@ web = [
     "dioxus/web",
 ]
 server = [
-    "async-trait",
     "axum",
     "dioxus/server",
     "dioxus-cli-config",
     "dioxus-fullstack/axum",
+    "serde",
     "tokio",
     "tower-sessions",
 ]
