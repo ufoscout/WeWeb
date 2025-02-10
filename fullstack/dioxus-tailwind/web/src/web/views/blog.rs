@@ -4,7 +4,16 @@ use dioxus::prelude::*;
 const BLOG_CSS: Asset = asset!("/assets/blog.css");
 
 #[component]
-pub fn Blog(id: i32) -> Element {
+pub fn Blog(id: ReadOnlySignal<i32>) -> Element {
+
+    let blog = use_server_future(move || {
+        let id = id();
+        async move {
+            get_blog_post(id).await.unwrap()
+        }
+    })?;
+
+
     rsx! {
         document::Link { rel: "stylesheet", href: BLOG_CSS}
 
@@ -13,20 +22,25 @@ pub fn Blog(id: i32) -> Element {
 
             // Content
             h1 { "This is blog #{id}!" }
-            p { "In blog #{id}, we show how the Dioxus router works and how URL parameters can be passed as props to our route components." }
+            p { "#{blog().unwrap()}" }
 
             // Navigation links
             Link {
                 class: "link",
-                to: Route::Blog { id: id - 1 },
+                to: Route::Blog { id: id() - 1 },
                 "Previous"
             }
             span { " <---> " }
             Link {
                 class: "link",
-                to: Route::Blog { id: id + 1 },
+                to: Route::Blog { id: id() + 1 },
                 "Next"
             }
         }
     }
+}
+
+#[server(GetBlogPost)]
+pub async fn get_blog_post(page: i32) -> Result<String, ServerFnError> {
+    Ok(format!("Hello from the server! Blog: #{page}"))
 }

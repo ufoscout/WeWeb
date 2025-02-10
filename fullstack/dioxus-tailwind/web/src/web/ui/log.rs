@@ -1,9 +1,11 @@
 use dioxus::prelude::*;
+use serde::{Deserialize, Serialize};
 use crate::server_fn::session::*;
 
 // Globals are created the first time you access them with the closure you pass to Global::new
 pub static SESSION: GlobalSignal<Option<Session>> = Global::new(|| None);
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Session {
     pub username: String,
 }
@@ -17,7 +19,7 @@ pub fn Login() -> Element {
 
     if let Some(session) = SESSION.read().as_ref() {
         rsx! {
-            label { "Username: {session.username}" }
+            label { "Username is: [{session.username}] " }
             button { 
                 class: "btn",
                 onclick: move |_event| async move {
@@ -29,7 +31,7 @@ pub fn Login() -> Element {
         }
     } else {
         rsx! {
-            label { "Username: " }
+            label { "Enter username: " }
             input {
                 placeholder: "Type here to login...",
                 class: "input input-bordered w-full max-w-xs",

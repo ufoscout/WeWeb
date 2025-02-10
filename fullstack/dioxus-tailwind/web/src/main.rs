@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 
+use server_fn::session::get_user_session;
 use ui::Navbar;
-use web::views::{Blog, Home};
+use web::{ui::log::{Session, SESSION}, views::{Blog, Home}};
 
 #[cfg(feature = "server")]
 mod server;
@@ -28,8 +29,7 @@ fn main() {
     dioxus::logger::initialize_default();
     
     #[cfg(feature = "web")]
-    // Hydrate the application on the client
-    dioxus_web::launch::launch_cfg(App, dioxus_web::Config::new().hydrate(true));
+    LaunchBuilder::web().launch(App);
     
     #[cfg(feature = "server")]
     {
@@ -43,6 +43,14 @@ fn main() {
 
 #[component]
 fn App() -> Element {
+
+    let session = use_server_future(move || async move {
+        get_user_session().await.unwrap().map(|username| Session { username })
+    })?;
+
+    use_memo(move || {
+        *SESSION.write() = session().flatten(); 
+    });
 
     // Build cool things ✌️
     rsx! {

@@ -19,7 +19,6 @@ authors = ["Francesco Cina <ufoscout@gmail.com>"]
 dioxus = { version = "0.6.0" }
 dioxus-cli-config = { version = "0.6.0" }
 dioxus-fullstack = { version = "0.6.0"}
-dioxus-web = { version = "0.6.0" }
 axum = { version = "0.7" }
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1" }

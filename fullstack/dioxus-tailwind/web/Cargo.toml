@@ -11,22 +11,18 @@ version.workspace = true
 [dependencies]
 dioxus-fullstack = { workspace = true  }
 dioxus = { workspace = true, features = ["router"] }
+serde = { workspace = true }
 ui = { workspace = true }
-
-# web
-dioxus-web = { workspace = true, features = ["hydrate"], optional = true }
 
 # server
 axum = { workspace = true, optional = true }
 dioxus-cli-config = { workspace = true, optional = true }
-serde = { workspace = true, optional = true }
 tokio = { workspace = true, features = ["full"], optional = true }
 tower-sessions = { workspace = true, optional = true }
 
 [features]
 default = []
 web = [
-    "dioxus-web",
     "dioxus/web",
 ]
 server = [
@@ -34,7 +30,6 @@ server = [
     "dioxus/server",
     "dioxus-cli-config",
     "dioxus-fullstack/axum",
-    "serde",
     "tokio",
     "tower-sessions",
 ]
