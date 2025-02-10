@@ -9,14 +9,12 @@ keywords.workspace = true
 version.workspace = true
 
 [dependencies]
-dioxus-fullstack = { workspace = true  }
 dioxus = { workspace = true, features = ["router"] }
 serde = { workspace = true }
 ui = { workspace = true }
 
 # server
 axum = { workspace = true, optional = true }
-dioxus-cli-config = { workspace = true, optional = true }
 tokio = { workspace = true, features = ["full"], optional = true }
 tower-sessions = { workspace = true, optional = true }
 
@@ -28,8 +26,6 @@ web = [
 server = [
     "axum",
     "dioxus/server",
-    "dioxus-cli-config",
-    "dioxus-fullstack/axum",
     "tokio",
     "tower-sessions",
 ]

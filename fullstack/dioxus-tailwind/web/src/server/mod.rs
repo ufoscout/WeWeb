@@ -1,6 +1,5 @@
 use axum::Router;
-use dioxus::prelude::*;
-use dioxus_fullstack::ServeConfig;
+use dioxus::{cli_config::fullstack_address_or_localhost, prelude::*};
 use tower_sessions::{cookie::time::Duration, Expiry, MemoryStore, SessionManagerLayer};
 
 pub mod session;
@@ -24,7 +23,7 @@ pub async fn start_server(app: fn() -> Element) {
         .layer(session_layer);
 
     // serve the app using the address passed by the CLI
-    let addr = dioxus_cli_config::fullstack_address_or_localhost();
+    let addr = fullstack_address_or_localhost();
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 
     axum::serve(listener, app.into_make_service())

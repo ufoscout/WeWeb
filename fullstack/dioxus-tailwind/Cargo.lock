@@ -2973,8 +2973,6 @@ version = "0.0.1"
 dependencies = [
  "axum",
  "dioxus",
- "dioxus-cli-config",
- "dioxus-fullstack",
  "serde",
  "tokio",
  "tower-sessions",
