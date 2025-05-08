@@ -23,3 +23,20 @@ build:
 [group('build')]
 watch:
   cargo leptos watch
+
+# Builds the CSS from the tailwindcss source and watches for changes.
+[group('build')]
+install_css_deps options="":
+  npm install
+
+
+# Builds the CSS from the tailwindcss source and watches for changes.
+[group('build')]
+build_css options="":
+  npx @tailwindcss/cli -i ./style/tailwind.css -o ./target/tailwind.css {{options}}
+
+
+# Builds the CSS from the tailwindcss source and watches for changes.
+[group('build')]
+watch_css:
+  just build_css "--watch"

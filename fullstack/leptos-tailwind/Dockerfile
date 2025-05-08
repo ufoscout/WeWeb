@@ -4,8 +4,8 @@ RUN apk add --update --no-cache bash && rm -rf /var/cache/apk/*
 
 COPY --from=ghcr.io/ufoscout/docker-compose-wait:latest /wait /wait
 
-ENV FILE_NAME leptos_tailwind
-ENV WRK_DIR /app
+ENV FILE_NAME=leptos_tailwind
+ENV WRK_DIR=/app
 
 ENV RUST_LOG="info"
 ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"

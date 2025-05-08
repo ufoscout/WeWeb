@@ -62,7 +62,7 @@ async fn main() {
 
     mod session {
         use axum::{
-            async_trait, extract::FromRequestParts, http::request::Parts, response::IntoResponse,
+            extract::FromRequestParts, http::request::Parts, response::IntoResponse,
         };
         use serde::{Deserialize, Serialize};
         use tower_sessions::Session;
@@ -72,7 +72,6 @@ async fn main() {
         #[derive(Default, Deserialize, Serialize)]
         pub struct Counter(usize);
 
-        #[async_trait]
         impl<S> FromRequestParts<S> for Counter
         where
             S: Send + Sync,
