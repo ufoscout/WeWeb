@@ -22,7 +22,7 @@ serve:
 # Builds the CSS from the tailwindcss source and watches for changes.
 [group('build')]
 build_css options="":
-  npx tailwindcss -i ./input.css -o ./web/assets/tailwind.css {{options}}
+  npx @tailwindcss/cli -i ./input.css -o ./web/assets/tailwind.css {{options}}
 
 
 # Builds the CSS from the tailwindcss source and watches for changes.
