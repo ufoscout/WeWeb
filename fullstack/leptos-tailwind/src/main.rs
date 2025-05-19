@@ -5,7 +5,7 @@ async fn main() {
     use leptos::logging::log;
     use leptos::prelude::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use leptos_tailwind::app::*;
+    use leptos_tailwind::{app::*, openapi_example::build_api};
     use tower_sessions::{cookie::time::Duration, Expiry, MemoryStore, SessionManagerLayer};
     use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
@@ -50,6 +50,7 @@ async fn main() {
     let app = app
         .route("/counter", axum::routing::get(session::counter))
         .route("/clear_counter", axum::routing::get(session::clear_counter))
+        .merge(build_api())
         .layer(session_layer);
 
     // run our app with hyper

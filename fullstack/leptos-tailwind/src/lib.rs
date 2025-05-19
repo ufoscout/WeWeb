@@ -1,5 +1,7 @@
 pub mod app;
 pub mod session;
+#[cfg(feature = "ssr")]
+pub mod openapi_example;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
